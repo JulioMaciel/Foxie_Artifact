@@ -27,7 +27,10 @@ public class MoveControl : MonoBehaviour
     {
         direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         toJump = Input.GetButtonDown("Jump");
-        
+    }
+
+    void LateUpdate()
+    {
         if (direction != Vector3.zero)
         {
             Move();
@@ -35,7 +38,7 @@ public class MoveControl : MonoBehaviour
         }
         animator.SetFloat(Anim.MoveSpeed, direction.normalized.magnitude);
         
-        if (toJump && controller.isGrounded) 
+        if (toJump && CanJump()) 
             Jump();
 
         HandleGravity();
@@ -48,6 +51,14 @@ public class MoveControl : MonoBehaviour
         
         playerVelocity.y += Gravity * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    bool CanJump()
+    {
+        if (playerVelocity.y > 0) return false;
+        
+        var hasHit = Physics.Raycast(transform.position, Vector3.down, 0.1f, Masks.Terrain);
+        return hasHit;
     }
 
     void Jump()
