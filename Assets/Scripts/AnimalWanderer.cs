@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
+
 public class AnimalWanderer : MonoBehaviour
 {
     [SerializeField] float wanderRadius = 5;

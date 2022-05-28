@@ -1510,8 +1510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a50d25bf9548b98a4aa39c34f04234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crowFrequency: 1
-  crowAudio: {fileID: 8300000, guid: 875510542b9a240488684e2d554e4d2b, type: 3}
+  frequency: 1
+  audioClip: {fileID: 8300000, guid: 875510542b9a240488684e2d554e4d2b, type: 3}
 --- !u!1 &2329874048821868128
 GameObject:
   m_ObjectHideFlags: 0

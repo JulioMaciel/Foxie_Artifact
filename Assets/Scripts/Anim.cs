@@ -13,5 +13,5 @@ public static class Anim
     // public static int Lay = Animator.StringToHash("Lay");
     // public static int Stand = Animator.StringToHash("Stand");
     
-    public static int Crow = Animator.StringToHash("Crow");
+    public static int IdleEvent = Animator.StringToHash("IdleEvent");
 }
