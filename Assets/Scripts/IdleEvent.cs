@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,7 +9,8 @@ using Random = UnityEngine.Random;
 public class IdleEvent : MonoBehaviour
 {
     [SerializeField] [Range(0, 10)] float frequency = 1;
-    [SerializeField] AudioClip audioClip;
+    [SerializeField] List<AudioClip> audioClips;
+    [SerializeField] bool triggerAnimation = true;
 
     AudioSource audioSource;
     AnimalWanderer wanderer;
@@ -39,11 +41,13 @@ public class IdleEvent : MonoBehaviour
 
     void Trigger()
     {
-        animator.SetTrigger(Anim.IdleEvent);
+        if (triggerAnimation) 
+            animator.SetTrigger(Anim.IdleEvent);
 
-        if (audioClip != null)
+        if (audioClips.Count >= 1)
         {
-            audioSource.clip = audioClip;
+            var rndClip = audioClips[Random.Range(0, audioClips.Count)];
+            audioSource.clip = rndClip;
             audioSource.Play();            
         }
         

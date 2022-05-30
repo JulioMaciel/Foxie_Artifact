@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -44,7 +45,6 @@ public class AnimalWanderer : MonoBehaviour
     void Move()
     {
         var newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-        FaceDestination(newPos);
         agent.SetDestination(newPos);
         Timer = 0;
     }
@@ -55,13 +55,5 @@ public class AnimalWanderer : MonoBehaviour
         randDirection += origin;
         NavMesh.SamplePosition (randDirection, out var navHit, dist, layerMask);
         return navHit.position;
-    }
-    
-    void FaceDestination(Vector3 destination)
-    {
-        var lookPos = destination - transform.position;
-        lookPos.y = 0;
-        var rotation = Quaternion.LookRotation(lookPos);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 10);  
     }
 }

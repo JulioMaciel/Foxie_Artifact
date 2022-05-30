@@ -1506,7 +1506,7 @@ NavMeshAgent:
   m_Speed: 0.5
   m_Acceleration: 2
   avoidancePriority: 50
-  m_AngularSpeed: 30
+  m_AngularSpeed: 600
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1542,7 +1542,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frequency: 2
-  audioClip: {fileID: 8300000, guid: c244c3141607649918f54beb8a706957, type: 3}
+  audioClips:
+  - {fileID: 8300000, guid: c244c3141607649918f54beb8a706957, type: 3}
+  - {fileID: 8300000, guid: 404de95ea2b407d4685f98e05a656930, type: 3}
+  - {fileID: 8300000, guid: 067f63ef07c6afa4bb811398dc27a78d, type: 3}
+  - {fileID: 8300000, guid: de2a374f5eac2884a957219dc5d1cb6a, type: 3}
+  - {fileID: 8300000, guid: 892745929e8cee2469e0784b0537c74d, type: 3}
+  triggerAnimation: 1
 --- !u!1 &1890656657933588206
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,13 +6,12 @@ public class CameraControl : MonoBehaviour
 
     [SerializeField] float targetHeight = 1f;
     [SerializeField] float distance = 5.0f;
-    [SerializeField] float offsetFromWall = 0.1f;
+    [SerializeField] float offsetFromWall = .1f;
     [SerializeField] float maxDistance = 10;
     [SerializeField] float minDistance = .6f;
     [SerializeField] float cameraMovementSpeed = 4;
     [SerializeField] int yMinLimit = 15;
-    [SerializeField] int yMaxLimit = 50
-        ;
+    [SerializeField] int yMaxLimit = 50;
     [SerializeField] LayerMask collisionLayers = -1;
 
     float xAngle, yAngle, currentDistance, desiredDistance, correctedDistance;
@@ -27,17 +26,15 @@ public class CameraControl : MonoBehaviour
         desiredDistance = distance;
         correctedDistance = distance;
     }
-
-    void Update()
-    {
-        if (!Input.GetMouseButton(0)) return;
-        
-        xAngle += Input.GetAxis("Mouse X") * cameraMovementSpeed;
-        yAngle -= Input.GetAxis("Mouse Y") * cameraMovementSpeed;
-    }
-
+    
     void LateUpdate()
     {
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            xAngle += Input.GetAxis("Mouse X") * cameraMovementSpeed;
+            yAngle -= Input.GetAxis("Mouse Y") * cameraMovementSpeed;
+        }
+        
         FixVerticalAngle();
 
         var rotation = Quaternion.Euler(yAngle, xAngle, 0);
@@ -70,17 +67,16 @@ public class CameraControl : MonoBehaviour
 
     void FixVerticalAngle()
     {
-        var angle = yAngle;
         switch (yAngle)
         {
             case < -360:
-                angle += 360;
+                yAngle += 360;
                 break;
             case > 360:
-                angle -= 360;
+                yAngle -= 360;
                 break;
         }
 
-        yAngle = Mathf.Clamp(angle, yMinLimit, yMaxLimit);
+        yAngle = Mathf.Clamp(yAngle, yMinLimit, yMaxLimit);
     }
 }
