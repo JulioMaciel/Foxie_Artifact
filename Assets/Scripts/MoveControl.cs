@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class MoveControl : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class MoveControl : MonoBehaviour
     Vector3 playerVelocity;
     Vector3 moveDirection;
     bool toJump;
+    
+    public event Action<Transform> OnMove;
 
     void Awake()
     {
@@ -73,13 +76,18 @@ public class MoveControl : MonoBehaviour
         var flatMovement = playerSpeed * Time.deltaTime * camDir;
         moveDirection = new Vector3(flatMovement.x, moveDirection.y, flatMovement.z);
         controller.Move(moveDirection);
+        OnMove?.Invoke(transform);
     }
 
     void Rotate()
     {
         var currentPosition = transform.position;
         var inputVector = currentPosition + moveDirection;
-        var targetRotation = Quaternion.LookRotation(inputVector - currentPosition);
+        var forwardV3 = inputVector - currentPosition;
+        
+        if (forwardV3 == Vector3.zero) return;
+        
+        var targetRotation = Quaternion.LookRotation(forwardV3);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
     }
 }

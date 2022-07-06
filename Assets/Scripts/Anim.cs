@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class Anim
 {
+    public static int StandUp = Animator.StringToHash("StandUp");
     public static int MoveSpeed = Animator.StringToHash("MoveSpeed");
     public static int Jump = Animator.StringToHash("Jump");
     
