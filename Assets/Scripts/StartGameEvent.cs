@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using ScriptObjects;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -19,9 +18,27 @@ public class StartGameEvent : MonoBehaviour
     [SerializeField] Transform goldieWelcomeFarmerSpot;
     [SerializeField] GameObject farmer;
     [SerializeField] Transform farmerWaveSpot;
+    [SerializeField] Transform farmerWorkSpot;
 
+    Animator goldieAnimator;
+    Animator playerAnimator;
+    Animator farmerAnimator;
+    MoveControl playerMoveControl;
+    NavMeshAgent goldieNavmesh;
+    NavMeshAgent farmerNavMesh;
+    
     bool isVignetteCleaned;
     bool isSaturationCleaned;
+
+    void Awake()
+    {
+        goldieAnimator = goldie.GetComponent<Animator>();
+        playerAnimator = player.GetComponent<Animator>();
+        farmerAnimator = farmer.GetComponent<Animator>();
+        playerMoveControl = player.GetComponent<MoveControl>();
+        goldieNavmesh = goldie.GetComponent<NavMeshAgent>();
+        farmerNavMesh = farmer.GetComponent<NavMeshAgent>();
+    }
 
     void Start()
     {
@@ -99,8 +116,7 @@ public class StartGameEvent : MonoBehaviour
 
     void GoldieBarks()
     {
-        var goldieAnimator = goldie.GetComponent<Animator>();
-        goldieAnimator.SetTrigger(Anim.Goldie.Bark);
+        goldieAnimator.SetTrigger(AnimParam.Goldie.Bark);
         var goldieAudio = goldie.GetComponent<AudioSource>();
         goldieAudio.clip = goldieBarkClip;
         goldieAudio.Play();   
@@ -108,7 +124,7 @@ public class StartGameEvent : MonoBehaviour
 
     IEnumerator MoveCameraToControlPosition()
     {
-        while (Vector3.Distance(startingCamera.transform.position, moveControlCamera.transform.position) > .5f)
+        while (!startingCamera.transform.position.IsCloseEnough(moveControlCamera.transform.position))
         {
             var speed = Time.deltaTime;
             startingCamera.transform.position = Vector3.Lerp(startingCamera.transform.position, moveControlCamera.transform.position, speed);
@@ -131,13 +147,10 @@ public class StartGameEvent : MonoBehaviour
         moveControlCamera.gameObject.SetActive(true);
         startingCamera.gameObject.SetActive(false);
 
-        var playerAnimator = player.GetComponent<Animator>();
-        playerAnimator.SetTrigger(Anim.StandUp);
-        
-        while(!playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Fox_Idle"))
-            yield return null;
-        
-        var playerMoveControl = player.GetComponent<MoveControl>();
+        playerAnimator.SetTrigger(AnimParam.StandUp);
+        yield return playerAnimator.WaitAnimationFinishes();
+        Debug.Log("AnimParam.StandUp finishes. It has 2 sequential animations."); //TODO
+
         playerMoveControl.enabled = true;
 
         StartCoroutine(MoveGoldieToWelcomeSpot());
@@ -145,24 +158,29 @@ public class StartGameEvent : MonoBehaviour
 
     IEnumerator MoveGoldieToWelcomeSpot()
     {
-        var goldieNavmesh = goldie.GetComponent<NavMeshAgent>();
-        var goldieAnim = goldie.GetComponent<Animator>();
-        StartCoroutine(goldieNavmesh.MoveWhileAnimating(goldieAnim, goldieWelcomeFarmerSpot));
-        
-        while (goldieNavmesh.hasPath)
-            yield return null;
+        StartCoroutine(goldieNavmesh.MoveWhileAnimating(goldieAnimator, goldieWelcomeFarmerSpot.position));
+        yield return goldieNavmesh.WaitToArrive();
 
-        var farmerNavMesh = farmer.GetComponent<NavMeshAgent>();
-        var farmerAnim = farmer.GetComponent<Animator>();
-        StartCoroutine(farmerNavMesh.MoveWhileAnimating(farmerAnim, farmerWaveSpot));
+        StartCoroutine(farmerNavMesh.MoveWhileAnimating(farmerAnimator, farmerWaveSpot.position));
         
         goldie.transform.LookAt(farmer.transform);
-        goldieAnim.SetTrigger(Anim.Goldie.Bark);
+        goldieAnimator.SetTrigger(AnimParam.Goldie.Bark);
         
-        while (Vector3.Distance(farmer.transform.position, farmerWaveSpot.position) > .5f)
-            yield return null;
+        WaypointManager.Instance.SetNewTarget(goldie.transform, "Follow Goldie to welcome the farmer");
+        
+        yield return farmerNavMesh.WaitToArrive();
         
         farmer.transform.LookAt(goldie.transform);
-        farmerAnim.SetTrigger(Anim.Human.Wave);
+        farmerAnimator.SetTrigger(AnimParam.Human.Wave);
+        yield return farmerAnimator.WaitAnimationFinishes();
+        
+        StartCoroutine(farmerNavMesh.MoveWhileAnimating(farmerAnimator, farmerWorkSpot.position));
+        StartCoroutine(PlayFarmerAnimationWork());
+    }
+
+    IEnumerator PlayFarmerAnimationWork()
+    {
+        yield return farmerNavMesh.WaitToArrive();
+        farmerAnimator.SetBool(AnimParam.Human.isWorking, true);
     }
 }

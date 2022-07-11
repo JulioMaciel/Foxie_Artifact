@@ -42,7 +42,7 @@ public class IdleEvent : MonoBehaviour
     void Trigger()
     {
         if (triggerAnimation) 
-            animator.SetTrigger(Anim.IdleEvent);
+            animator.SetTrigger(AnimParam.IdleEvent);
 
         if (audioClips.Count >= 1)
         {

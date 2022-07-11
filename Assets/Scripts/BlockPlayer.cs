@@ -36,9 +36,6 @@ public class BlockPlayer : MonoBehaviour
     {
         var moveControl = player.GetComponent<MoveControl>();
         moveControl.OnMove += ReactToPlayerMovement;
-
-        // foreach (var wall in walls)
-        //     wall.OnPlayerTouches += OnPlayerHittingLimitWall;
     }
 
     void Update()
@@ -63,22 +60,14 @@ public class BlockPlayer : MonoBehaviour
         else if (followPlayerZPosition && !isSameZPositionToPlayer)
             newPos = new Vector3(thisPos.x, thisPos.y, playerPosition.position.z);
         else return;
-
-        var navMeshPos = GetNearestNavMeshPosition(newPos);
         
-        agent.SetDestination(navMeshPos);
+        agent.TrySetWorldDestination(newPos);
     }
     
     void SyncAnimation()
     {
         var arrivedExpectedAxis = followPlayerXPosition && isSameXPositionToPlayer || followPlayerZPosition && isSameZPositionToPlayer;
-        animator.SetFloat(Anim.MoveSpeed, arrivedExpectedAxis ? 0 : 0.9f);
-    }
-
-    Vector3 GetNearestNavMeshPosition(Vector3 position)
-    {
-        NavMesh.SamplePosition(position, out var hit, 1.0f, NavMesh.AllAreas);
-        return hit.position;
+        animator.SetFloat(AnimParam.MoveSpeed, arrivedExpectedAxis ? 0 : 0.9f);
     }
 
     void EmitWarningSound()
@@ -114,7 +103,6 @@ public class BlockPlayer : MonoBehaviour
 
     bool IsFacingPlayer()
     {
-        //return Vector3.Angle(player.transform.forward, transform.position - player.transform.position) < 5;
         return Vector3.Dot(transform.forward, (player.transform.position - transform.position).normalized) > 0.7;
     }
 }

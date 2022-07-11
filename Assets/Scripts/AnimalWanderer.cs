@@ -39,7 +39,7 @@ public class AnimalWanderer : MonoBehaviour
         if (!agent.hasPath) return;
         
         var hasAlmostArrived = agent.remainingDistance < 0.1;
-        animator.SetFloat(Anim.MoveSpeed, hasAlmostArrived ? 0 : 0.9f);
+        animator.SetFloat(AnimParam.MoveSpeed, hasAlmostArrived ? 0 : 0.9f);
     }
 
     void Move()

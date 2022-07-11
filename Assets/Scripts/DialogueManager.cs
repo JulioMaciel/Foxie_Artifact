@@ -19,10 +19,7 @@ public class DialogueManager : MonoBehaviour
     
     public event Action<int> OnEndMessage;
     
-    void Awake()
-    {
-        instance = this;
-    }
+    void Awake() => instance = this;
 
     public void StartDialogue(Dialogue dialogue)
     {

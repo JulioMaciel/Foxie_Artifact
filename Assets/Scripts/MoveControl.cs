@@ -39,7 +39,7 @@ public class MoveControl : MonoBehaviour
             Move();
             Rotate();
         }
-        animator.SetFloat(Anim.MoveSpeed, direction.normalized.magnitude);
+        animator.SetFloat(AnimParam.MoveSpeed, direction.normalized.magnitude);
         
         if (toJump && CanJump()) 
             Jump();
@@ -67,7 +67,7 @@ public class MoveControl : MonoBehaviour
     void Jump()
     {
         playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * Gravity);
-        animator.SetTrigger(Anim.Jump);
+        animator.SetTrigger(AnimParam.Jump);
     }
 
     void Move()
