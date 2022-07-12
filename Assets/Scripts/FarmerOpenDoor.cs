@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class FarmerOpenDoor : MonoBehaviour
@@ -7,7 +8,7 @@ public class FarmerOpenDoor : MonoBehaviour
     
     void Start()
     {
-        var rot = transform.rotation;
+        var rot = transform.localRotation;
         openedDoorRotation = Quaternion.Euler(new Vector3(rot.x, rot.y + 130, rot.z));
     }
 
@@ -15,13 +16,17 @@ public class FarmerOpenDoor : MonoBehaviour
     {
         if (!isOpeningDoor) return;
         
-        transform.rotation = Quaternion.Lerp(transform.rotation, openedDoorRotation, Time.deltaTime);
-        
-        if (transform.rotation.normalized != openedDoorRotation.normalized)
-            Destroy(this);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, openedDoorRotation, Time.deltaTime);
+        StartCoroutine(DestroySoon());
     }
 
-    void OnCollisionEnter(Collision col)
+    IEnumerator DestroySoon()
+    {
+        yield return new WaitForSeconds(5);
+        Destroy(this);
+    }
+
+    void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.name == "Farmer")
             isOpeningDoor = true;

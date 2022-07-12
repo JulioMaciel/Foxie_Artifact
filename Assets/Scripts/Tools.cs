@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 public static class Tools
 {
-    public static IEnumerator MoveWhileAnimating(this NavMeshAgent agent, Animator anim, Vector3 destination)
+    public static IEnumerator MoveAnimating(this NavMeshAgent agent, Animator anim, Vector3 destination)
     {
         if (anim.parameters.All(p => p.nameHash != AnimParam.MoveSpeed))
             throw new UnityException("The animator must have a MoveSpeed parameter.");
@@ -37,10 +38,20 @@ public static class Tools
             yield return null;
     }
 
-    public static IEnumerator WaitAnimationFinishes(this Animator anim)
+    public static IEnumerator WaitCurrentAnimation(this Animator anim)
     {
-        var animationLength = anim.GetCurrentAnimatorStateInfo(0).length * anim.GetCurrentAnimatorStateInfo(0).speed;
-        yield return new WaitForSecondsRealtime(animationLength);
+        // lenght = 2
+        // if speed < 1 => (0.5)
+            // increase length to 4
+            // so -> 2 ___ 0.5 = 4
+            // 2/.5 = 4
+        // if speed > 1 => (2)
+            // decrease length to 1
+            // so -> 2 ___ 2 = 2
+            // 2/2 => 1
+        var clip = anim.GetCurrentAnimatorStateInfo(0);
+        var fullLength = clip.length / clip.speed;
+        yield return new WaitForSecondsRealtime(fullLength);
     }
 
     public static void TrySetWorldDestination(this NavMeshAgent agent, Vector3 worldDestination)
@@ -49,5 +60,23 @@ public static class Tools
 
         if (hit.hit) agent.SetDestination(hit.position);
         else Debug.DrawLine(agent.transform.position, worldDestination, Color.red, 10000);
+    }
+
+    public static IEnumerator WaitAnimationStart(this Animator anim, AnimClip clip)
+    {
+        var clipName = Enum.GetName(typeof(AnimClip), clip);
+        var clipHashId = Animator.StringToHash(clipName);
+        
+        if (!anim.HasState(0, clipHashId))
+            throw new UnityException("The animator does not contain this clip");
+        
+        while (!anim.GetCurrentAnimatorStateInfo(0).IsName(clipName))
+            yield return null;
+    }
+
+    public static IEnumerator WaitAnimationFinish(this Animator anim, AnimClip clip)
+    {
+        yield return anim.WaitAnimationStart(clip);
+        yield return anim.WaitCurrentAnimation();
     }
 }

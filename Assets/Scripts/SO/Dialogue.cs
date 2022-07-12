@@ -6,6 +6,7 @@ namespace ScriptObjects
     [CreateAssetMenu(fileName = "New dialogue", menuName = "Dialogue", order = 0)]
     public class Dialogue : ScriptableObject
     {
+        public Quest quest;
         public Actor actor;
         public List<string> messages;
     }

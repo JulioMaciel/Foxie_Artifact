@@ -2,42 +2,41 @@ using System;
 using ScriptObjects;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Image = UnityEngine.UI.Image;
 
 public class DialogueManager : MonoBehaviour
 {
-    [SerializeField] GameObject Canvas;
-    [SerializeField] Image AvatarImage;
-    [SerializeField] TextMeshProUGUI AuthorTMP;
-    [SerializeField] TextMeshProUGUI MessageTMP;
+    [SerializeField] GameObject canvas;
+    [SerializeField] Image avatarImage;
+    [SerializeField] TextMeshProUGUI authorTMP;
+    [SerializeField] TextMeshProUGUI messageTMP;
 
     Dialogue currentDialogue;
     int currentMessageIndex;
     
-    public static DialogueManager instance;
+    public static DialogueManager Instance;
     
-    public event Action<int> OnEndMessage;
+    public event Action<Quest, int> OnEndMessage;
     
-    void Awake() => instance = this;
+    void Awake() => Instance = this;
 
     public void StartDialogue(Dialogue dialogue)
     {
         currentDialogue = dialogue;
-        Canvas.SetActive(true);
-        AvatarImage.sprite = dialogue.actor.avatar;
-        AuthorTMP.text = dialogue.actor.name; 
-        MessageTMP.text = dialogue.messages[currentMessageIndex];
+        canvas.SetActive(true);
+        avatarImage.sprite = dialogue.actor.avatar;
+        authorTMP.text = dialogue.actor.name; 
+        messageTMP.text = dialogue.messages[currentMessageIndex];
     }
 
     public void ProceedDialogue()
     {
-        OnEndMessage?.Invoke(currentMessageIndex);
+        OnEndMessage?.Invoke(currentDialogue.quest, currentMessageIndex);
         currentMessageIndex++;
 
         if (currentDialogue.messages.Count - 1 >= currentMessageIndex)
-            MessageTMP.text = currentDialogue.messages[currentMessageIndex];
+            messageTMP.text = currentDialogue.messages[currentMessageIndex];
         else
-            Canvas.SetActive(false);
+            canvas.SetActive(false);
     }
 }
