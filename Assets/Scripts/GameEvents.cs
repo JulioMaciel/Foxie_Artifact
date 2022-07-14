@@ -11,14 +11,18 @@ public class GameEvents : MonoBehaviour
     [SerializeField] Volume postProcessingVolume;
     [SerializeField] Camera startingCamera;
     [SerializeField] Camera moveControlCamera;
-    [SerializeField] Dialogue startingDialogue;
+    [SerializeField] DialogueItem welcomeFarmerDialogueItem;
+    [SerializeField] DialogueItem snakeHuntDialogueItem;
+    [SerializeField] DialogueItem snakeFoundDialogueItem;
     [SerializeField] GameObject player;
     [SerializeField] GameObject goldie;
+    [SerializeField] GameObject snake;
+    [SerializeField] GameObject farmer;
     [SerializeField] AudioClip goldieBarkClip;
     [SerializeField] Transform goldieWelcomeFarmerSpot;
-    [SerializeField] GameObject farmer;
     [SerializeField] Transform farmerWaveSpot;
     [SerializeField] Transform farmerWorkSpot;
+    [SerializeField] Transform goldieSnakePigSpot;
 
     Animator goldieAnimator;
     Animator playerAnimator;
@@ -44,7 +48,7 @@ public class GameEvents : MonoBehaviour
 
     void Start()
     {
-        DialogueManager.Instance.StartDialogue(startingDialogue);
+        DialogueManager.Instance.StartDialogue(welcomeFarmerDialogueItem);
     }
 
     void OnEnable()
@@ -53,11 +57,11 @@ public class GameEvents : MonoBehaviour
         QuestPointerManager.Instance.OnApproachTarget += OnApproachQuestTarget;
     }
 
-    void OnEndMessage(Quest quest, int messageIndex)
+    void OnEndMessage(Dialogue dialogue, int messageIndex)
     {
-        switch (quest)
+        switch (dialogue)
         {
-            case Quest.WelcomeFarmer:        
+            case Dialogue.WelcomeFarmer:        
                 switch (messageIndex)
                 {
                     case 0: StartCoroutine(CleanPostProcessing()); break;
@@ -65,16 +69,27 @@ public class GameEvents : MonoBehaviour
                     case 2: StartCoroutine(EnablePlayerControl()); break;
                 }
                 break;
-            case Quest.HuntSnake:
+            case Dialogue.HuntSnake: 
+                switch (messageIndex) 
+                {
+                    case 2: SetSnakeTarget(); break;
+                }
+                break;
+            case Dialogue.SnakeFound:
+                switch (messageIndex)
+                {
+                    case 1: StartAttackSnake(); break;
+                }
                 break;
         }
     }
 
-    void OnApproachQuestTarget(Quest quest)
+    void OnApproachQuestTarget(Target target)
     {
-        switch (quest)
+        switch (target)
         {
-            case Quest.WelcomeFarmer: StartCoroutine(FarmerLeaveHouse()); break;
+            case Target.GoldieWelcomeFarmer: StartCoroutine(FarmerLeaveHouse()); break;
+            case Target.Snake: DialogueManager.Instance.StartDialogue(snakeFoundDialogueItem);break;
         }
     }
 
@@ -180,7 +195,7 @@ public class GameEvents : MonoBehaviour
         goldie.transform.LookAt(farmer.transform);
         GoldieBarks();
         
-        QuestPointerManager.Instance.SetNewTarget(goldie.transform, "Follow Goldie to welcome the farmer", Quest.WelcomeFarmer);
+        QuestPointerManager.Instance.SetNewTarget(goldie.transform, "Follow Goldie to welcome the farmer", Target.GoldieWelcomeFarmer);
     }
 
     IEnumerator FarmerLeaveHouse()
@@ -196,14 +211,27 @@ public class GameEvents : MonoBehaviour
         StartCoroutine(farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position));
         yield return farmerNavMesh.WaitToArrive();
         StartCoroutine(PlayFarmerAnimationWork());
-        
-        // dialogue kill snakes
+
+        DialogueManager.Instance.StartDialogue(snakeHuntDialogueItem);
     }
 
     IEnumerator PlayFarmerAnimationWork()
     {
         yield return farmerNavMesh.WaitToArrive();
         farmerAnimator.SetBool(AnimParam.Human.isWorking, true);
+    }
+
+    void SetSnakeTarget()
+    {
+        QuestPointerManager.Instance.SetNewTarget(snake.transform, "Hunt the snake around the chicks", Target.Snake);
+    }
+
+    void StartAttackSnake()
+    {
+        // show UI
+        // change controls
+        // wait player approaches
+        // enable attack button
     }
     
     void OnDisable()

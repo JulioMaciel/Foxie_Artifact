@@ -11,31 +11,31 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI authorTMP;
     [SerializeField] TextMeshProUGUI messageTMP;
 
-    Dialogue currentDialogue;
+    DialogueItem currentDialogueItem;
     int currentMessageIndex;
     
     public static DialogueManager Instance;
     
-    public event Action<Quest, int> OnEndMessage;
+    public event Action<Dialogue, int> OnEndMessage;
     
     void Awake() => Instance = this;
 
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue(DialogueItem dialogueItem)
     {
-        currentDialogue = dialogue;
+        currentDialogueItem = dialogueItem;
         canvas.SetActive(true);
-        avatarImage.sprite = dialogue.actor.avatar;
-        authorTMP.text = dialogue.actor.name; 
-        messageTMP.text = dialogue.messages[currentMessageIndex];
+        avatarImage.sprite = dialogueItem.actorItem.avatar;
+        authorTMP.text = dialogueItem.actorItem.name; 
+        messageTMP.text = dialogueItem.messages[currentMessageIndex];
     }
 
     public void ProceedDialogue()
     {
-        OnEndMessage?.Invoke(currentDialogue.quest, currentMessageIndex);
+        OnEndMessage?.Invoke(currentDialogueItem.dialogue, currentMessageIndex);
         currentMessageIndex++;
 
-        if (currentDialogue.messages.Count - 1 >= currentMessageIndex)
-            messageTMP.text = currentDialogue.messages[currentMessageIndex];
+        if (currentDialogueItem.messages.Count - 1 >= currentMessageIndex)
+            messageTMP.text = currentDialogueItem.messages[currentMessageIndex];
         else
             canvas.SetActive(false);
     }

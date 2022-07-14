@@ -11,12 +11,12 @@ public class QuestPointerManager : MonoBehaviour
 
     QuestPointerHandler questPointerHandler;
     TextMeshProUGUI questPointerText;
-    Transform target;
-    Quest currentQuest;
+    Transform targetTransform;
+    Target currentTarget;
     
     public static QuestPointerManager Instance;
     
-    public event Action<Quest> OnApproachTarget;
+    public event Action<Target> OnApproachTarget;
     
     void Awake()
     {
@@ -25,15 +25,15 @@ public class QuestPointerManager : MonoBehaviour
         questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    public void SetNewTarget(Transform newTarget, string text, Quest quest)
+    public void SetNewTarget(Transform newTarget, string text, Target target)
     {
         questPointer3D.SetActive(true);
         questPointer2D.SetActive(true);
         
         questPointerHandler.SetTarget(newTarget);
         questPointerText.text = text;
-        target = newTarget;
-        currentQuest = quest;
+        targetTransform = newTarget;
+        currentTarget = target;
 
         StartCoroutine(EraseMessage());
         StartCoroutine(CheckIfApproachedTarget());
@@ -47,10 +47,10 @@ public class QuestPointerManager : MonoBehaviour
 
     IEnumerator CheckIfApproachedTarget()
     {
-        while (!player.transform.position.IsCloseEnough(target.position, 2f))
+        while (!player.transform.position.IsCloseEnough(targetTransform.position, 2f))
             yield return null;
         
-        OnApproachTarget?.Invoke(currentQuest);
+        OnApproachTarget?.Invoke(currentTarget);
         
         questPointer3D.SetActive(false);
         questPointer2D.SetActive(false);
