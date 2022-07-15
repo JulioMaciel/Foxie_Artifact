@@ -11,9 +11,10 @@ public class GameEvents : MonoBehaviour
     [SerializeField] Volume postProcessingVolume;
     [SerializeField] Camera startingCamera;
     [SerializeField] Camera moveControlCamera;
-    [SerializeField] DialogueItem welcomeFarmerDialogueItem;
-    [SerializeField] DialogueItem snakeHuntDialogueItem;
-    [SerializeField] DialogueItem snakeFoundDialogueItem;
+    [SerializeField] DialogueItem welcomeFarmerDialogue;
+    [SerializeField] DialogueItem snakeHuntDialogue;
+    [SerializeField] DialogueItem snakeFoundDialogue;
+    [SerializeField] DialogueItem checkOutFarmerDialogue;
     [SerializeField] GameObject player;
     [SerializeField] GameObject goldie;
     [SerializeField] GameObject snake;
@@ -48,7 +49,7 @@ public class GameEvents : MonoBehaviour
 
     void Start()
     {
-        DialogueManager.Instance.StartDialogue(welcomeFarmerDialogueItem);
+        DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);
     }
 
     void OnEnable()
@@ -89,7 +90,7 @@ public class GameEvents : MonoBehaviour
         switch (target)
         {
             case Target.GoldieWelcomeFarmer: StartCoroutine(FarmerLeaveHouse()); break;
-            case Target.Snake: DialogueManager.Instance.StartDialogue(snakeFoundDialogueItem);break;
+            case Target.Snake: DialogueManager.Instance.StartDialogue(snakeFoundDialogue);break;
         }
     }
 
@@ -212,7 +213,7 @@ public class GameEvents : MonoBehaviour
         yield return farmerNavMesh.WaitToArrive();
         StartCoroutine(PlayFarmerAnimationWork());
 
-        DialogueManager.Instance.StartDialogue(snakeHuntDialogueItem);
+        DialogueManager.Instance.StartDialogue(snakeHuntDialogue);
     }
 
     IEnumerator PlayFarmerAnimationWork()
@@ -223,20 +224,25 @@ public class GameEvents : MonoBehaviour
 
     void SetSnakeTarget()
     {
+        StartCoroutine(goldieNavmesh.MoveAnimating(goldieAnimator, goldieSnakePigSpot.position));
         QuestPointerManager.Instance.SetNewTarget(snake.transform, "Hunt the snake around the chicks", Target.Snake);
     }
 
     void StartAttackSnake()
     {
-        // show UI
-        // change controls
-        // wait player approaches
-        // enable attack button
+        AttackSnakeEvent.Instance.StartEvent();
+        AttackSnakeEvent.Instance.OnEventEnds += OnAttackSnakeEventEnds;
+    }
+
+    void OnAttackSnakeEventEnds()
+    {
+        DialogueManager.Instance.StartDialogue(checkOutFarmerDialogue);
     }
     
     void OnDisable()
     {
         DialogueManager.Instance.OnEndMessage -= OnEndMessage;
         QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
+        AttackSnakeEvent.Instance.OnEventEnds -= OnAttackSnakeEventEnds;
     }
 }

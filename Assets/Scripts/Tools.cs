@@ -40,15 +40,6 @@ public static class Tools
 
     public static IEnumerator WaitCurrentAnimation(this Animator anim)
     {
-        // lenght = 2
-        // if speed < 1 => (0.5)
-            // increase length to 4
-            // so -> 2 ___ 0.5 = 4
-            // 2/.5 = 4
-        // if speed > 1 => (2)
-            // decrease length to 1
-            // so -> 2 ___ 2 = 2
-            // 2/2 => 1
         var clip = anim.GetCurrentAnimatorStateInfo(0);
         var fullLength = clip.length / clip.speed;
         yield return new WaitForSecondsRealtime(fullLength);
@@ -78,5 +69,22 @@ public static class Tools
     {
         yield return anim.WaitAnimationStart(clip);
         yield return anim.WaitCurrentAnimation();
+    }
+
+    public static void TurnBackOn(this Transform trans, Transform target)
+    {
+        trans.rotation = Quaternion.LookRotation(trans.position - target.position);
+    }
+
+    public static IEnumerator LookAtSmoothly(this Transform trans, Transform target, float speed)
+    {
+        var targetRotation = Quaternion.LookRotation(target.transform.position - trans.position);
+        var currentAngle = Quaternion.Angle(trans.rotation, target.rotation);
+        while (currentAngle >= 1)
+        {
+            trans.rotation = Quaternion.Slerp(trans.rotation, targetRotation, speed * Time.deltaTime);
+            currentAngle = Quaternion.Angle(trans.rotation, target.rotation);
+            yield return null;
+        }
     }
 }

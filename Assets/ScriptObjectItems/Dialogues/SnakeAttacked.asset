@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e485e0d9848d4637891991ccd6de2188, type: 3}
-  m_Name: MissedSnake
+  m_Name: SnakeAttacked
   m_EditorClassIdentifier: 
   dialogue: 3
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - Damn it! The snake evaded! But no worries, it will reappear soon. Just wait a
-    few seconds.
+  - Damn it! The snake noticed you! But no worries, let's try it again! Make it smoother
+    this time.

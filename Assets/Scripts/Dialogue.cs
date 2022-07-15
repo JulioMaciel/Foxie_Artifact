@@ -3,7 +3,7 @@
     WelcomeFarmer,
     HuntSnake,
     SnakeFound,
-    MissedSnake,
+    SnakeAttacked,
     CheckOutFarmer,
     AttackBoringIndustry,
     WellDone

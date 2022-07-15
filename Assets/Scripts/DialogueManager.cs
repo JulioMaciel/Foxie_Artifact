@@ -22,6 +22,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(DialogueItem dialogueItem)
     {
+        currentMessageIndex = 0;
         currentDialogueItem = dialogueItem;
         canvas.SetActive(true);
         avatarImage.sprite = dialogueItem.actorItem.avatar;
