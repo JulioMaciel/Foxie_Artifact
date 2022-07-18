@@ -87,4 +87,14 @@ public static class Tools
             yield return null;
         }
     }
+
+    public static IEnumerator MoveUntilArrive(this Transform trans, Transform target, float speed, float tolerance = .5f)
+    {
+        while (!trans.position.IsCloseEnough(target.position, tolerance))
+        {
+            var step = speed * Time.deltaTime;
+            trans.position = Vector3.MoveTowards(trans.position, target.position, step);
+            yield return null;
+        }
+    }
 }

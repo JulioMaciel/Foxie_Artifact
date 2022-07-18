@@ -50,6 +50,10 @@ public class GameEvents : MonoBehaviour
     void Start()
     {
         DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);
+        playerMoveControl.enabled = false;
+        postProcessingVolume.gameObject.SetActive(true);
+        moveControlCamera.gameObject.SetActive(false);
+        startingCamera.gameObject.SetActive(true);
     }
 
     void OnEnable()
