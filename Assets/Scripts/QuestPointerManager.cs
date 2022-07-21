@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using ScriptObjects;
 using TMPro;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class QuestPointerManager : MonoBehaviour
     QuestPointerHandler questPointerHandler;
     TextMeshProUGUI questPointerText;
     Transform targetTransform;
-    Target currentTarget;
+    TargetItem currentTarget;
     
     public static QuestPointerManager Instance;
     
@@ -25,21 +26,21 @@ public class QuestPointerManager : MonoBehaviour
         questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
     }
 
-    public void SetNewTarget(Transform newTarget, string text, Target target)
+    public void SetNewTarget(TargetItem item, Transform target)
     {
         questPointer3D.SetActive(true);
         questPointer2D.SetActive(true);
         
-        questPointerHandler.SetTarget(newTarget);
-        questPointerText.text = text;
-        targetTransform = newTarget;
-        currentTarget = target;
+        currentTarget = item;
+        targetTransform = target;
+        questPointerHandler.SetTarget(targetTransform);
+        questPointerText.text = item.message;
 
-        StartCoroutine(EraseMessage());
+        StartCoroutine(EraseMessageLater());
         StartCoroutine(CheckIfApproachedTarget());
     }
 
-    IEnumerator EraseMessage()
+    IEnumerator EraseMessageLater()
     {
         yield return new WaitForSeconds(5);
         questPointerText.text = string.Empty;
@@ -50,7 +51,7 @@ public class QuestPointerManager : MonoBehaviour
         while (!player.transform.position.IsCloseEnough(targetTransform.position, 2f))
             yield return null;
         
-        OnApproachTarget?.Invoke(currentTarget);
+        OnApproachTarget?.Invoke(currentTarget.target);
         
         questPointer3D.SetActive(false);
         questPointer2D.SetActive(false);

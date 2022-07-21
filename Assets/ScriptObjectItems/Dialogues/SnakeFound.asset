@@ -15,6 +15,5 @@ MonoBehaviour:
   dialogue: 2
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - Foxie, you found a snake!!!
-  - Remember, approach carefully and slowly, otherwise, the snake will hide in the
-    terrain.
+  - {fileID: 11400000, guid: 54f5fdcf341617b458e1c6be45f2e5a8, type: 2}
+  - {fileID: 11400000, guid: c8eeb40b4e90c1f41a6e0efc76178b1e, type: 2}

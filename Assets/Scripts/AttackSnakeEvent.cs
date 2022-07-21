@@ -17,10 +17,14 @@ public class AttackSnakeEvent : MonoBehaviour
     [SerializeField] RectTransform suspicionBar;
     [SerializeField] Slider awarenessSlider;
     [SerializeField] Slider approachSlider;
+    [SerializeField] Image fillAreaAwarenessSlider;
     [SerializeField] DialogueItem snakeAttackedDialogue;
     [SerializeField] AudioClip foxAttackClip;
     [SerializeField] AudioClip snakeAttackClip;
     [SerializeField] AudioClip snakeDieClip;
+    
+    [SerializeField] Color32 awarenessInitialColor = new(255, 238, 196, 255);
+    [SerializeField] Color32 awarenessFinalColor = new(246, 74, 57, 255);
 
     MoveControl playerMoveControl;
     Animator playerAnim;
@@ -31,10 +35,14 @@ public class AttackSnakeEvent : MonoBehaviour
     AttackSnakeCamera attackSnakeCamera;
     AudioSource playerAudio;
     AudioSource snakeAudio;
+    AnimalWanderer snakeAnimalWanderer;
+    IdleEvent snakeIdleEvent;
+    Image suspiciousImage;
 
     Vector3 direction;
 
     bool hasEventStarted;
+    bool canPlayerApproach;
     float suspicionLevel;
     float awarenessLevel;
     float approachSliderValue;
@@ -45,39 +53,47 @@ public class AttackSnakeEvent : MonoBehaviour
     public static AttackSnakeEvent Instance;
     void Awake() => Instance = this;
 
-    void Start() => direction = (snakeSpot.transform.position - playerSpot.transform.position).normalized;
+    // void Start()
+    // {
+    //     direction = (snakeSpot.transform.position - playerSpot.transform.position).normalized;
+    // }
 
-    void OnEnable() => approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
-
-    void Update()
+    void OnEnable()
     {
-        if (!hasEventStarted) return;
-
-        if (awarenessLevel >= 100)
-            StartCoroutine(SnakeAttack());
-        else if (IsCloseEnoughToAttack())
-            StartCoroutine(PlayerAttack());
-        else
-        {
-            ReactToApproachSlider();
-            HandleSuspicion();
-        }
-    }
-
-    public void StartEvent()
-    {
+        approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
+        
         GetRequiredComponents();
         hasEventStarted = true;
         attackSnakeCanvas.gameObject.SetActive(true);
         playerMoveControl.enabled = false;
         freeCameraControl.enabled = false;
         attackSnakeCamera.enabled = true;
-        snake.GetComponent<AnimalWanderer>().enabled = false;
-        snake.GetComponent<IdleEvent>().enabled = false;
-        //StartCoroutine(ManageCamera());
+        snakeAnimalWanderer.enabled = false;
+        snakeIdleEvent.enabled = false;
         ResetControls();
-        // TODO: reduce speed animation walk player???
+        direction = (snakeSpot.transform.position - playerSpot.transform.position).normalized;
     }
+
+    void Update()
+    {
+        if (!hasEventStarted || !canPlayerApproach) return;
+
+        ReactToApproachSlider();
+        StartCoroutine(HandleSuspicion());
+    }
+
+    // public void StartEvent()
+    // {
+    //     GetRequiredComponents();
+    //     hasEventStarted = true;
+    //     attackSnakeCanvas.gameObject.SetActive(true);
+    //     playerMoveControl.enabled = false;
+    //     freeCameraControl.enabled = false;
+    //     attackSnakeCamera.enabled = true;
+    //     snakeAnimalWanderer.enabled = false;
+    //     snakeIdleEvent.enabled = false;
+    //     ResetControls();
+    // }
 
     void GetRequiredComponents()
     {
@@ -88,8 +104,11 @@ public class AttackSnakeEvent : MonoBehaviour
         playerControl = player.GetComponent<CharacterController>();
         freeCameraControl = freeCamera.GetComponent<CameraControl>();
         attackSnakeCamera = freeCamera.GetComponent<AttackSnakeCamera>();
-        playerAudio =  player.GetComponent<AudioSource>();
-        snakeAudio =  snake.GetComponent<AudioSource>();
+        playerAudio = player.GetComponent<AudioSource>();
+        snakeAudio = snake.GetComponent<AudioSource>();
+        snakeAnimalWanderer = snake.GetComponent<AnimalWanderer>();
+        snakeIdleEvent = snake.GetComponent<IdleEvent>();
+        suspiciousImage = suspicionBar.GetComponent<Image>();
     }
 
     void ResetControls()
@@ -103,60 +122,52 @@ public class AttackSnakeEvent : MonoBehaviour
         suspicionLevel = 0;
         awarenessLevel = 0;
         approachSlider.value = 0;
+        canPlayerApproach = true;
+        approachSlider.interactable = true;
         UpdateSuspicionUI();
         UpdateAwarenessUI();        
     }
 
-    IEnumerator ManageCamera()
-    {
-        yield return new WaitForSeconds(1);
-        freeCameraControl.enabled = false;
-        yield return snakeNavMesh.WaitToArrive();
-        yield return freeCamera.transform.LookAtSmoothly(snake.transform, 1f);
-    }
-
     void ReactToApproachSlider()
     {
-        if (approachSliderValue > 0)
-        {
-            playerControl.Move(direction * Time.deltaTime / 6);
-            playerAnim.SetFloat(AnimParam.MoveSpeed, .01f);
-        }
-        else
-            playerAnim.SetFloat(AnimParam.MoveSpeed, 0);
+        if (approachSliderValue > 0) 
+            playerControl.Move(direction * approachSlider.value / 10);
+
+        playerAnim.SetFloat(AnimParam.MoveSpeed, approachSlider.value);
+        var walkMultiplier = Mathf.Clamp01(approachSlider.value * 3);
+        playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, walkMultiplier);
     }
 
-    void HandleSuspicion()
+    IEnumerator HandleSuspicion()
     {
         if (approachSlider.value == 0 && suspicionLevel > 0) 
-            suspicionLevel -= Time.deltaTime * 2;
+            suspicionLevel -= Time.deltaTime * 6;
         else
         {
             if (suspicionLevel <= 100) 
-                suspicionLevel += Time.deltaTime * approachSlider.value * 50;
+                suspicionLevel += Time.deltaTime * approachSlider.value * 75;
 
             if (suspicionLevel >= 25)
             {
-                awarenessLevel += Time.deltaTime * 5f;
+                awarenessLevel += suspicionLevel / 150;
                 UpdateAwarenessUI();
             }
         }
         UpdateSuspicionUI();
-    }
 
-    bool IsCloseEnoughToAttack()
-    {
-        return player.transform.position.IsCloseEnough(snake.transform.position);
+        if (awarenessLevel >= 100)
+            yield return SnakeAttack();
+        else if (player.transform.position.IsCloseEnough(snake.transform.position, 1))
+            yield return PlayerAttack();
     }
 
     IEnumerator SnakeAttack()
     {
+        canPlayerApproach = false;
+        approachSlider.interactable = false;
         playerAnim.SetFloat(AnimParam.MoveSpeed, 0);
         snakeNavMesh.TrySetWorldDestination(player.transform.position);
-        yield return snakeNavMesh.WaitToArrive(2);
-        // closer camera
-        //StartCoroutine(freeCamera.transform.MoveUntilArrive(player.transform, .5f, 3f));
-        
+        yield return snakeNavMesh.WaitToArrive(1.5f);
         snakeAnim.SetTrigger(AnimParam.Attack);
         snakeAudio.clip = snakeAttackClip;
         snakeAudio.Play();
@@ -168,6 +179,8 @@ public class AttackSnakeEvent : MonoBehaviour
 
     IEnumerator PlayerAttack()
     {
+        canPlayerApproach = false;
+        approachSlider.interactable = false;
         playerAnim.SetTrigger(AnimParam.Attack);
         playerAudio.clip = foxAttackClip;
         playerAudio.Play();
@@ -183,12 +196,20 @@ public class AttackSnakeEvent : MonoBehaviour
     {
         var scaledAwareness = awarenessLevel / 100;
         awarenessSlider.value = scaledAwareness;
+        
+        var nextColor = Color32.Lerp(awarenessInitialColor,awarenessFinalColor, scaledAwareness);
+        fillAreaAwarenessSlider.color = nextColor;
     }
 
     void UpdateSuspicionUI()
     {
         var scaledSuspicion = suspicionLevel / 100;
         suspicionBar.localScale = new Vector3(1f, scaledSuspicion, 1f);
+        
+        var currentAlpha = Mathf.Lerp(115, 215, scaledSuspicion);
+        var tempColor = (Color32)suspiciousImage.color;
+        tempColor.a = (byte)currentAlpha;
+        suspiciousImage.color = tempColor;
     }
 
     void EndEvent()
@@ -198,6 +219,7 @@ public class AttackSnakeEvent : MonoBehaviour
         playerMoveControl.enabled = true;
         freeCameraControl.enabled = true;
         attackSnakeCamera.enabled = false;
+        playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
         OnEventEnds?.Invoke();
     }
 

@@ -36,6 +36,8 @@ public static class Tools
     {
         while (!HasPracticallyArrived(agent, tolerance))
             yield return null;
+
+        agent.ResetPath();
     }
 
     public static IEnumerator WaitCurrentAnimation(this Animator anim)

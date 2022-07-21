@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace ScriptObjects
 {
-    [CreateAssetMenu(fileName = "New dialogue", menuName = "Dialogue", order = 0)]
+    [CreateAssetMenu(fileName = "New dialogue", menuName = "Dialogue/Dialogue", order = 0)]
     public class DialogueItem : ScriptableObject
     {
         public Dialogue dialogue;
         public ActorItem actorItem;
-        public List<string> messages;
+        public List<MessageItem> messages;
     }
 }

@@ -1,15 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DebugMode : MonoBehaviour
 {
-    [SerializeField] Animator playerAnimator;
+    [SerializeField] MainGameEvent startAtEvent;
     
     void Start()
     {
-        playerAnimator.SetTrigger(AnimParam.StandUp);
-        AttackSnakeEvent.Instance.StartEvent();
-        GetComponent<GameEvents>().enabled = false;
+        switch (startAtEvent)
+        {
+            case MainGameEvent.AttackSnake:
+                GetComponent<WakeUpEvent>().enabled = false;
+                GetComponent<AttackSnakeEvent>().enabled = true;
+                break;
+        }
+    }
+
+    public enum MainGameEvent
+    {
+        WakeUp,
+        AttackSnake,
     }
 }

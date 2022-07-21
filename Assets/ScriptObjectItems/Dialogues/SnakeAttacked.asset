@@ -15,5 +15,4 @@ MonoBehaviour:
   dialogue: 3
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - Damn it! The snake noticed you! But no worries, let's try it again! Make it smoother
-    this time.
+  - {fileID: 11400000, guid: 76a57a1172339ec4782b6f9dbf4b861b, type: 2}

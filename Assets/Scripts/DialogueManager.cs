@@ -12,31 +12,37 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI messageTMP;
 
     DialogueItem currentDialogueItem;
+    MessageItem currentMessageItem;
     int currentMessageIndex;
     
+    public event Action<DialogueEvent> OnDialogueEvent;
+    
     public static DialogueManager Instance;
-    
-    public event Action<Dialogue, int> OnEndMessage;
-    
     void Awake() => Instance = this;
 
     public void StartDialogue(DialogueItem dialogueItem)
     {
         currentMessageIndex = 0;
         currentDialogueItem = dialogueItem;
+        currentMessageItem = currentDialogueItem.messages[currentMessageIndex];
         canvas.SetActive(true);
-        avatarImage.sprite = dialogueItem.actorItem.avatar;
-        authorTMP.text = dialogueItem.actorItem.name; 
-        messageTMP.text = dialogueItem.messages[currentMessageIndex];
+        avatarImage.sprite = currentDialogueItem.actorItem.avatar;
+        authorTMP.text = currentDialogueItem.actorItem.name; 
+        messageTMP.text = currentMessageItem.message;
     }
 
     public void ProceedDialogue()
     {
-        OnEndMessage?.Invoke(currentDialogueItem.dialogue, currentMessageIndex);
+        if (currentMessageItem.sequentialEvent != DialogueEvent.None)
+            OnDialogueEvent?.Invoke(currentMessageItem.sequentialEvent);
+        
         currentMessageIndex++;
 
-        if (currentDialogueItem.messages.Count - 1 >= currentMessageIndex)
-            messageTMP.text = currentDialogueItem.messages[currentMessageIndex];
+        if (currentDialogueItem.messages.Count >= currentMessageIndex + 1)
+        {
+            currentMessageItem = currentDialogueItem.messages[currentMessageIndex];
+            messageTMP.text = currentMessageItem.message;
+        }
         else
             canvas.SetActive(false);
     }

@@ -15,7 +15,6 @@ MonoBehaviour:
   dialogue: 1
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - Alright, he started to work. Now it is our time to help. Let's go!
-  - As we did yesteday, let's see if there is any snake around the animals. If you
-    find any, attack it.
-  - You go check the chicks and I the pigs.
+  - {fileID: 11400000, guid: 8561f4ab17d5a7544a77e5d96424f45d, type: 2}
+  - {fileID: 11400000, guid: b1911c56532cc2c4fb25b8fbda8d551d, type: 2}
+  - {fileID: 11400000, guid: 3001fbb85194036428b0338cdaf6fadc, type: 2}

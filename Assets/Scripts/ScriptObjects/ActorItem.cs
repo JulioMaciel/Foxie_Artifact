@@ -2,7 +2,7 @@
 
 namespace ScriptObjects
 {
-    [CreateAssetMenu(fileName = "New actor", menuName = "Actor", order = 0)]
+    [CreateAssetMenu(fileName = "New Actor", menuName = "Dialogue/Actor", order = 1)]
     public class ActorItem : ScriptableObject
     {
         public new string name;

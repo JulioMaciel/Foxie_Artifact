@@ -67,7 +67,7 @@ public class MoveControl : MonoBehaviour
     void Jump()
     {
         playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * Gravity);
-        animator.SetTrigger(AnimParam.Jump);
+        animator.SetTrigger(AnimParam.Fox.Jump);
     }
 
     void Move()

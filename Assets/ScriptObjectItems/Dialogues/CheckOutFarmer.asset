@@ -15,5 +15,5 @@ MonoBehaviour:
   dialogue: 4
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - You did it, Foxie! Good work!
-  - Now let's see how the farmer is going.
+  - {fileID: 11400000, guid: 3f0ade1f36a0593429c73cbc2f3294f3, type: 2}
+  - {fileID: 11400000, guid: 4ad1fd451c1c3c84f9af505eea61ca75, type: 2}

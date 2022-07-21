@@ -2,11 +2,17 @@ using UnityEngine;
 
 public static class AnimParam
 {
-    public static int StandUp = Animator.StringToHash("StandUp");
     public static int MoveSpeed = Animator.StringToHash("MoveSpeed");
-    public static int Jump = Animator.StringToHash("Jump");
     public static int Attack = Animator.StringToHash("Attack");
     public static int IdleEvent = Animator.StringToHash("IdleEvent");
+    
+    public static class Fox
+    {
+        public static int WalkMultiplier = Animator.StringToHash("walkMultiplier");
+        public static int StandUp = Animator.StringToHash("StandUp");
+        public static int Jump = Animator.StringToHash("Jump");
+        public static int Sleep = Animator.StringToHash("Sleep");
+    }
 
     public static class Goldie
     {
@@ -28,5 +34,5 @@ public static class AnimParam
 public enum AnimClip
 {
     Idle,
-    Wave,
+    Wave
 }

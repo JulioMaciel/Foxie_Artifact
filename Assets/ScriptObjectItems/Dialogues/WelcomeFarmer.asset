@@ -15,6 +15,6 @@ MonoBehaviour:
   dialogue: 0
   actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
   messages:
-  - Hey Foxie!
-  - Wake up!!!
-  - The farmer is almost leaving the house. Let's go!
+  - {fileID: 11400000, guid: 8f1b154151136d644a3d83bb8b2b4c6c, type: 2}
+  - {fileID: 11400000, guid: 83dcd28c7632aca47b6eb4b0fd2ae47f, type: 2}
+  - {fileID: 11400000, guid: bc05faaeaa4f623448e4e068b306186d, type: 2}
