@@ -4,6 +4,7 @@ using System.Linq;
 using StaticData;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace Tools
 {
@@ -101,6 +102,18 @@ namespace Tools
                 trans.position = Vector3.MoveTowards(trans.position, target.position, step);
                 yield return null;
             }
+        }
+
+        public static void PlayClip(this AudioSource audioSource, AudioClip clip)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+
+        public static void PlayRandomClip(this AudioSource audioSource, AudioClip[] clips)
+        {
+            var rndClip = clips[Random.Range(0, clips.Length)];
+            audioSource.PlayClip(rndClip);
         }
     }
 }

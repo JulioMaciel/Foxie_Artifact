@@ -149,8 +149,7 @@ namespace GameEvents
         void GoldieBarks()
         {
             goldieAnimator.SetTrigger(AnimParam.Goldie.Bark);
-            goldieAudio.clip = goldieBarkClip;
-            goldieAudio.Play();   
+            goldieAudio.PlayClip(goldieBarkClip);   
         }
 
         IEnumerator MoveCameraToControlPosition()

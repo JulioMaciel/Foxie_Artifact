@@ -159,8 +159,7 @@ namespace GameEvents
             snakeNavMesh.TrySetWorldDestination(player.transform.position);
             yield return snakeNavMesh.WaitToArrive(1.5f);
             snakeAnim.SetTrigger(AnimParam.Attack);
-            snakeAudio.clip = snakeAttackClip;
-            snakeAudio.Play();
+            snakeAudio.PlayClip(snakeAttackClip);
             yield return new WaitForSeconds(2);
             DialogueManager.Instance.StartDialogue(snakeAttackedDialogue);
             yield return new WaitForSeconds(3);
@@ -172,12 +171,10 @@ namespace GameEvents
             canPlayerApproach = false;
             approachSlider.interactable = false;
             playerAnim.SetTrigger(AnimParam.Attack);
-            playerAudio.clip = foxAttackClip;
-            playerAudio.Play();
+            playerAudio.PlayClip(foxAttackClip);
             yield return new WaitForSeconds(1);
             snakeAnim.SetTrigger(AnimParam.Snake.Die);
-            snakeAudio.clip = snakeDieClip;
-            snakeAudio.Play();
+            snakeAudio.PlayClip(snakeDieClip);
             //TODO: add poof particle effect
             EndEvent();
         }
@@ -211,6 +208,7 @@ namespace GameEvents
             attackSnakeCamera.enabled = false;
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
             OnEventEnds?.Invoke();
+            enabled = false;
         }
 
         void OnDisable()

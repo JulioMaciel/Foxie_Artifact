@@ -15,6 +15,10 @@ namespace Tools
                     GetComponent<WakeUpEvent>().enabled = false;
                     GetComponent<AttackSnakeEvent>().enabled = true;
                     break;
+                case MainGameEvent.BoringIndustry:
+                    GetComponent<WakeUpEvent>().enabled = false;
+                    GetComponent<BoringIndustryEvent>().enabled = true;
+                    break;
             }
         }
 
@@ -22,6 +26,7 @@ namespace Tools
         {
             WakeUp,
             AttackSnake,
+            BoringIndustry,
         }
     }
 }

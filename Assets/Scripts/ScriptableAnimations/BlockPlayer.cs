@@ -74,8 +74,7 @@ namespace ScriptableAnimations
             if (warningAudioClips.Count < 1) return;
         
             var rndClip = warningAudioClips[Random.Range(0, warningAudioClips.Count)];
-            audioSource.clip = rndClip;
-            audioSource.Play();
+            audioSource.PlayClip(rndClip);
         }
     
         void OnTriggerEnter(Collider other)

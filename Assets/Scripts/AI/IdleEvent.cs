@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StaticData;
+using Tools;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -50,8 +51,7 @@ namespace AI
             if (audioClips.Count >= 1)
             {
                 var rndClip = audioClips[Random.Range(0, audioClips.Count)];
-                audioSource.clip = rndClip;
-                audioSource.Play();            
+                audioSource.PlayClip(rndClip);            
             }
         
             willTrigger = false;
