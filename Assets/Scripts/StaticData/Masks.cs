@@ -11,5 +11,7 @@ namespace StaticData
         public static int Water = LayerMask.GetMask("Water");
         public static int UI = LayerMask.GetMask("UI");
         public static int Obstacle = LayerMask.GetMask("Obstacle");
+        public static int GrassTerrain = LayerMask.GetMask("GrassTerrain");
+        public static int SandTerrain = LayerMask.GetMask("SandTerrain");
     }
 }

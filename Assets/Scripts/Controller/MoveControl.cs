@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using StaticData;
 using Tools;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Controller
 {
@@ -11,16 +13,11 @@ namespace Controller
         [SerializeField] float jumpHeight = 1f;
         [SerializeField] float rotationSpeed = 25f;
         [SerializeField] Transform freeCamera;
-        [SerializeField] AudioClip stepGrassClip;
-        [SerializeField] AudioClip stepEarthClip;
-        [SerializeField] GameObject stepDustEffect;
     
         const float Gravity = -10f;
 
         CharacterController controller;
         Animator animator;
-        AudioSource audioSource;
-
         Vector3 direction;
         Vector3 playerVelocity;
         Vector3 moveDirection;
@@ -32,9 +29,7 @@ namespace Controller
         {
             controller = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
-            audioSource = GetComponent<AudioSource>();
         }
-        // TODO: footprint sound effect by animation clip + dust (run only)
 
         void Update()
         {
@@ -99,18 +94,6 @@ namespace Controller
         
             var targetRotation = Quaternion.LookRotation(forwardV3);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
-        }
-
-        /*
-         * Called by animation clip
-         * TODO: only dust when over earth by masking
-         * TODO: Pooling system
-         */
-        void Step()
-        {
-            audioSource.PlayClip(stepGrassClip);
-            var dust = Instantiate(stepDustEffect);
-            dust.transform.position = gameObject.transform.position;
         }
     }
 }

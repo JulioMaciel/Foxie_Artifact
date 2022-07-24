@@ -1,4 +1,5 @@
 using StaticData;
+using Tools;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,13 +15,13 @@ namespace AI
 
         Animator animator;
         Transform target;
-        NavMeshAgent agent;
+        NavMeshAgent navMesh;
 
         public float Timer { get; private set; }
 
         void Awake () 
         {
-            agent = GetComponent<NavMeshAgent> ();
+            navMesh = GetComponent<NavMeshAgent> ();
             animator = gameObject.GetComponent<Animator>();
         
             Timer = wanderTimer - Random.Range(0, wanderTimer);
@@ -38,16 +39,15 @@ namespace AI
 
         void SyncAnimation()
         {
-            if (!agent.hasPath) return;
-        
-            var hasAlmostArrived = agent.remainingDistance < 0.1;
-            animator.SetFloat(AnimParam.MoveSpeed, hasAlmostArrived ? 0 : 0.9f);
+            if (!navMesh.hasPath) return;
+            
+            animator.SetFloat(AnimParam.MoveSpeed, navMesh.HasPracticallyArrived() ? 0 : 0.9f);
         }
 
         void Move()
         {
             var newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-            agent.SetDestination(newPos);
+            navMesh.SetDestination(newPos);
             Timer = 0;
         }
 

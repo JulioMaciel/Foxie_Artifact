@@ -5,17 +5,17 @@ namespace ScriptableAnimations
 {
     public class AnimateCircularBlades : MonoBehaviour
     {
-        [SerializeField] int Speed;
+        [SerializeField] int speed;
 
         void Start()
         {
-            if (Speed == 0)
-                Speed = Random.Range(45, 145);
+            if (speed == 0)
+                speed = Random.Range(45, 145);
         }
 
         void Update()
         {
-            transform.RotateAround(transform.position, transform.forward, Time.deltaTime * Speed);
+            transform.RotateAround(transform.position, transform.forward, Time.deltaTime * speed);
         }
     }
 }

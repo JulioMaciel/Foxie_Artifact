@@ -6,9 +6,6 @@ namespace UI
 {
     public class DialogueControl : MonoBehaviour, IPointerClickHandler
     {
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            DialogueManager.Instance.ProceedDialogue();
-        }
+        public void OnPointerClick(PointerEventData eventData) => DialogueManager.Instance.ProceedDialogue();
     }
 }
