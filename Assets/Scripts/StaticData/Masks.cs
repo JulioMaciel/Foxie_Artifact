@@ -2,7 +2,7 @@
 
 namespace StaticData
 {
-    public static class Masks
+    public struct Masks
     {
         public static int Default = LayerMask.GetMask("Default");
         public static int TransparentFX = LayerMask.GetMask("TransparentFX");

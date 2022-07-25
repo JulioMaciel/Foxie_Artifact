@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Water
+  - Goldie
+  - Farmer
+  - Snake
   layers:
   - Default
   - TransparentFX

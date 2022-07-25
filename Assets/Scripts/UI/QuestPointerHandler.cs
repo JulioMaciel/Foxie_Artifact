@@ -4,13 +4,17 @@ namespace UI
 {
     public class QuestPointerHandler : MonoBehaviour
     {
-        [SerializeField] Camera freeCamera;
-    
+        Camera mainCamera;
         Transform target;
+
+        void Awake()
+        {
+            mainCamera = Camera.main;
+        }
 
         void Update()
         {
-            var direction = (freeCamera.transform.position - target.transform.position).normalized;
+            var direction = (mainCamera.transform.position - target.transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(-direction);
         }
 

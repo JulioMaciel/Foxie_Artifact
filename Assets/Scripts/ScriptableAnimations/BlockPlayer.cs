@@ -25,10 +25,10 @@ namespace ScriptableAnimations
 
         void Awake()
         {
+            player = GameObject.FindWithTag(Tags.Player);
             agent = GetComponent<NavMeshAgent>();
             animator = gameObject.GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
-            player = GameObject.FindWithTag("Player");
         }
 
         void OnEnable()
@@ -79,7 +79,7 @@ namespace ScriptableAnimations
     
         void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag("Player")) return;
+            if (!other.gameObject.CompareTag(Tags.Player)) return;
         
             EmitWarningSound();
         

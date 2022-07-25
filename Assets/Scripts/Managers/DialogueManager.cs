@@ -9,7 +9,7 @@ namespace Managers
 {
     public class DialogueManager : MonoBehaviour
     {
-        [SerializeField] GameObject canvas;
+        [SerializeField] RectTransform dialogueCanvas;
         [SerializeField] Image avatarImage;
         [SerializeField] TextMeshProUGUI authorTMP;
         [SerializeField] TextMeshProUGUI messageTMP;
@@ -28,7 +28,7 @@ namespace Managers
             currentMessageIndex = 0;
             currentDialogueItem = dialogueItem;
             currentMessageItem = currentDialogueItem.messages[currentMessageIndex];
-            canvas.SetActive(true);
+            dialogueCanvas.gameObject.SetActive(true);
             avatarImage.sprite = currentDialogueItem.actorItem.avatar;
             authorTMP.text = currentDialogueItem.actorItem.name; 
             messageTMP.text = currentMessageItem.message;
@@ -47,7 +47,7 @@ namespace Managers
                 messageTMP.text = currentMessageItem.message;
             }
             else
-                canvas.SetActive(false);
+                dialogueCanvas.gameObject.SetActive(false);
         }
     }
 }

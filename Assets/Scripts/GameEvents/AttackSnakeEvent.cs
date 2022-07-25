@@ -16,9 +16,6 @@ namespace GameEvents
 {
     public class AttackSnakeEvent : MonoBehaviour
     {
-        [SerializeField] GameObject freeCamera;
-        [SerializeField] GameObject player;
-        [SerializeField] GameObject snake;
         [SerializeField] Transform playerSpot;
         [SerializeField] Transform snakeSpot;
         [SerializeField] RectTransform attackSnakeCanvas;
@@ -40,12 +37,15 @@ namespace GameEvents
         NavMeshAgent snakeNavMesh;
         CharacterController playerControl;
         FreeCameraControl freeFreeCameraControl;
-        AttackSnakeCamera attackSnakeCamera;
+        AttackSnakeCamera snakeAttackCameraControl;
         AudioSource playerAudio;
         AudioSource snakeAudio;
         AnimalWanderer snakeAnimalWanderer;
         IdleEvent snakeIdleEvent;
         Image suspiciousImage;
+        GameObject player;
+        GameObject snake;
+        Camera mainCamera;
 
         Vector3 direction;
 
@@ -59,18 +59,19 @@ namespace GameEvents
         public Action OnEventEnds; 
     
         public static AttackSnakeEvent Instance;
+        
         void Awake() => Instance = this;
 
         void OnEnable()
         {
             approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
         
-            GetRequiredComponents();
+            SetComponents();
             hasEventStarted = true;
             attackSnakeCanvas.gameObject.SetActive(true);
             playerMoveControl.enabled = false;
             freeFreeCameraControl.enabled = false;
-            attackSnakeCamera.enabled = true;
+            snakeAttackCameraControl.enabled = true;
             snakeAnimalWanderer.enabled = false;
             snakeIdleEvent.enabled = false;
             ResetControls();
@@ -85,15 +86,18 @@ namespace GameEvents
             StartCoroutine(HandleSuspicion());
         }
 
-        void GetRequiredComponents()
+        void SetComponents()
         {
+            player = GameObject.FindWithTag(Tags.Player);
+            snake = GameObject.FindWithTag(Tags.Snake);
+            mainCamera = Camera.main;
             playerMoveControl = player.GetComponent<MoveControl>();
             playerAnim = player.GetComponent<Animator>();
             snakeAnim = snake.GetComponent<Animator>();
             snakeNavMesh = snake.GetComponent<NavMeshAgent>();
             playerControl = player.GetComponent<CharacterController>();
-            freeFreeCameraControl = freeCamera.GetComponent<FreeCameraControl>();
-            attackSnakeCamera = freeCamera.GetComponent<AttackSnakeCamera>();
+            freeFreeCameraControl = mainCamera.GetComponent<FreeCameraControl>();
+            snakeAttackCameraControl = mainCamera.GetComponent<AttackSnakeCamera>();
             playerAudio = player.GetComponent<AudioSource>();
             snakeAudio = snake.GetComponent<AudioSource>();
             snakeAnimalWanderer = snake.GetComponent<AnimalWanderer>();
@@ -205,7 +209,7 @@ namespace GameEvents
             attackSnakeCanvas.gameObject.SetActive(false);
             playerMoveControl.enabled = true;
             freeFreeCameraControl.enabled = true;
-            attackSnakeCamera.enabled = false;
+            snakeAttackCameraControl.enabled = false;
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
             OnEventEnds?.Invoke();
             enabled = false;

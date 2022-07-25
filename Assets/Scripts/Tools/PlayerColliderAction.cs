@@ -1,4 +1,5 @@
 using System;
+using StaticData;
 using UnityEngine;
 
 namespace Tools
@@ -9,7 +10,7 @@ namespace Tools
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag(Tags.Player))
                 OnPlayerTouches?.Invoke();
         }
     }

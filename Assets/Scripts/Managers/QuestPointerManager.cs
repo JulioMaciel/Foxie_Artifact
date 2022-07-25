@@ -11,10 +11,10 @@ namespace Managers
 {
     public class QuestPointerManager : MonoBehaviour
     {
-        [SerializeField] GameObject questPointer3D;
-        [SerializeField] GameObject questPointer2D;
-        [SerializeField] GameObject player;
-
+        [SerializeField] Transform questPointer3D;
+        [SerializeField] RectTransform questPointer2D;
+        
+        GameObject player;
         QuestPointerHandler questPointerHandler;
         TextMeshProUGUI questPointerText;
         Transform targetTransform;
@@ -27,14 +27,15 @@ namespace Managers
         void Awake()
         {
             Instance = this;
+            player = GameObject.FindWithTag(Tags.Player);
             questPointerHandler = questPointer3D.GetComponentInChildren<QuestPointerHandler>();
             questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
         }
 
         public void SetNewTarget(TargetItem item, Transform target)
         {
-            questPointer3D.SetActive(true);
-            questPointer2D.SetActive(true);
+            questPointer3D.gameObject.SetActive(true);
+            questPointer2D.gameObject.SetActive(true);
         
             currentTarget = item;
             targetTransform = target;
@@ -58,8 +59,8 @@ namespace Managers
         
             OnApproachTarget?.Invoke(currentTarget.target);
         
-            questPointer3D.SetActive(false);
-            questPointer2D.SetActive(false);
+            questPointer3D.gameObject.SetActive(false);
+            questPointer2D.gameObject.SetActive(false);
         } 
     }
 }

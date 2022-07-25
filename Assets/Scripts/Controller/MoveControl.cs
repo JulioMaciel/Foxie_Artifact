@@ -12,10 +12,10 @@ namespace Controller
         [SerializeField] float playerSpeed = 5f;
         [SerializeField] float jumpHeight = 1f;
         [SerializeField] float rotationSpeed = 25f;
-        [SerializeField] Transform freeCamera;
     
         const float Gravity = -10f;
 
+        Camera mainCamera;
         CharacterController controller;
         Animator animator;
         Vector3 direction;
@@ -27,6 +27,7 @@ namespace Controller
 
         void Awake()
         {
+            mainCamera = Camera.main;
             controller = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
         }
@@ -77,7 +78,7 @@ namespace Controller
 
         void Move()
         {
-            var camDir = freeCamera.transform.TransformDirection(direction);
+            var camDir = mainCamera.transform.TransformDirection(direction);
             var flatMovement = playerSpeed * Time.deltaTime * camDir;
             moveDirection = new Vector3(flatMovement.x, moveDirection.y, flatMovement.z);
             controller.Move(moveDirection);

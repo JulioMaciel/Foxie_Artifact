@@ -7,6 +7,7 @@ using UnityEngine.Pool;
 namespace Controller
 {
     [RequireComponent(typeof(AudioSource))]
+    
     public class FootstepControl : MonoBehaviour
     {
         [SerializeField] GameObject footstepObject;

@@ -2,6 +2,7 @@ using StaticData;
 using Tools;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace AI
 {
@@ -23,10 +24,13 @@ namespace AI
         {
             navMesh = GetComponent<NavMeshAgent> ();
             animator = gameObject.GetComponent<Animator>();
-        
+        }
+
+        void Start()
+        {
             Timer = wanderTimer - Random.Range(0, wanderTimer);
         }
- 
+
         void Update () 
         {
             SyncAnimation();

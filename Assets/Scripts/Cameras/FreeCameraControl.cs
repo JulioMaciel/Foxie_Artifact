@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using StaticData;
+using UnityEngine;
 
 namespace Cameras
 {
     public class FreeCameraControl : MonoBehaviour
     {
-        [SerializeField] Transform target;
+        //[SerializeField] Transform target;
 
         [SerializeField] float targetHeight = 1f;
         [SerializeField] float distance = 5.0f;
@@ -15,8 +16,14 @@ namespace Cameras
         [SerializeField] int yMinLimit = 15;
         [SerializeField] int yMaxLimit = 50;
         [SerializeField] LayerMask collisionLayers = -1;
-
+        
+        Transform target;
         float xAngle, yAngle, currentDistance, desiredDistance, correctedDistance;
+
+        void Awake()
+        {
+            target = GameObject.FindWithTag(Tags.Player).transform;
+        }
 
         void Start()
         {
@@ -55,10 +62,15 @@ namespace Cameras
                 isCorrected = true;
             }
 
-            currentDistance = !isCorrected || correctedDistance > currentDistance ? 
-                Mathf.Lerp(currentDistance, correctedDistance, Time.deltaTime) : 
-                correctedDistance;
-        
+            // currentDistance = !isCorrected || correctedDistance > currentDistance ? 
+            //     Mathf.Lerp(currentDistance, correctedDistance, Time.deltaTime) : 
+            //     correctedDistance;
+
+            if (!isCorrected || correctedDistance > currentDistance)
+                currentDistance = Mathf.Lerp(currentDistance, correctedDistance, Time.deltaTime);
+            else 
+                currentDistance = correctedDistance;
+
             currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
 
             position = tarPos - (rotation * Vector3.forward * currentDistance + vTargetOffset);

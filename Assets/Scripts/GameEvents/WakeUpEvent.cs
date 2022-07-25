@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cameras;
 using Controller;
 using Managers;
 using ScriptableObjects;
@@ -15,21 +16,16 @@ namespace GameEvents
     public class WakeUpEvent : MonoBehaviour
     {
         [SerializeField] Volume postProcessingVolume;
-        [SerializeField] Camera startingCamera;
-        [SerializeField] Camera moveControlCamera;
         [SerializeField] DialogueItem welcomeFarmerDialogue;
         [SerializeField] DialogueItem snakeHuntDialogue;
         [SerializeField] DialogueItem snakeFoundDialogue;
         [SerializeField] DialogueItem checkOutFarmerDialogue;
-        [SerializeField] GameObject player;
-        [SerializeField] GameObject goldie;
-        [SerializeField] GameObject snake;
-        [SerializeField] GameObject farmer;
         [SerializeField] AudioClip goldieBarkClip;
         [SerializeField] Transform goldieWelcomeFarmerSpot;
         [SerializeField] Transform farmerWaveSpot;
         [SerializeField] Transform farmerWorkSpot;
         [SerializeField] Transform goldieSnakePigSpot;
+        [SerializeField] Transform cameraWakeUpSpot;
         [SerializeField] TargetItem goldieTarget;
         [SerializeField] TargetItem snakeTarget;
 
@@ -40,12 +36,23 @@ namespace GameEvents
         NavMeshAgent goldieNavmesh;
         NavMeshAgent farmerNavMesh;
         AudioSource goldieAudio;
+        
+        Camera mainCamera;
+        GameObject player;
+        GameObject goldie;
+        GameObject snake;
+        GameObject farmer;
     
         bool isVignetteCleaned;
         bool isSaturationCleaned;
 
         void Awake()
         {
+            mainCamera = Camera.main;
+            player = GameObject.FindWithTag(Tags.Player);
+            goldie = GameObject.FindWithTag(Tags.Goldie);
+            farmer = GameObject.FindWithTag(Tags.Farmer);
+            snake = GameObject.FindWithTag(Tags.Snake);
             goldieAnimator = goldie.GetComponent<Animator>();
             playerAnimator = player.GetComponent<Animator>();
             farmerAnimator = farmer.GetComponent<Animator>();
@@ -61,8 +68,6 @@ namespace GameEvents
             DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);
             playerMoveControl.enabled = false;
             postProcessingVolume.gameObject.SetActive(true);
-            moveControlCamera.gameObject.SetActive(false);
-            startingCamera.gameObject.SetActive(true);
         }
 
         void OnEnable()
@@ -76,7 +81,7 @@ namespace GameEvents
             switch (dialogueEvent)
             {
                 case DialogueEvent.CleanSleepingPP: StartCoroutine(CleanPostProcessing()); break;
-                case DialogueEvent.MoveWakingCamera: MoveToControlCamera(); break;
+                case DialogueEvent.MoveWakingCamera: MoveCameraWhileWakeUp(); break;
                 case DialogueEvent.EnablePlayerControl: StartCoroutine(EnablePlayerControl()); break;
                 case DialogueEvent.SetSnakeTarget: SetSnakeTarget(); break;
                 case DialogueEvent.StartAttackSnakeEvent: StartAttackSnake(); break;
@@ -139,10 +144,10 @@ namespace GameEvents
             isSaturationCleaned = true;
         }
 
-        void MoveToControlCamera()
+        void MoveCameraWhileWakeUp()
         {
-            StartCoroutine(MoveCameraToControlPosition());
-            StartCoroutine(RotateCameraToControlRotation());
+            StartCoroutine(MoveCameraToWakeUpSpot());
+            StartCoroutine(RotateCameraToWakeUpSpot());
             GoldieBarks();
         }
 
@@ -152,31 +157,29 @@ namespace GameEvents
             goldieAudio.PlayClip(goldieBarkClip);   
         }
 
-        IEnumerator MoveCameraToControlPosition()
+        IEnumerator MoveCameraToWakeUpSpot()
         {
-            while (!startingCamera.transform.position.IsCloseEnough(moveControlCamera.transform.position))
+            while (!mainCamera.transform.position.IsCloseEnough(cameraWakeUpSpot.transform.position))
             {
                 var speed = Time.deltaTime;
-                startingCamera.transform.position = Vector3.Lerp(startingCamera.transform.position, moveControlCamera.transform.position, speed);
+                mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraWakeUpSpot.transform.position, speed);
                 yield return null;
             }
         }
 
-        IEnumerator RotateCameraToControlRotation()
+        IEnumerator RotateCameraToWakeUpSpot()
         {
-            while (startingCamera.transform.rotation.normalized != moveControlCamera.transform.rotation.normalized)
+            while (mainCamera.transform.rotation.normalized != cameraWakeUpSpot.transform.rotation.normalized)
             {
                 var speed = Time.deltaTime;
-                startingCamera.transform.rotation = Quaternion.Lerp(startingCamera.transform.rotation, moveControlCamera.transform.rotation, speed);
+                mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, cameraWakeUpSpot.transform.rotation, speed);
                 yield return null;
             }
         }
 
         IEnumerator EnablePlayerControl()
         {
-            moveControlCamera.gameObject.SetActive(true);
-            startingCamera.gameObject.SetActive(false);
-
+            mainCamera.GetComponent<FreeCameraControl>().enabled = true;
             playerAnimator.SetTrigger(AnimParam.Fox.StandUp);
             yield return playerAnimator.WaitAnimationStart(AnimClip.Idle);
 
@@ -216,7 +219,7 @@ namespace GameEvents
         IEnumerator PlayFarmerAnimationWork()
         {
             yield return farmerNavMesh.WaitToArrive();
-            farmerAnimator.SetBool(AnimParam.Human.isWorking, true);
+            farmerAnimator.SetBool(AnimParam.Human.IsWorking, true);
         }
 
         void SetSnakeTarget()
@@ -227,7 +230,6 @@ namespace GameEvents
 
         void StartAttackSnake()
         {
-            //AttackSnakeEvent.Instance.StartEvent();
             GetComponent<AttackSnakeEvent>().enabled = true;
             AttackSnakeEvent.Instance.OnEventEnds += OnAttackSnakeEventEnds;
         }
