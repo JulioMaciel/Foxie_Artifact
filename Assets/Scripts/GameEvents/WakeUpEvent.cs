@@ -48,11 +48,21 @@ namespace GameEvents
 
         void Awake()
         {
+            FindObjects();
+            GetComponents();
+        }
+
+        void FindObjects()
+        {
             mainCamera = Camera.main;
             player = GameObject.FindWithTag(Tags.Player);
             goldie = GameObject.FindWithTag(Tags.Goldie);
             farmer = GameObject.FindWithTag(Tags.Farmer);
             snake = GameObject.FindWithTag(Tags.Snake);
+        }
+
+        void GetComponents()
+        {
             goldieAnimator = goldie.GetComponent<Animator>();
             playerAnimator = player.GetComponent<Animator>();
             farmerAnimator = farmer.GetComponent<Animator>();

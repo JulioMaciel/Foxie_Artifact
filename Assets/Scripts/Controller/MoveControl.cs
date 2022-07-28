@@ -66,7 +66,7 @@ namespace Controller
         {
             if (playerVelocity.y > 0) return false;
         
-            var hasHit = Physics.Raycast(transform.position, Vector3.down, 0.1f, Masks.Terrain);
+            var hasHit = Physics.Raycast(transform.position, Vector3.down, 0.1f, Layers.Terrain);
             return hasHit;
         }
 

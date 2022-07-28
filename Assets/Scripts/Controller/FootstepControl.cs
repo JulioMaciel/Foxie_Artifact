@@ -35,14 +35,14 @@ namespace Controller
         // Called by animation clip
         void Step()
         {
-            if (IsOverTerrain(Masks.SandTerrain))
+            if (IsOverTerrain(Tags.SandTerrain))
             {
                 audioSource.PlayRandomClip(sandClips);
                 var dust = poolDust.Get();
                 dust.transform.position = gameObject.transform.localPosition;
                 StartCoroutine(ReleaseDustPoolAfterFinishing(dust));
             }
-            else if (IsOverTerrain(Masks.GrassTerrain)) 
+            else if (IsOverTerrain(Tags.GrassTerrain)) 
                 audioSource.PlayRandomClip(grassClips);
         }
 
@@ -53,7 +53,10 @@ namespace Controller
             poolDust.Release(dust);
         }
 
-        bool IsOverTerrain(int mask) => 
-            Physics.Raycast(transform.position, Vector3.down, 0.1f, mask);
+        bool IsOverTerrain(string tag)
+        {
+            var hasHit = Physics.Raycast(transform.position, Vector3.down, out var hitInfo, 0.1f, Layers.Terrain);
+            return hasHit && hitInfo.transform.CompareTag(tag);
+        }
     }
 }

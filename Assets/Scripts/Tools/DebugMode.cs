@@ -6,6 +6,7 @@ namespace Tools
     public class DebugMode : MonoBehaviour
     {
         [SerializeField] MainGameEvent startAtEvent;
+        [SerializeField] Camera boringIndustryDebugCamera;
     
         void Start()
         {
@@ -18,6 +19,8 @@ namespace Tools
                 case MainGameEvent.BoringIndustry:
                     GetComponent<WakeUpEvent>().enabled = false;
                     GetComponent<BoringIndustryEvent>().enabled = true;
+                    Camera.main.gameObject.SetActive(false);
+                    boringIndustryDebugCamera.gameObject.SetActive(true);
                     break;
             }
         }

@@ -59,14 +59,14 @@ namespace GameEvents
         public Action OnEventEnds; 
     
         public static AttackSnakeEvent Instance;
-        
         void Awake() => Instance = this;
 
         void OnEnable()
         {
             approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
         
-            SetComponents();
+            FindObjects();
+            GetComponents();
             hasEventStarted = true;
             attackSnakeCanvas.gameObject.SetActive(true);
             playerMoveControl.enabled = false;
@@ -86,11 +86,15 @@ namespace GameEvents
             StartCoroutine(HandleSuspicion());
         }
 
-        void SetComponents()
+        void FindObjects()
         {
             player = GameObject.FindWithTag(Tags.Player);
             snake = GameObject.FindWithTag(Tags.Snake);
             mainCamera = Camera.main;
+        }
+
+        void GetComponents()
+        {
             playerMoveControl = player.GetComponent<MoveControl>();
             playerAnim = player.GetComponent<Animator>();
             snakeAnim = snake.GetComponent<Animator>();

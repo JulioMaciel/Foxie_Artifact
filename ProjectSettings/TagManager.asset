@@ -8,6 +8,11 @@ TagManager:
   - Goldie
   - Farmer
   - Snake
+  - SandTerrain
+  - GrassTerrain
+  - BoringCar
+  - BoringDriver
+  - BoringPassenger
   layers:
   - Default
   - TransparentFX
@@ -19,8 +24,8 @@ TagManager:
   - Obstacle
   - NavMeshToIgnore
   - UI3D
-  - GrassTerrain
-  - SandTerrain
+  - 
+  - 
   - 
   - 
   - 
