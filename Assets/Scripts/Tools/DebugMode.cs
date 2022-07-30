@@ -1,3 +1,4 @@
+using Cameras;
 using GameEvents;
 using UnityEngine;
 
@@ -5,28 +6,41 @@ namespace Tools
 {
     public class DebugMode : MonoBehaviour
     {
+        [SerializeField] GameObject gameEvents;
         [SerializeField] MainGameEvent startAtEvent;
-        [SerializeField] Camera boringIndustryDebugCamera;
+        
+        public static DebugMode Instance;
+        void Awake() => Instance = this;
     
         void Start()
         {
             switch (startAtEvent)
             {
+                case MainGameEvent.None:
+                    gameEvents.GetComponent<WakeUpEvent>().enabled = false;
+                    break;
                 case MainGameEvent.AttackSnake:
-                    GetComponent<WakeUpEvent>().enabled = false;
-                    GetComponent<AttackSnakeEvent>().enabled = true;
+                    gameEvents.GetComponent<WakeUpEvent>().enabled = false;
+                    gameEvents.GetComponent<AttackSnakeEvent>().enabled = true;
                     break;
                 case MainGameEvent.BoringIndustry:
-                    GetComponent<WakeUpEvent>().enabled = false;
-                    GetComponent<BoringIndustryEvent>().enabled = true;
-                    Camera.main.gameObject.SetActive(false);
-                    boringIndustryDebugCamera.gameObject.SetActive(true);
+                    gameEvents.GetComponent<WakeUpEvent>().enabled = false;
+                    gameEvents.GetComponent<BoringIndustryEvent>().enabled = true;
                     break;
             }
+        }
+        
+        public void EnableDebugCamera(Transform newTarget)
+        {
+            Camera.main.gameObject.SetActive(false);
+            var debugCam = GetComponentInChildren<DebugCamera>();
+            debugCam.gameObject.SetActive(true);
+            debugCam.target = newTarget;
         }
 
         public enum MainGameEvent
         {
+            None,
             WakeUp,
             AttackSnake,
             BoringIndustry,

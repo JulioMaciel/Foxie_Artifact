@@ -104,10 +104,11 @@ namespace Tools
             }
         }
 
-        public static void PlayClip(this AudioSource audioSource, AudioClip clip)
+        public static void PlayClip(this AudioSource audioSource, AudioClip clip, bool playInLoop = false)
         {
             audioSource.clip = clip;
             audioSource.Play();
+            audioSource.loop = playInLoop;
         }
 
         public static void PlayRandomClip(this AudioSource audioSource, AudioClip[] clips)

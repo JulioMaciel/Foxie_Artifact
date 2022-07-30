@@ -33,6 +33,11 @@ namespace StaticData
         {
             public static int Die = Animator.StringToHash("Die");
         }
+
+        public struct Car
+        {
+            public static int IsMovingForward = Animator.StringToHash("isMovingForward");
+        }
     }
 
     public enum AnimClip

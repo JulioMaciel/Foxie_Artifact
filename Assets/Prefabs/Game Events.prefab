@@ -1,5 +1,291 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &332820488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 332820489}
+  m_Layer: 0
+  m_Name: Road Track 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &332820489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332820488}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -150.84, y: 0.754, z: 67.53}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &401540770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 401540771}
+  m_Layer: 0
+  m_Name: Road Track 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &401540771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 401540770}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -227.25, y: 4.776, z: 73.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &941666750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 941666751}
+  m_Layer: 0
+  m_Name: Road Track 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &941666751
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941666750}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -249.26, y: 7.68, z: 86.74}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1061737330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1061737331}
+  m_Layer: 0
+  m_Name: Road Track 6
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1061737331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061737330}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -141.16, y: 0.754, z: 31.29}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1392975391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1392975392}
+  m_Layer: 0
+  m_Name: Road Track 5
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1392975392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392975391}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -138.74, y: 0.754, z: 59.31}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1418618674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1418618675}
+  m_Layer: 0
+  m_Name: BoringCar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1418618675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418618674}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 941666751}
+  - {fileID: 401540771}
+  - {fileID: 1850055516}
+  - {fileID: 332820489}
+  - {fileID: 1392975392}
+  - {fileID: 1061737331}
+  - {fileID: 1716742079}
+  m_Father: {fileID: 2493533379622542869}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1506608187
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1506608188}
+  m_Layer: 0
+  m_Name: CameraWakeUpSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: -5938655980376293919, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1506608188
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506608187}
+  m_LocalRotation: {x: 0.26752722, y: 0.5764838, z: -0.20736286, w: 0.74370444}
+  m_LocalPosition: {x: -129.6489, y: 2.8917017, z: 24.394459}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2493533379622542869}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1716742078
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1716742079}
+  m_Layer: 0
+  m_Name: Road Track 7
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1716742079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716742078}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -152.87, y: 0.754, z: 15.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1850055515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850055516}
+  m_Layer: 0
+  m_Name: Road Track 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850055516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850055515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -204.37, y: 0.754, z: 63.71}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1418618675}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2493533378657049223
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +392,7 @@ GameObject:
   - component: {fileID: 2493533379435969108}
   - component: {fileID: 2493533379435969109}
   - component: {fileID: 2493533379435969110}
-  - component: {fileID: 2493533379435969111}
+  - component: {fileID: 1576432372}
   m_Layer: 0
   m_Name: Game Events
   m_TagString: Untagged
@@ -143,23 +429,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   postProcessingVolume: {fileID: 0}
-  startingCamera: {fileID: 0}
-  moveControlCamera: {fileID: 0}
   welcomeFarmerDialogue: {fileID: 11400000, guid: cd157a343799ce54cada8d9cc7509ace,
     type: 2}
   snakeHuntDialogue: {fileID: 11400000, guid: f9724280ca3c03c4ab15968a0bac2434, type: 2}
   snakeFoundDialogue: {fileID: 11400000, guid: 45714d6abb08875439b80043d81bf2be, type: 2}
   checkOutFarmerDialogue: {fileID: 11400000, guid: ab7dbabceb16a514e8fc911606d9c361,
     type: 2}
-  player: {fileID: 0}
-  goldie: {fileID: 0}
-  snake: {fileID: 0}
-  farmer: {fileID: 0}
   goldieBarkClip: {fileID: 8300000, guid: f7aac852bb044fa43b268e3edb7ae4b3, type: 3}
   goldieWelcomeFarmerSpot: {fileID: 2493533380265610645}
   farmerWaveSpot: {fileID: 2493533379140514099}
   farmerWorkSpot: {fileID: 2493533380254222325}
   goldieSnakePigSpot: {fileID: 2493533379808659271}
+  cameraWakeUpSpot: {fileID: 1506608188}
   goldieTarget: {fileID: 11400000, guid: 1da4ed4978be0c942a3617ad52ded5b7, type: 2}
   snakeTarget: {fileID: 11400000, guid: dc004925c28055e48a9eba2b15dd2ee3, type: 2}
 --- !u!114 &2493533379435969110
@@ -174,9 +455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2043aec254cd4c07a0f4ca75b6865e48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freeCamera: {fileID: 0}
-  player: {fileID: 0}
-  snake: {fileID: 0}
   playerSpot: {fileID: 2493533378657049224}
   snakeSpot: {fileID: 2493533379484841962}
   attackSnakeCanvas: {fileID: 0}
@@ -195,19 +473,35 @@ MonoBehaviour:
   awarenessFinalColor:
     serializedVersion: 2
     rgba: 4281944822
---- !u!114 &2493533379435969111
+--- !u!114 &1576432372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2493533379435969107}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d3e2ad6a8d4bce49831812749b1dc64, type: 3}
+  m_Script: {fileID: 11500000, guid: 24ac383e4b6b42228e7444bc588ad23b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startAtEvent: 0
+  boringCarPrefab: {fileID: 0}
+  boringBusinessManPrefab: {fileID: 0}
+  roadTracks:
+  - {fileID: 0}
+  - {fileID: 941666751}
+  - {fileID: 401540771}
+  - {fileID: 1850055516}
+  - {fileID: 332820489}
+  - {fileID: 1392975392}
+  - {fileID: 1061737331}
+  - {fileID: 1716742079}
+  roadDustParticles: {fileID: 3626832829391354810, guid: de108e2f26cd0d840839a37248625c36,
+    type: 3}
+  carOnRoad: {fileID: 8300000, guid: 1ddeb136f38d782489bcb55fa62d2ffd, type: 3}
+  carIdle: {fileID: 8300000, guid: ca5fc1b9fbaf8ce459d9de4d32e6ce17, type: 3}
+  carDoorOpen: {fileID: 8300000, guid: 3765464157babe842887c358a5f21531, type: 3}
+  carDoorClose: {fileID: 8300000, guid: 3a96c3ca4622ecc43a2794e2c9b9a250, type: 3}
 --- !u!1 &2493533379484841961
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +565,8 @@ Transform:
   - {fileID: 2493533380613392573}
   - {fileID: 2493533379484841962}
   - {fileID: 2493533378657049224}
+  - {fileID: 1506608188}
+  - {fileID: 1418618675}
   m_Father: {fileID: 2493533379435969108}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
