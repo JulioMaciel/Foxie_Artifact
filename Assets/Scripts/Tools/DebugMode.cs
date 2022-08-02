@@ -1,5 +1,6 @@
 using Cameras;
 using GameEvents;
+using StaticData;
 using UnityEngine;
 
 namespace Tools
@@ -8,6 +9,7 @@ namespace Tools
     {
         [SerializeField] GameObject gameEvents;
         [SerializeField] MainGameEvent startAtEvent;
+        [SerializeField] Transform farmerWorkSpot;
         
         public static DebugMode Instance;
         void Awake() => Instance = this;
@@ -24,6 +26,10 @@ namespace Tools
                     gameEvents.GetComponent<AttackSnakeEvent>().enabled = true;
                     break;
                 case MainGameEvent.BoringIndustry:
+                    var farmer = GameObject.FindWithTag(Tags.Farmer);
+                    farmer.SetActive(false);
+                    farmer.transform.position = farmerWorkSpot.position;
+                    farmer.SetActive(true);
                     gameEvents.GetComponent<WakeUpEvent>().enabled = false;
                     gameEvents.GetComponent<BoringIndustryEvent>().enabled = true;
                     break;

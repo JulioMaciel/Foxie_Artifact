@@ -27,6 +27,9 @@ namespace StaticData
             public static int IsWorking = Animator.StringToHash("isWorking");
             public static int SitDown = Animator.StringToHash("SitDown");
             public static int StandUp = Animator.StringToHash("StandUp");
+            public static int Shout = Animator.StringToHash("Shout");
+            public static int SayNo = Animator.StringToHash("SayNo");
+            public static int Horror = Animator.StringToHash("Horror");
         }
 
         public struct Snake

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: face6c85db4a8fc48951edbeb617f106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
+  dialogueCanvas: {fileID: 0}
   avatarImage: {fileID: 0}
   authorTMP: {fileID: 0}
   messageTMP: {fileID: 0}
@@ -64,7 +64,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questPointer3D: {fileID: 0}
   questPointer2D: {fileID: 0}
-  player: {fileID: 0}
 --- !u!1001 &3937903684993520836
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -96,10 +96,15 @@ namespace Tools
 
         public static IEnumerator MoveUntilArrive(this Transform trans, Transform target, float speed, float tolerance = .5f)
         {
-            while (!trans.position.IsCloseEnough(target.position, tolerance))
+            yield return MoveUntilArrive(trans, target.position, speed, tolerance);
+        }
+        
+        public static IEnumerator MoveUntilArrive(this Transform trans, Vector3 target, float speed, float tolerance = .5f)
+        {
+            while (!trans.position.IsCloseEnough(target, tolerance))
             {
                 var step = speed * Time.deltaTime;
-                trans.position = Vector3.MoveTowards(trans.position, target.position, step);
+                trans.position = Vector3.MoveTowards(trans.position, target, step);
                 yield return null;
             }
         }
@@ -116,5 +121,24 @@ namespace Tools
             var rndClip = clips[Random.Range(0, clips.Length)];
             audioSource.PlayClip(rndClip);
         }
+        
+        // public static IEnumerator KeepPlaying(AudioSource audioSource, AudioClip[] clips)
+        // {
+        //     //yield return null;
+        //     audioSource.PlayRandomClip(clips);
+        //     while (audioSource.isPlaying)
+        //         yield return null;
+        //     
+        //     yield return KeepPlaying(audioSource, clips);
+        //
+        //     // foreach (var t in clips)
+        //     // {
+        //     //     audioSource.clip = t;
+        //     //     audioSource.Play();
+        //     //     
+        //     //     while (audioSource.isPlaying)
+        //     //         yield return null;
+        //     // }
+        // }
     }
 }
