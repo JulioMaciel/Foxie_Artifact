@@ -1,4 +1,6 @@
-﻿using StaticData;
+﻿using GameEvents;
+using Managers;
+using StaticData;
 using UnityEngine;
 
 namespace Cameras
@@ -22,7 +24,7 @@ namespace Cameras
 
         void Awake()
         {
-            target = GameObject.FindWithTag(Tags.Player).transform;
+            target = Entity.Instance.player.transform;
         }
 
         void Start()

@@ -11,6 +11,8 @@ TagManager:
   - SandTerrain
   - GrassTerrain
   - BoringCar
+  - BoringDriver
+  - BoringPassenger
   layers:
   - Default
   - TransparentFX

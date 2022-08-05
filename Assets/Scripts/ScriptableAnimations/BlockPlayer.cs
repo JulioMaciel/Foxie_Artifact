@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Controller;
+using GameEvents;
+using Managers;
 using StaticData;
 using Tools;
 using UnityEngine;
@@ -25,7 +27,7 @@ namespace ScriptableAnimations
 
         void Awake()
         {
-            player = GameObject.FindWithTag(Tags.Player);
+            player = Entity.Instance.player;
             agent = GetComponent<NavMeshAgent>();
             animator = gameObject.GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();

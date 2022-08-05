@@ -1,4 +1,6 @@
-﻿using StaticData;
+﻿using GameEvents;
+using Managers;
+using StaticData;
 using UnityEngine;
 
 namespace Cameras
@@ -12,8 +14,8 @@ namespace Cameras
 
         void Awake()
         {
-            player = GameObject.FindWithTag(Tags.Player);
-            snake = GameObject.FindWithTag(Tags.Snake);
+            player = Entity.Instance.player;
+            snake = Entity.Instance.snake;
         }
 
         void LateUpdate()

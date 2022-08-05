@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections;
+using Cameras;
+using Controller;
+using Managers;
+using ScriptableObjects;
 using StaticData;
 using Tools;
+using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
@@ -10,10 +15,9 @@ namespace GameEvents
 {
     public class BoringIndustryEvent : MonoBehaviour
     {
-        [SerializeField] GameObject boringCar;
-        [SerializeField] GameObject boringDriver;
-        [SerializeField] GameObject boringPassenger;
         [SerializeField] GameObject roadDustParent;
+        [SerializeField] DialogueItem boringCarShowedUp;
+        [SerializeField] TargetItem goldieTargetAfterSnake;
         [SerializeField] Transform parkingSpot;
         [SerializeField] ParticleSystem roadDustParticles;
         [SerializeField] AudioClip carOnRoadClip;
@@ -23,9 +27,16 @@ namespace GameEvents
         [SerializeField] AudioClip[] angryClips;
         [SerializeField] AudioClip[] sadClips;
         [SerializeField] AudioClip[] scaredClips;
+        [SerializeField] BalloonItem balloonBoringReasons;
+        [SerializeField] BalloonItem balloonSayingNo;
 
         Camera mainCamera;
+        GameObject player;
         GameObject farmer;
+        GameObject goldie;
+        GameObject boringCar;
+        GameObject boringDriver;
+        GameObject boringPassenger;
         
         NavMeshAgent carNavMesh;
         NavMeshAgent driverNavMesh;
@@ -38,6 +49,9 @@ namespace GameEvents
         AudioSource driverAudio;
         AudioSource passengerAudio;
         AudioSource farmerAudio;
+        SpeechBalloonHandler farmerBalloon;
+        SpeechBalloonHandler driverBalloon;
+        SpeechBalloonHandler passengerBalloon;
 
         ObjectPool<GameObject> poolDust;
         float timeSinceLastDustEmission;
@@ -46,13 +60,13 @@ namespace GameEvents
 
         void OnEnable()
         {
-            FindObjects();
+            SetObjects();
             GetComponents();
+            
+            QuestPointerManager.Instance.OnApproachTarget += OnApproachQuestTarget;
+            DialogueManager.Instance.OnDialogueEvent += OnDialogueEvent;
 
-            BuildDustPool();
-            StartCoroutine(MoveBoringCarToFarm());
-
-            DebugMode.Instance.EnableDebugCamera(boringCar.transform);
+            //DebugMode.Instance.EnableDebugCamera(boringCar.transform);
         }
 
         void Update()
@@ -60,10 +74,15 @@ namespace GameEvents
             if (isCarMoving) HandleDustEmission();
         }
 
-        void FindObjects()
+        void SetObjects()
         {
             mainCamera = Camera.main;
-            farmer = GameObject.FindWithTag(Tags.Farmer);
+            player = Entity.Instance.player;
+            farmer = Entity.Instance.farmer;
+            goldie = Entity.Instance.goldie;
+            boringCar = Entity.Instance.boringCar;
+            boringDriver = Entity.Instance.boringDriver;
+            boringPassenger = Entity.Instance.boringPassenger;
         }
 
         void GetComponents()
@@ -79,6 +98,41 @@ namespace GameEvents
             driverAudio = boringDriver.GetComponent<AudioSource>();
             passengerAudio = boringPassenger.GetComponent<AudioSource>();
             farmerAudio = farmer.GetComponent<AudioSource>();
+            farmerBalloon = farmer.GetComponent<SpeechBalloonHandler>();
+            driverBalloon = boringDriver.GetComponent<SpeechBalloonHandler>();
+            passengerBalloon = boringPassenger.GetComponent<SpeechBalloonHandler>();
+        }
+
+        void OnApproachQuestTarget(Target target)
+        {
+            switch (target)
+            {
+                case Target.Goldie: ShowBoringCar(); break;
+            }
+        }
+
+        void OnDialogueEvent(DialogueEvent dialogueEvent)
+        {
+            switch (dialogueEvent)
+            {
+                case DialogueEvent.SetGoldieTargetAfterSnake: 
+                    QuestPointerManager.Instance.SetNewTarget(goldieTargetAfterSnake, goldie.transform);
+                    break;
+            }
+        }
+
+        void ShowBoringCar()
+        {
+            DialogueManager.Instance.StartDialogue(boringCarShowedUp);
+            
+            BuildDustPool();
+            StartCoroutine(MoveBoringCarToFarm());
+
+            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
+            mainCamera.GetComponent<BoringCarCamera>().enabled = true;
+            player.GetComponent<MoveControl>().enabled = farmer;
+
+            // TODO: revert camera and player control
         }
 
         void BuildDustPool()
@@ -160,22 +214,32 @@ namespace GameEvents
             passengerNavMesh.transform.LookAt(farmer.transform);
 
             TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
+            driverBalloon.ShowBalloon(balloonBoringReasons, 5);
 
             yield return driverAnimator.WaitCurrentAnimation();
             var farmerPos = farmer.transform.position;
-            yield return driverNavMesh.MoveAnimating(driverAnimator, farmerPos);
-            yield return passengerNavMesh.MoveAnimating(passengerAnimator, farmerPos);
+            StartCoroutine(driverNavMesh.MoveAnimating(driverAnimator, farmerPos));
+            StartCoroutine(passengerNavMesh.MoveAnimating(passengerAnimator, farmerPos));
             yield return driverNavMesh.WaitToArrive(1);
             
             driverNavMesh.transform.LookAt(farmer.transform);
             passengerNavMesh.transform.LookAt(farmer.transform);
             
             TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
+            driverBalloon.ShowBalloon(balloonBoringReasons, 5);
             yield return driverAnimator.WaitCurrentAnimation();
             TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
+            passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
             yield return passengerAnimator.WaitCurrentAnimation();
             TalkAnimating(Emotion.Sad, farmerAnimator, farmerAudio);
+            farmerBalloon.ShowBalloon(balloonSayingNo, 5);
             yield return farmerAnimator.WaitCurrentAnimation();
+            TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
+            driverBalloon.ShowBalloon(balloonBoringReasons, 5);
+            TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
+            passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
+            yield return driverAnimator.WaitCurrentAnimation();
+            TalkAnimating(Emotion.Scared, farmerAnimator, farmerAudio);
         }
 
         void TalkAnimating(Emotion emotion, Animator humanAnim, AudioSource audioSource)
@@ -195,6 +259,12 @@ namespace GameEvents
                     audioSource.PlayRandomClip(scaredClips);
                     break;
             }
+        }
+
+        void OnDisable()
+        {
+            QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
+            DialogueManager.Instance.OnDialogueEvent -= OnDialogueEvent;
         }
 
         internal enum Emotion

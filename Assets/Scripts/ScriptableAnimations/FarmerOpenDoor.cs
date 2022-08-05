@@ -1,4 +1,6 @@
 using System.Collections;
+using GameEvents;
+using Managers;
 using StaticData;
 using UnityEngine;
 
@@ -31,7 +33,7 @@ namespace ScriptableAnimations
 
         void OnTriggerEnter(Collider col)
         {            
-            if (col.gameObject.CompareTag(Tags.Player))
+            if (col.gameObject == Entity.Instance.farmer)
                 isOpeningDoor = true;
         }
     }

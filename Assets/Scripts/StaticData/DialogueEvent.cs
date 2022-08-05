@@ -10,5 +10,7 @@
         StartAttackSnakeEvent,
         AttackSnakeFailed,
         AttackSnakeSuccess,
+        SetGoldieTargetAfterSnake,
+        MoveCameraToWatchBoringCar,
     }
 }

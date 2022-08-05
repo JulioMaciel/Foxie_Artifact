@@ -19,7 +19,6 @@ namespace GameEvents
         [SerializeField] DialogueItem welcomeFarmerDialogue;
         [SerializeField] DialogueItem snakeHuntDialogue;
         [SerializeField] DialogueItem snakeFoundDialogue;
-        [SerializeField] DialogueItem checkOutFarmerDialogue;
         [SerializeField] AudioClip goldieBarkClip;
         [SerializeField] Transform goldieWelcomeFarmerSpot;
         [SerializeField] Transform farmerWaveSpot;
@@ -48,17 +47,17 @@ namespace GameEvents
 
         void Awake()
         {
-            FindObjects();
+            SetObjects();
             GetComponents();
         }
 
-        void FindObjects()
+        void SetObjects()
         {
             mainCamera = Camera.main;
-            player = GameObject.FindWithTag(Tags.Player);
-            goldie = GameObject.FindWithTag(Tags.Goldie);
-            farmer = GameObject.FindWithTag(Tags.Farmer);
-            snake = GameObject.FindWithTag(Tags.Snake);
+            player = Entity.Instance.player;
+            goldie = Entity.Instance.goldie;
+            farmer = Entity.Instance.farmer;
+            snake = Entity.Instance.snake;
         }
 
         void GetComponents()
@@ -241,19 +240,19 @@ namespace GameEvents
         void StartAttackSnake()
         {
             GetComponent<AttackSnakeEvent>().enabled = true;
-            AttackSnakeEvent.Instance.OnEventEnds += OnAttackSnakeEventEnds;
+            //AttackSnakeEvent.Instance.OnEventEnds += OnAttackSnakeEventEnds;
         }
 
-        void OnAttackSnakeEventEnds()
-        {
-            DialogueManager.Instance.StartDialogue(checkOutFarmerDialogue);
-        }
+        // void OnAttackSnakeEventEnds()
+        // {
+        //     DialogueManager.Instance.StartDialogue(checkOutFarmerDialogue);
+        // }
     
         void OnDisable()
         {
             DialogueManager.Instance.OnDialogueEvent -= OnDialogueEvent;
             QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
-            AttackSnakeEvent.Instance.OnEventEnds -= OnAttackSnakeEventEnds;
+            //AttackSnakeEvent.Instance.OnEventEnds -= OnAttackSnakeEventEnds;
         }
     }
 }

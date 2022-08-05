@@ -1,5 +1,6 @@
 using Cameras;
 using GameEvents;
+using Managers;
 using StaticData;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Tools
                     gameEvents.GetComponent<AttackSnakeEvent>().enabled = true;
                     break;
                 case MainGameEvent.BoringIndustry:
-                    var farmer = GameObject.FindWithTag(Tags.Farmer);
+                    var farmer = Entity.Instance.farmer;
                     farmer.SetActive(false);
                     farmer.transform.position = farmerWorkSpot.position;
                     farmer.SetActive(true);

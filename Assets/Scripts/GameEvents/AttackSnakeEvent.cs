@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using AI;
 using Cameras;
 using Controller;
@@ -18,12 +17,14 @@ namespace GameEvents
     {
         [SerializeField] Transform playerSpot;
         [SerializeField] Transform snakeSpot;
+        [SerializeField] Transform goldieCongratsPlayer;
         [SerializeField] RectTransform attackSnakeCanvas;
         [SerializeField] RectTransform suspicionBar;
         [SerializeField] Slider awarenessSlider;
         [SerializeField] Slider approachSlider;
         [SerializeField] Image fillAreaAwarenessSlider;
         [SerializeField] DialogueItem snakeAttackedDialogue;
+        [SerializeField] DialogueItem snakedSuccessfullyAttacked;
         [SerializeField] AudioClip foxAttackClip;
         [SerializeField] AudioClip snakeAttackClip;
         [SerializeField] AudioClip snakeDieClip;
@@ -56,7 +57,6 @@ namespace GameEvents
         float approachSliderValue;
 
         PointerEventData onApproachInputPressed;
-        public Action OnEventEnds; 
     
         public static AttackSnakeEvent Instance;
         void Awake() => Instance = this;
@@ -65,7 +65,7 @@ namespace GameEvents
         {
             approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
         
-            FindObjects();
+            SetObjects();
             GetComponents();
             hasEventStarted = true;
             attackSnakeCanvas.gameObject.SetActive(true);
@@ -86,10 +86,10 @@ namespace GameEvents
             StartCoroutine(HandleSuspicion());
         }
 
-        void FindObjects()
+        void SetObjects()
         {
-            player = GameObject.FindWithTag(Tags.Player);
-            snake = GameObject.FindWithTag(Tags.Snake);
+            player = Entity.Instance.player;
+            snake = Entity.Instance.snake;
             mainCamera = Camera.main;
         }
 
@@ -183,7 +183,6 @@ namespace GameEvents
             yield return new WaitForSeconds(1);
             snakeAnim.SetTrigger(AnimParam.Snake.Die);
             snakeAudio.PlayClip(snakeDieClip);
-            //TODO: add poof particle effect
             EndEvent();
         }
     
@@ -215,13 +214,27 @@ namespace GameEvents
             freeFreeCameraControl.enabled = true;
             snakeAttackCameraControl.enabled = false;
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
-            OnEventEnds?.Invoke();
+            //OnEventEnds?.Invoke();
+            DialogueManager.Instance.StartDialogue(snakedSuccessfullyAttacked);
+            //QuestPointerManager.Instance.SetNewTarget(goldieTarget, goldie.transform);
+            GetComponent<BoringIndustryEvent>().enabled = true;
             enabled = false;
         }
+        
+        // void OnApproachQuestTarget(Target target)
+        // {
+        //     if (target == Target.Goldie) DialogueManager.Instance.StartDialogue(StartBoringEvent());
+        // }
+        //
+        // void StartBoringEvent()
+        // {
+        //     
+        // }
 
         void OnDisable()
         {
             approachSlider.onValueChanged.RemoveAllListeners();
+            //QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using GameEvents;
 using ScriptableObjects;
 using StaticData;
 using TMPro;
@@ -27,7 +28,7 @@ namespace Managers
         void Awake()
         {
             Instance = this;
-            player = GameObject.FindWithTag(Tags.Player);
+            player = Entity.Instance.player;
             questPointerHandler = questPointer3D.GetComponentInChildren<QuestPointerHandler>();
             questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
         }

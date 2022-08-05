@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef43a6cb87e4d38af668fc1cabd92b0, type: 3}
   m_Name: CheckOutFarmer.2
   m_EditorClassIdentifier: 
-  message: Now let's see how the farmer is going.
-  sequentialEvent: 0
+  message: Now let's see how the farmer is going. Come on!
+  sequentialEvent: 8
