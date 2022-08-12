@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Controller;
-using GameEvents;
 using Managers;
 using StaticData;
 using Tools;

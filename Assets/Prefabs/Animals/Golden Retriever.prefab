@@ -1461,7 +1461,7 @@ GameObject:
   - component: {fileID: 6158140125356375529}
   m_Layer: 0
   m_Name: Golden Retriever
-  m_TagString: Untagged
+  m_TagString: Goldie
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1618,7 +1618,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: 0.08
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!1 &7768795302454229719

@@ -35,7 +35,9 @@ namespace GameEvents
         MoveControl playerMoveControl;
         Animator playerAnim;
         Animator snakeAnim;
+        Animator goldieAnimator;
         NavMeshAgent snakeNavMesh;
+        NavMeshAgent goldieNavMesh;
         CharacterController playerControl;
         FreeCameraControl freeFreeCameraControl;
         AttackSnakeCamera snakeAttackCameraControl;
@@ -46,6 +48,7 @@ namespace GameEvents
         Image suspiciousImage;
         GameObject player;
         GameObject snake;
+        GameObject goldie;
         Camera mainCamera;
 
         Vector3 direction;
@@ -74,6 +77,7 @@ namespace GameEvents
             snakeAttackCameraControl.enabled = true;
             snakeAnimalWanderer.enabled = false;
             snakeIdleEvent.enabled = false;
+            goldieNavMesh.SetDestination(goldieCongratsPlayer.position);
             ResetControls();
             direction = (snakeSpot.transform.position - playerSpot.transform.position).normalized;
         }
@@ -88,9 +92,10 @@ namespace GameEvents
 
         void SetObjects()
         {
+            mainCamera = Camera.main;
             player = Entity.Instance.player;
             snake = Entity.Instance.snake;
-            mainCamera = Camera.main;
+            goldie = Entity.Instance.goldie; 
         }
 
         void GetComponents()
@@ -98,7 +103,9 @@ namespace GameEvents
             playerMoveControl = player.GetComponent<MoveControl>();
             playerAnim = player.GetComponent<Animator>();
             snakeAnim = snake.GetComponent<Animator>();
+            goldieAnimator = goldie.GetComponent<Animator>();
             snakeNavMesh = snake.GetComponent<NavMeshAgent>();
+            goldieNavMesh = goldie.GetComponent<NavMeshAgent>();
             playerControl = player.GetComponent<CharacterController>();
             freeFreeCameraControl = mainCamera.GetComponent<FreeCameraControl>();
             snakeAttackCameraControl = mainCamera.GetComponent<AttackSnakeCamera>();
@@ -214,27 +221,16 @@ namespace GameEvents
             freeFreeCameraControl.enabled = true;
             snakeAttackCameraControl.enabled = false;
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
-            //OnEventEnds?.Invoke();
+            goldieAnimator.SetFloat(AnimParam.MoveSpeed, 0);
+            goldie.transform.LookAt(player.transform);
             DialogueManager.Instance.StartDialogue(snakedSuccessfullyAttacked);
-            //QuestPointerManager.Instance.SetNewTarget(goldieTarget, goldie.transform);
             GetComponent<BoringIndustryEvent>().enabled = true;
-            enabled = false;
+            Destroy(this);
         }
-        
-        // void OnApproachQuestTarget(Target target)
-        // {
-        //     if (target == Target.Goldie) DialogueManager.Instance.StartDialogue(StartBoringEvent());
-        // }
-        //
-        // void StartBoringEvent()
-        // {
-        //     
-        // }
 
         void OnDisable()
         {
             approachSlider.onValueChanged.RemoveAllListeners();
-            //QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
         }
     }
 }

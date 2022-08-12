@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using ScriptableObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,7 +26,8 @@ namespace UI
 
         IEnumerator ShowOnce()
         {
-            contentRenderer.sprite = item.balloonContent.First();
+            var rnd = Random.Range(0, item.balloonContent.Length);
+            contentRenderer.sprite = item.balloonContent[rnd];
             yield return new WaitForSeconds(duration);
             HideBalloon();
         }

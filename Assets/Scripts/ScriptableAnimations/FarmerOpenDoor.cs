@@ -1,7 +1,5 @@
 using System.Collections;
-using GameEvents;
 using Managers;
-using StaticData;
 using UnityEngine;
 
 namespace ScriptableAnimations

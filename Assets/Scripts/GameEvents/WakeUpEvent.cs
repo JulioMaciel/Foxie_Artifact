@@ -216,7 +216,8 @@ namespace GameEvents
         
             farmer.transform.LookAt(goldie.transform);
             farmerAnimator.SetTrigger(AnimParam.Human.Wave);
-            yield return farmerAnimator.WaitAnimationFinish(AnimClip.Wave);
+            //yield return farmerAnimator.WaitAnimationFinish(AnimClip.Wave);
+            yield return new WaitForSeconds(3);
         
             StartCoroutine(farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position));
             yield return farmerNavMesh.WaitToArrive();
@@ -240,19 +241,13 @@ namespace GameEvents
         void StartAttackSnake()
         {
             GetComponent<AttackSnakeEvent>().enabled = true;
-            //AttackSnakeEvent.Instance.OnEventEnds += OnAttackSnakeEventEnds;
+            Destroy(this);
         }
 
-        // void OnAttackSnakeEventEnds()
-        // {
-        //     DialogueManager.Instance.StartDialogue(checkOutFarmerDialogue);
-        // }
-    
         void OnDisable()
         {
             DialogueManager.Instance.OnDialogueEvent -= OnDialogueEvent;
             QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
-            //AttackSnakeEvent.Instance.OnEventEnds -= OnAttackSnakeEventEnds;
         }
     }
 }

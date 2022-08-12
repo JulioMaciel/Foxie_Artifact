@@ -1,6 +1,4 @@
-﻿using GameEvents;
-using Managers;
-using StaticData;
+﻿using Managers;
 using UnityEngine;
 
 namespace Cameras

@@ -1,7 +1,6 @@
 using Cameras;
 using GameEvents;
 using Managers;
-using StaticData;
 using UnityEngine;
 
 namespace Tools

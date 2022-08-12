@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Controller;
 using Managers;
 using Tools;
 using UnityEngine;
@@ -10,15 +11,24 @@ namespace Cameras
         [SerializeField] float height = 10;
         
         GameObject boringCar;
-        //Vector3 initialPosition;
+        FreeCameraControl freeCamera;
+        MoveControl playerMoveControl;
 
         void OnEnable()
         {
+            freeCamera = GetComponent<FreeCameraControl>();
+            playerMoveControl = Entity.Instance.player.GetComponent<MoveControl>();
             boringCar = Entity.Instance.boringCar;
-            //initialPosition = transform.position;
             
+            freeCamera.enabled = false;
+            playerMoveControl.enabled = false;
+
             StartCoroutine(MoveCameraSmoothly(true));
-            StartCoroutine(KeepLookingAtCar());
+        }
+
+        void LateUpdate()
+        {
+            transform.LookAt(boringCar.transform);
         }
 
         IEnumerator MoveCameraSmoothly(bool goUp)
@@ -27,17 +37,21 @@ namespace Cameras
             var desiredHeight = currentPos.y + height * (goUp ? 1 : -1);
             
             var desiredPosition = new Vector3(currentPos.x, desiredHeight, currentPos.z);
+            Debug.DrawLine(currentPos, desiredPosition, Color.magenta, 99);
             yield return transform.MoveUntilArrive(desiredPosition, 1);
 
             // Move back down after going up 
             if (!goUp) yield break;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(1);
             yield return MoveCameraSmoothly(false);
+            End();
         }
 
-        IEnumerator KeepLookingAtCar()
+        void End()
         {
-            yield return transform.LookAtSmoothly(boringCar.transform, 1);
+            freeCamera.enabled = true;
+            playerMoveControl.enabled = true;
+            Destroy(this);
         }
     }
 }

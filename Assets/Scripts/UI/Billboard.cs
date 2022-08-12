@@ -13,7 +13,8 @@ namespace UI
 
         void LateUpdate()
         {
-            transform.rotation = Quaternion.Euler(0, mainCamera.transform.rotation.y, 0);
+            //transform.rotation = Quaternion.Euler(0, mainCamera.transform.rotation.y, 0);
+            transform.LookAt(transform.position + mainCamera.transform.forward);
         }
     }
 }

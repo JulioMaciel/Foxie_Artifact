@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using StaticData;
-using Tools;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Controller
 {

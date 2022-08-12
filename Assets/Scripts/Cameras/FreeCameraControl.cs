@@ -1,6 +1,4 @@
-﻿using GameEvents;
-using Managers;
-using StaticData;
+﻿using Managers;
 using UnityEngine;
 
 namespace Cameras
@@ -63,10 +61,6 @@ namespace Cameras
                 correctedDistance = Vector3.Distance(trueTargetPosition, collisionHit.point) - offsetFromWall;
                 isCorrected = true;
             }
-
-            // currentDistance = !isCorrected || correctedDistance > currentDistance ? 
-            //     Mathf.Lerp(currentDistance, correctedDistance, Time.deltaTime) : 
-            //     correctedDistance;
 
             if (!isCorrected || correctedDistance > currentDistance)
                 currentDistance = Mathf.Lerp(currentDistance, correctedDistance, Time.deltaTime);

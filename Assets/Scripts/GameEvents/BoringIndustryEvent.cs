@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Cameras;
 using Controller;
 using Managers;
@@ -10,6 +9,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 namespace GameEvents
 {
@@ -57,6 +57,8 @@ namespace GameEvents
         float timeSinceLastDustEmission;
         float carDustFrequency = .2f;
         bool isCarMoving;
+        bool hasAttackedDriver;
+        bool hasAttackedPassenger;
 
         void OnEnable()
         {
@@ -123,16 +125,14 @@ namespace GameEvents
 
         void ShowBoringCar()
         {
+            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
+            mainCamera.GetComponent<BoringCarCamera>().enabled = true;
+            
             DialogueManager.Instance.StartDialogue(boringCarShowedUp);
+            boringCar.SetActive(true);
             
             BuildDustPool();
             StartCoroutine(MoveBoringCarToFarm());
-
-            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
-            mainCamera.GetComponent<BoringCarCamera>().enabled = true;
-            player.GetComponent<MoveControl>().enabled = farmer;
-
-            // TODO: revert camera and player control
         }
 
         void BuildDustPool()
@@ -149,7 +149,7 @@ namespace GameEvents
         IEnumerator MoveBoringCarToFarm()
         {
             isCarMoving = true;
-            boringCar.gameObject.SetActive(true);
+            //boringCar.gameObject.SetActive(true);
             carAudio.PlayClip(carOnRoadClip, true);
             carWheelsAnimator.SetBool(AnimParam.Car.IsMovingForward, true);
             carNavMesh.SetDestination(parkingSpot.position);
@@ -188,14 +188,14 @@ namespace GameEvents
             boringDriver.transform.position = carPos;
             boringPassenger.transform.position = carPos;
             
+            farmerAnimator.SetBool(AnimParam.Human.IsWorking, false);
+            farmer.transform.LookAt(boringCar.transform);
+            
             driverAudio.PlayClip(carDoorOpenClip);
             passengerAudio.PlayClip(carDoorOpenClip);
 
             var driverLeaveCarSpot  = boringCar.transform.TransformPoint(Vector3.left * 2);
             var passengerLeaveCarSpot  = boringCar.transform.TransformPoint(Vector3.right * 2);
-            
-            boringDriver.transform.TurnBackOn(boringCar.transform);
-            boringPassenger.transform.TurnBackOn(boringCar.transform);
 
             StartCoroutine(boringDriver.transform.MoveUntilArrive(driverLeaveCarSpot, 2, .025f));
             yield return boringPassenger.transform.MoveUntilArrive(passengerLeaveCarSpot, 2, .025f);
@@ -220,26 +220,63 @@ namespace GameEvents
             var farmerPos = farmer.transform.position;
             StartCoroutine(driverNavMesh.MoveAnimating(driverAnimator, farmerPos));
             StartCoroutine(passengerNavMesh.MoveAnimating(passengerAnimator, farmerPos));
-            yield return driverNavMesh.WaitToArrive(1);
+            yield return driverNavMesh.WaitToArrive(2);
             
             driverNavMesh.transform.LookAt(farmer.transform);
             passengerNavMesh.transform.LookAt(farmer.transform);
+
+            StartCoroutine(KeepDriverArguing());
+            StartCoroutine(KeepPassengerArguing());
+            StartCoroutine(KeepFarmerArguing());
+        }
+
+        IEnumerator KeepDriverArguing()
+        {
+            while (!hasAttackedDriver)
+            {
+                TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
+                driverBalloon.ShowBalloon(balloonBoringReasons, 5);
+                yield return driverAnimator.WaitCurrentAnimation();
+                yield return new WaitForSeconds(Random.Range(2f, 5f));
+            }
+
+            // todo: what happens after attacked
+        }
+        
+        IEnumerator KeepPassengerArguing()
+        {
+            while (!hasAttackedPassenger)
+            {
+                TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
+                passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
+                yield return passengerAnimator.WaitCurrentAnimation();
+                yield return new WaitForSeconds(Random.Range(2f, 5f));
+            }  
             
-            TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
-            driverBalloon.ShowBalloon(balloonBoringReasons, 5);
-            yield return driverAnimator.WaitCurrentAnimation();
-            TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
-            passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
-            yield return passengerAnimator.WaitCurrentAnimation();
-            TalkAnimating(Emotion.Sad, farmerAnimator, farmerAudio);
-            farmerBalloon.ShowBalloon(balloonSayingNo, 5);
-            yield return farmerAnimator.WaitCurrentAnimation();
-            TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
-            driverBalloon.ShowBalloon(balloonBoringReasons, 5);
-            TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
-            passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
-            yield return driverAnimator.WaitCurrentAnimation();
-            TalkAnimating(Emotion.Scared, farmerAnimator, farmerAudio);
+            // todo: what happens after attacked
+        }
+        
+        IEnumerator KeepFarmerArguing()
+        {
+            while (!hasAttackedPassenger && !hasAttackedDriver)
+            {
+                var willReactSad = Random.Range(1, 3) == 1;
+
+                if (willReactSad)
+                {
+                    TalkAnimating(Emotion.Sad, farmerAnimator, farmerAudio);
+                    farmerBalloon.ShowBalloon(balloonSayingNo, 5);
+                }
+                else
+                {
+                    TalkAnimating(Emotion.Scared, farmerAnimator, farmerAudio);
+                }
+                
+                yield return farmerAnimator.WaitCurrentAnimation();
+                yield return new WaitForSeconds(Random.Range(4f, 8f));
+            }
+            
+            // todo: what happens after attacks
         }
 
         void TalkAnimating(Emotion emotion, Animator humanAnim, AudioSource audioSource)
