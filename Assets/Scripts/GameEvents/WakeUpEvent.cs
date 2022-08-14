@@ -216,11 +216,10 @@ namespace GameEvents
         
             farmer.transform.LookAt(goldie.transform);
             farmerAnimator.SetTrigger(AnimParam.Human.Wave);
-            //yield return farmerAnimator.WaitAnimationFinish(AnimClip.Wave);
             yield return new WaitForSeconds(3);
         
             StartCoroutine(farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position));
-            yield return farmerNavMesh.WaitToArrive();
+            yield return new WaitForSeconds(1);
             StartCoroutine(PlayFarmerAnimationWork());
 
             DialogueManager.Instance.StartDialogue(snakeHuntDialogue);

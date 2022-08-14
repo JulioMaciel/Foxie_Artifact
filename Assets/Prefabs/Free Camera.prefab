@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 6415121750948452206}
   - component: {fileID: 6415121750948452207}
   - component: {fileID: 1894023910}
+  - component: {fileID: 1708577955}
   m_Layer: 0
   m_Name: Free Camera
   m_TagString: MainCamera
@@ -427,3 +428,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 2, z: -2.66}
+--- !u!114 &1708577955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6415121750948452205}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4c9ea5c0294cfea6e392d6567e83e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  height: 10

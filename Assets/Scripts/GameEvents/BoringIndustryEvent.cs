@@ -149,7 +149,6 @@ namespace GameEvents
         IEnumerator MoveBoringCarToFarm()
         {
             isCarMoving = true;
-            //boringCar.gameObject.SetActive(true);
             carAudio.PlayClip(carOnRoadClip, true);
             carWheelsAnimator.SetBool(AnimParam.Car.IsMovingForward, true);
             carNavMesh.SetDestination(parkingSpot.position);
@@ -235,9 +234,9 @@ namespace GameEvents
             while (!hasAttackedDriver)
             {
                 TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
-                driverBalloon.ShowBalloon(balloonBoringReasons, 5);
+                driverBalloon.ShowBalloon(balloonBoringReasons, 3);
                 yield return driverAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(2f, 5f));
+                yield return new WaitForSeconds(Random.Range(1f, 3f));
             }
 
             // todo: what happens after attacked
@@ -248,9 +247,9 @@ namespace GameEvents
             while (!hasAttackedPassenger)
             {
                 TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
-                passengerBalloon.ShowBalloon(balloonBoringReasons, 5);
+                passengerBalloon.ShowBalloon(balloonBoringReasons, 3);
                 yield return passengerAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(2f, 5f));
+                yield return new WaitForSeconds(Random.Range(1f, 3f));
             }  
             
             // todo: what happens after attacked
@@ -265,7 +264,7 @@ namespace GameEvents
                 if (willReactSad)
                 {
                     TalkAnimating(Emotion.Sad, farmerAnimator, farmerAudio);
-                    farmerBalloon.ShowBalloon(balloonSayingNo, 5);
+                    farmerBalloon.ShowBalloon(balloonSayingNo, 3);
                 }
                 else
                 {
@@ -273,7 +272,7 @@ namespace GameEvents
                 }
                 
                 yield return farmerAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(4f, 8f));
+                yield return new WaitForSeconds(Random.Range(3f, 6f));
             }
             
             // todo: what happens after attacks
