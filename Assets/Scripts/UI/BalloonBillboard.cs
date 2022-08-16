@@ -4,7 +4,7 @@ namespace UI
 {
     public class BalloonBillboard : MonoBehaviour
     {
-        [SerializeField] float distance = .4f;
+        public float distance = .4f;
         
         Camera mainCamera;
         Transform thisHuman;
@@ -26,38 +26,15 @@ namespace UI
 
         void LateUpdate()
         {
-            //transform.rotation = Quaternion.Euler(0, mainCamera.transform.rotation.y, 0);
-            //transform.LookAt(transform.position + mainCamera.transform.forward);
             transform.LookAt(mainCamera.transform);
+            SetPosition();
+        }
 
+        void SetPosition()
+        {
             var angleHumanToCamera = Get360Angle();
-            
-            // EXPECTED VALUES - TODO unit tests
-            // a 0      x +4  z 0
-            // a 90     x 0   z -4
-            // a 180    x -4  z 0
-            // a 270    x 0   z +4  
-
-            // normalizes angles > 180 and > 270 
-            var xNormalizedAngle = angleHumanToCamera switch
-            {
-                > xMaxValue and < xMaxAngle * 1.5f => xMaxValue - (angleHumanToCamera - xMaxValue),
-                > xMaxAngle * 1.5f => xMinAngle + (xMaxValue * 2f - angleHumanToCamera),
-                _ => angleHumanToCamera
-            };
-            var xPercentage = (xNormalizedAngle - xMinAngle) / xMaxValue;
-            var xDestination = Mathf.Lerp(distance, -distance, xPercentage);
-
-            // normalizes angles < 90 and > 270 
-            var zNormalizedAngle = angleHumanToCamera switch
-            {
-                > zMaxAngle => zMaxAngle - (angleHumanToCamera - zMaxAngle),
-                < zMinAngle => zMinAngle + (zMinAngle - angleHumanToCamera),
-                _ => angleHumanToCamera
-            };
-            var zPercentage = (zNormalizedAngle - zMinAngle) / zMaxValue;
-            var zDestination = Mathf.Lerp(-distance, distance, zPercentage);
-
+            var xDestination = GetPositionX(angleHumanToCamera);
+            var zDestination = GetPositionZ(angleHumanToCamera);
             transform.localPosition = new Vector3(xDestination, yPos, zDestination);
         }
 
@@ -76,6 +53,34 @@ namespace UI
             var rightAngle = Vector3.Angle((camPos - humanPos), humanRight);
             var angleHumanToCamera = rightAngle > 90 ? 360 - forwardAngle : forwardAngle;
             return angleHumanToCamera;
+        }
+
+        public float GetPositionX(float angleHumanToCamera)
+        {
+            // normalizes angles > 180 and > 270 
+            var xNormalizedAngle = angleHumanToCamera switch
+            {
+                >= xMaxValue and <= xMaxAngle * 1.5f => xMaxValue - (angleHumanToCamera - xMaxValue),
+                >= xMaxAngle * 1.5f => xMinAngle + (xMaxValue * 2f - angleHumanToCamera),
+                _ => angleHumanToCamera
+            };
+            var xPercentage = (xNormalizedAngle - xMinAngle) / xMaxValue;
+            var xDestination = Mathf.Lerp(distance, -distance, xPercentage);
+            return xDestination;
+        }
+
+        public float GetPositionZ(float angleHumanToCamera)
+        {
+            // normalizes angles < 90 and > 270 
+            var zNormalizedAngle = angleHumanToCamera switch
+            {
+                >= zMaxAngle => zMaxAngle - (angleHumanToCamera - zMaxAngle),
+                < zMinAngle => zMinAngle + (zMinAngle - angleHumanToCamera),
+                _ => angleHumanToCamera
+            };
+            var zPercentage = (zNormalizedAngle - zMinAngle) / zMaxValue;
+            var zDestination = Mathf.Lerp(-distance, distance, zPercentage);
+            return zDestination;
         }
 
         float Get180Angle()
