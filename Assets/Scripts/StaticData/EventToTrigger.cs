@@ -1,17 +1,17 @@
 ﻿namespace StaticData
 {
-    public enum DialogueEvent
+    public enum EventToTrigger
     {
         None,
         CleanSleepingPP,
         MoveWakingCamera,
         EnablePlayerControl,
+        StartFarmerAnimation,
         SetSnakeTarget,
+        ShowSnakeFoundDialogue,
         StartAttackSnakeEvent,
-        AttackSnakeFailed,
-        AttackSnakeSuccess,
         SetGoldieTargetAfterSnake,
-        MoveCameraToWatchBoringCar,
+        ShowBoringCar,
         ShowBiteUI
     }
 }

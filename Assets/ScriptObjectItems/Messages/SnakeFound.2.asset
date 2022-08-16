@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   message: 'Remember, approach carefully and slowly, otherwise, the snake will hide
     in the terrain. '
-  sequentialEvent: 5
+  sequentialEventToTrigger: 7

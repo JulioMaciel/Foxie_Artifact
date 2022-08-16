@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BoringCarShowedUp.1
   m_EditorClassIdentifier: 
   message: OH MY DOGNESS, look that car, it's the boring industry again!!!
-  sequentialEvent: 0
+  sequentialEventToTrigger: 0

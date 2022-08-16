@@ -18,7 +18,7 @@ namespace Managers
         MessageItem currentMessageItem;
         int currentMessageIndex;
     
-        public event Action<DialogueEvent> OnDialogueEvent;
+        public event Action<EventToTrigger> OnEventToTrigger;
     
         public static DialogueManager Instance;
         void Awake() => Instance = this;
@@ -36,8 +36,8 @@ namespace Managers
 
         public void ProceedDialogue()
         {
-            if (currentMessageItem.sequentialEvent != DialogueEvent.None)
-                OnDialogueEvent?.Invoke(currentMessageItem.sequentialEvent);
+            if (currentMessageItem.sequentialEventToTrigger != EventToTrigger.None)
+                OnEventToTrigger?.Invoke(currentMessageItem.sequentialEventToTrigger);
         
             currentMessageIndex++;
 

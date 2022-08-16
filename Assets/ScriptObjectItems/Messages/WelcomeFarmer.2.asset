@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: WelcomeFarmer.2
   m_EditorClassIdentifier: 
   message: 'Wake up!!! '
-  sequentialEvent: 2
+  sequentialEventToTrigger: 2

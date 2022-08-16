@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: WelcomeFarmer.1
   m_EditorClassIdentifier: 
   message: 'Hey Foxie! '
-  sequentialEvent: 1
+  sequentialEventToTrigger: 1

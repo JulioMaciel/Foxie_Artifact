@@ -18,7 +18,7 @@ namespace GameEvents
         [SerializeField] GameObject roadDustParent;
         [SerializeField] DialogueItem boringCarShowedUp;
         [SerializeField] DialogueItem attackBoringIndustry;
-        [SerializeField] TargetItem goldieTargetAfterSnake;
+        //[SerializeField] TargetItem goldieTargetAfterSnake;
         [SerializeField] Transform parkingSpot;
         [SerializeField] ParticleSystem roadDustParticles;
         [SerializeField] AudioClip carOnRoadClip;
@@ -66,8 +66,8 @@ namespace GameEvents
             SetObjects();
             GetComponents();
             
-            QuestPointerManager.Instance.OnApproachTarget += OnApproachQuestTarget;
-            DialogueManager.Instance.OnDialogueEvent += OnDialogueEvent;
+            QuestPointerManager.Instance.OnApproachTarget += OnEventToTrigger;
+            DialogueManager.Instance.OnEventToTrigger += OnEventToTrigger;
 
             //DebugMode.Instance.EnableDebugCamera(boringCar.transform);
         }
@@ -106,21 +106,14 @@ namespace GameEvents
             passengerBalloon = boringPassenger.GetComponent<SpeechBalloonHandler>();
         }
 
-        void OnApproachQuestTarget(Target target)
+        void OnEventToTrigger(EventToTrigger eventToTrigger)
         {
-            switch (target)
+            switch (eventToTrigger)
             {
-                case Target.Goldie: ShowBoringCar(); break;
-            }
-        }
-
-        void OnDialogueEvent(DialogueEvent dialogueEvent)
-        {
-            switch (dialogueEvent)
-            {
-                case DialogueEvent.SetGoldieTargetAfterSnake: 
-                    QuestPointerManager.Instance.SetNewTarget(goldieTargetAfterSnake, goldie.transform);
+                case EventToTrigger.SetGoldieTargetAfterSnake: 
+                    QuestPointerManager.Instance.SetNewTarget(goldie, EventToTrigger.ShowBoringCar, "Meet Goldie outside the fence");
                     break;
+                case EventToTrigger.ShowBoringCar: ShowBoringCar(); break;
             }
         }
 
@@ -300,8 +293,8 @@ namespace GameEvents
 
         void OnDisable()
         {
-            QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
-            DialogueManager.Instance.OnDialogueEvent -= OnDialogueEvent;
+            QuestPointerManager.Instance.OnApproachTarget -= OnEventToTrigger;
+            DialogueManager.Instance.OnEventToTrigger -= OnEventToTrigger;
         }
 
         internal enum Emotion

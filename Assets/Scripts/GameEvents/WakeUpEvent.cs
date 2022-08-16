@@ -25,8 +25,6 @@ namespace GameEvents
         [SerializeField] Transform farmerWorkSpot;
         [SerializeField] Transform goldieSnakePigSpot;
         [SerializeField] Transform cameraWakeUpSpot;
-        [SerializeField] TargetItem goldieTarget;
-        [SerializeField] TargetItem snakeTarget;
 
         Animator goldieAnimator;
         Animator playerAnimator;
@@ -81,28 +79,21 @@ namespace GameEvents
 
         void OnEnable()
         {
-            DialogueManager.Instance.OnDialogueEvent += OnDialogueEvent;
-            QuestPointerManager.Instance.OnApproachTarget += OnApproachQuestTarget;
+            DialogueManager.Instance.OnEventToTrigger += OnEventToTrigger;
+            QuestPointerManager.Instance.OnApproachTarget += OnEventToTrigger;
         }
 
-        void OnDialogueEvent(DialogueEvent dialogueEvent)
+        void OnEventToTrigger(EventToTrigger eventToTrigger)
         {
-            switch (dialogueEvent)
+            switch (eventToTrigger)
             {
-                case DialogueEvent.CleanSleepingPP: StartCoroutine(CleanPostProcessing()); break;
-                case DialogueEvent.MoveWakingCamera: MoveCameraWhileWakeUp(); break;
-                case DialogueEvent.EnablePlayerControl: StartCoroutine(EnablePlayerControl()); break;
-                case DialogueEvent.SetSnakeTarget: SetSnakeTarget(); break;
-                case DialogueEvent.StartAttackSnakeEvent: StartAttackSnake(); break;
-            }
-        }
-
-        void OnApproachQuestTarget(Target target)
-        {
-            switch (target)
-            {
-                case Target.Goldie: StartCoroutine(FarmerLeaveHouse()); break;
-                case Target.Snake: DialogueManager.Instance.StartDialogue(snakeFoundDialogue);break;
+                case EventToTrigger.CleanSleepingPP: StartCoroutine(CleanPostProcessing()); break;
+                case EventToTrigger.MoveWakingCamera: MoveCameraWhileWakeUp(); break;
+                case EventToTrigger.EnablePlayerControl: StartCoroutine(EnablePlayerControl()); break;
+                case EventToTrigger.StartFarmerAnimation: StartCoroutine(FarmerLeaveHouse()); break;
+                case EventToTrigger.SetSnakeTarget: SetSnakeTarget(); break;
+                case EventToTrigger.ShowSnakeFoundDialogue: DialogueManager.Instance.StartDialogue(snakeFoundDialogue); break;
+                case EventToTrigger.StartAttackSnakeEvent: StartAttackSnake(); break;
             }
         }
 
@@ -205,7 +196,7 @@ namespace GameEvents
             goldie.transform.LookAt(farmer.transform);
             GoldieBarks();
         
-            QuestPointerManager.Instance.SetNewTarget(goldieTarget, goldie.transform);
+            QuestPointerManager.Instance.SetNewTarget(goldie, EventToTrigger.StartFarmerAnimation, "Follow Goldie");
         }
 
         IEnumerator FarmerLeaveHouse()
@@ -234,7 +225,7 @@ namespace GameEvents
         void SetSnakeTarget()
         {
             StartCoroutine(goldieNavmesh.MoveAnimating(goldieAnimator, goldieSnakePigSpot.position));
-            QuestPointerManager.Instance.SetNewTarget(snakeTarget, snake.transform);
+            QuestPointerManager.Instance.SetNewTarget(snake, EventToTrigger.ShowSnakeFoundDialogue, "Search for snakes around the chicks");
         }
 
         void StartAttackSnake()
@@ -245,8 +236,8 @@ namespace GameEvents
 
         void OnDisable()
         {
-            DialogueManager.Instance.OnDialogueEvent -= OnDialogueEvent;
-            QuestPointerManager.Instance.OnApproachTarget -= OnApproachQuestTarget;
+            DialogueManager.Instance.OnEventToTrigger -= OnEventToTrigger;
+            QuestPointerManager.Instance.OnApproachTarget -= OnEventToTrigger;
         }
     }
 }

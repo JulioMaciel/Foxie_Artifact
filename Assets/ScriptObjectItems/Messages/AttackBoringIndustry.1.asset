@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef43a6cb87e4d38af668fc1cabd92b0, type: 3}
   m_Name: AttackBoringIndustry.1
   m_EditorClassIdentifier: 
-  message: 
-  sequentialEvent: 0
+  message: Ok Foxie, let's do the same as last time. Bite their legs until they give
+    up.
+  sequentialEventToTrigger: 10

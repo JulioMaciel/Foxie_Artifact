@@ -8,6 +8,6 @@ namespace ScriptableObjects
     {
         [TextArea]
         public string message;
-        public DialogueEvent sequentialEvent = DialogueEvent.None;
+        public EventToTrigger sequentialEventToTrigger = EventToTrigger.None;
     }
 }

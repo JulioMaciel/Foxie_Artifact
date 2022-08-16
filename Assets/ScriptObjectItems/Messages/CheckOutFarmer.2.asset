@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CheckOutFarmer.2
   m_EditorClassIdentifier: 
   message: Now let's see how the farmer is going. Come on!
-  sequentialEvent: 8
+  sequentialEventToTrigger: 8

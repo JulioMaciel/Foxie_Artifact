@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: WelcomeFarmer.3
   m_EditorClassIdentifier: 
   message: 'The farmer is almost leaving the house. Let''s go! '
-  sequentialEvent: 3
+  sequentialEventToTrigger: 3

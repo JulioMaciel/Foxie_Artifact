@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: HuntSnake.3
   m_EditorClassIdentifier: 
   message: 'You go check the chicks and I the pigs. '
-  sequentialEvent: 4
+  sequentialEventToTrigger: 5

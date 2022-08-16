@@ -18,11 +18,11 @@ namespace Managers
         QuestPointerHandler questPointerHandler;
         TextMeshProUGUI questPointerText;
         Transform targetTransform;
-        TargetItem currentTarget;
+        EventToTrigger eventToTrigger;
     
         public static QuestPointerManager Instance;
     
-        public event Action<Target> OnApproachTarget;
+        public event Action<EventToTrigger> OnApproachTarget;
     
         void Awake()
         {
@@ -32,15 +32,16 @@ namespace Managers
             questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        public void SetNewTarget(TargetItem item, Transform target)
+        public void SetNewTarget(GameObject target, EventToTrigger eventToTriggerWhenApproach, string underPointerInstruction)
         {
             questPointer3D.gameObject.SetActive(true);
             questPointer2D.gameObject.SetActive(true);
         
-            currentTarget = item;
-            targetTransform = target;
+            //currentTarget = item;
+            targetTransform = target.transform;
+            eventToTrigger = eventToTriggerWhenApproach;
             questPointerHandler.SetTarget(targetTransform);
-            questPointerText.text = item.message;
+            questPointerText.text = underPointerInstruction;
 
             StartCoroutine(EraseMessageLater());
             StartCoroutine(CheckIfApproachedTarget());
@@ -57,7 +58,7 @@ namespace Managers
             while (!player.transform.position.IsCloseEnough(targetTransform.position, 2f))
                 yield return null;
         
-            OnApproachTarget?.Invoke(currentTarget.target);
+            OnApproachTarget?.Invoke(eventToTrigger);
         
             questPointer3D.gameObject.SetActive(false);
             questPointer2D.gameObject.SetActive(false);
