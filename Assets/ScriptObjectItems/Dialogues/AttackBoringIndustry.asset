@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef43a6cb87e4d38af668fc1cabd92b0, type: 3}
-  m_Name: BoringCarShowedUp.1
+  m_Script: {fileID: 11500000, guid: e485e0d9848d4637891991ccd6de2188, type: 3}
+  m_Name: AttackBoringIndustry
   m_EditorClassIdentifier: 
-  message: OH MY DOGNESS, look that car, it's the boring industry again!!!
-  sequentialEvent: 0
+  actorItem: {fileID: 11400000, guid: db1dcc52c0efe664a9e3f9406639bbe2, type: 2}
+  messages:
+  - {fileID: 11400000, guid: e7c6692347fe00e44bad00f44f48f199, type: 2}

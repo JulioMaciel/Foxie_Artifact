@@ -19,6 +19,7 @@ namespace Controller
         Vector3 playerVelocity;
         Vector3 moveDirection;
         bool toJump;
+        bool isStopped;
     
         public event Action<Transform> OnMove;
 
@@ -31,6 +32,8 @@ namespace Controller
 
         void Update()
         {
+            if (isStopped) return;
+            
             direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             toJump = Input.GetButtonDown("Jump");
         }
@@ -92,6 +95,18 @@ namespace Controller
         
             var targetRotation = Quaternion.LookRotation(forwardV3);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed);
+        }
+
+        public void Stop()
+        {
+            isStopped = true;
+            direction = Vector3.zero;
+            toJump = false;
+        }
+
+        public void Resume()
+        {
+            isStopped = false;
         }
     }
 }

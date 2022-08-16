@@ -12,5 +12,6 @@
         AttackSnakeSuccess,
         SetGoldieTargetAfterSnake,
         MoveCameraToWatchBoringCar,
+        ShowBiteUI
     }
 }

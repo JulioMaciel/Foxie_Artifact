@@ -17,6 +17,7 @@ namespace GameEvents
     {
         [SerializeField] GameObject roadDustParent;
         [SerializeField] DialogueItem boringCarShowedUp;
+        [SerializeField] DialogueItem attackBoringIndustry;
         [SerializeField] TargetItem goldieTargetAfterSnake;
         [SerializeField] Transform parkingSpot;
         [SerializeField] ParticleSystem roadDustParticles;

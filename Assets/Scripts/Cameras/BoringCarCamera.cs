@@ -21,7 +21,7 @@ namespace Cameras
             boringCar = Entity.Instance.boringCar;
             
             freeCamera.enabled = false;
-            playerMoveControl.enabled = false;
+            playerMoveControl.Stop(); //playerMoveControl.enabled = false;
 
             StartCoroutine(MoveCameraSmoothly(true));
         }
@@ -50,7 +50,7 @@ namespace Cameras
         void End()
         {
             freeCamera.enabled = true;
-            playerMoveControl.enabled = true;
+            playerMoveControl.Resume(); //playerMoveControl.enabled = true;
             Destroy(this);
         }
     }

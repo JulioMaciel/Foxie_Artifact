@@ -12,10 +12,8 @@ namespace UI
         
         const float xMinAngle = 0;
         const float xMaxAngle = 180;
-        const float xMaxValue = xMaxAngle - xMinAngle;
         const float zMinAngle = 90;
         const float zMaxAngle = 270;
-        const float zMaxValue = zMaxAngle - zMinAngle;
     
         void Start()
         {
@@ -49,8 +47,8 @@ namespace UI
             humanForward.y = 0;
             var humanRight = humanTrans.right;
             humanRight.y = 0;
-            var forwardAngle = Vector3.Angle((camPos - humanPos), humanForward);
-            var rightAngle = Vector3.Angle((camPos - humanPos), humanRight);
+            var forwardAngle = Vector3.Angle(camPos - humanPos, humanForward);
+            var rightAngle = Vector3.Angle(camPos - humanPos, humanRight);
             var angleHumanToCamera = rightAngle > 90 ? 360 - forwardAngle : forwardAngle;
             return angleHumanToCamera;
         }
@@ -60,11 +58,11 @@ namespace UI
             // normalizes angles > 180 and > 270 
             var xNormalizedAngle = angleHumanToCamera switch
             {
-                >= xMaxValue and <= xMaxAngle * 1.5f => xMaxValue - (angleHumanToCamera - xMaxValue),
-                >= xMaxAngle * 1.5f => xMinAngle + (xMaxValue * 2f - angleHumanToCamera),
+                >= 180 and <= xMaxAngle * 1.5f => 180 - (angleHumanToCamera - 180),
+                >= xMaxAngle * 1.5f => xMinAngle + (180 * 2f - angleHumanToCamera),
                 _ => angleHumanToCamera
             };
-            var xPercentage = (xNormalizedAngle - xMinAngle) / xMaxValue;
+            var xPercentage = (xNormalizedAngle - xMinAngle) / 180;
             var xDestination = Mathf.Lerp(distance, -distance, xPercentage);
             return xDestination;
         }
@@ -78,7 +76,7 @@ namespace UI
                 < zMinAngle => zMinAngle + (zMinAngle - angleHumanToCamera),
                 _ => angleHumanToCamera
             };
-            var zPercentage = (zNormalizedAngle - zMinAngle) / zMaxValue;
+            var zPercentage = (zNormalizedAngle - zMinAngle) / 180;
             var zDestination = Mathf.Lerp(-distance, distance, zPercentage);
             return zDestination;
         }
