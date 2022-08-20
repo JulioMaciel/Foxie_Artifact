@@ -1936,6 +1936,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speech Balloon
       objectReference: {fileID: 0}
+    - target: {fileID: 4075898966044564593, guid: 95dd9ec2349dc2c448796ab65152f3c2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7642487362894570607, guid: 95dd9ec2349dc2c448796ab65152f3c2,
         type: 3}
       propertyPath: m_RootOrder
@@ -1944,12 +1949,12 @@ PrefabInstance:
     - target: {fileID: 7642487362894570607, guid: 95dd9ec2349dc2c448796ab65152f3c2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.402
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7642487362894570607, guid: 95dd9ec2349dc2c448796ab65152f3c2,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.01
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7642487362894570607, guid: 95dd9ec2349dc2c448796ab65152f3c2,
         type: 3}

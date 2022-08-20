@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 3390238362463630589}
   - component: {fileID: 3390238362463630530}
   - component: {fileID: 3390238362463630588}
-  - component: {fileID: 1938474073}
   - component: {fileID: 1938474077}
+  - component: {fileID: 1574403472}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -66,18 +66,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questPointer3D: {fileID: 0}
   questPointer2D: {fileID: 0}
---- !u!114 &1938474073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3390238362463630531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88234a4231e7d5e4683827f2ee84a9be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1938474077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +85,24 @@ MonoBehaviour:
   boringCar: {fileID: 0}
   boringDriver: {fileID: 0}
   boringPassenger: {fileID: 0}
+--- !u!114 &1574403472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3390238362463630531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4592017ac1614e89893fcaa58de35e75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialUI: {fileID: 0}
+  wasdText: Use WASD buttons to move the player
+  jumpText: Use space button to jump
+  controlPressedTextColor: {r: 0.36956942, g: 0.8490566, b: 0.29236382, a: 1}
+  minTimeControlPressed: 2
+  initialUIMovementSpeed: 1.1
 --- !u!1001 &3937903684993520836
 PrefabInstance:
   m_ObjectHideFlags: 0

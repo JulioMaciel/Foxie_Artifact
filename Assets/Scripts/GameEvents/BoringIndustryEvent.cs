@@ -18,7 +18,6 @@ namespace GameEvents
         [SerializeField] GameObject roadDustParent;
         [SerializeField] DialogueItem boringCarShowedUp;
         [SerializeField] DialogueItem attackBoringIndustry;
-        //[SerializeField] TargetItem goldieTargetAfterSnake;
         [SerializeField] Transform parkingSpot;
         [SerializeField] ParticleSystem roadDustParticles;
         [SerializeField] AudioClip carOnRoadClip;
@@ -114,14 +113,19 @@ namespace GameEvents
                     QuestPointerManager.Instance.SetNewTarget(goldie, EventToTrigger.ShowBoringCar, "Meet Goldie outside the fence");
                     break;
                 case EventToTrigger.ShowBoringCar: ShowBoringCar(); break;
+                case EventToTrigger.ShowAttackBoringDialogue: 
+                    DialogueManager.Instance.StartDialogue(attackBoringIndustry); break;
+                case EventToTrigger.ShowBiteUI: ShowBiteUI(); break;
             }
         }
 
         void ShowBoringCar()
         {
             mainCamera.GetComponent<FreeCameraControl>().enabled = false;
-            mainCamera.GetComponent<BoringCarCamera>().enabled = true;
-            
+            var boringCamera = mainCamera.GetComponent<BoringCarCamera>();
+            boringCamera.enabled = true;
+            boringCamera.OnEventToTrigger += OnEventToTrigger;
+
             DialogueManager.Instance.StartDialogue(boringCarShowedUp);
             boringCar.SetActive(true);
             
@@ -205,7 +209,7 @@ namespace GameEvents
             
             driverNavMesh.transform.LookAt(farmer.transform);
             passengerNavMesh.transform.LookAt(farmer.transform);
-
+            
             TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
             driverBalloon.ShowBalloon(balloonBoringReasons, 5);
 
@@ -253,7 +257,7 @@ namespace GameEvents
         {
             while (!hasAttackedPassenger && !hasAttackedDriver)
             {
-                var willReactSad = Random.Range(1, 3) == 1;
+                var willReactSad = Random.Range(0, 2) == 0;
 
                 if (willReactSad)
                 {
@@ -289,6 +293,12 @@ namespace GameEvents
                     audioSource.PlayRandomClip(scaredClips);
                     break;
             }
+        }
+
+        void ShowBiteUI()
+        {
+            // TODO
+            Debug.Log("wip: showing bite ui...");
         }
 
         void OnDisable()

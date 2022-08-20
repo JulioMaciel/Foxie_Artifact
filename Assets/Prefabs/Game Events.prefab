@@ -3772,8 +3772,6 @@ MonoBehaviour:
   farmerWorkSpot: {fileID: 2493533380254222325}
   goldieSnakePigSpot: {fileID: 2493533379808659271}
   cameraWakeUpSpot: {fileID: 1506608188}
-  goldieTarget: {fileID: 11400000, guid: 1da4ed4978be0c942a3617ad52ded5b7, type: 2}
-  snakeTarget: {fileID: 11400000, guid: dc004925c28055e48a9eba2b15dd2ee3, type: 2}
 --- !u!114 &2493533379435969110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3821,7 +3819,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roadDustParent: {fileID: 0}
   boringCarShowedUp: {fileID: 11400000, guid: 66a836c776f6aa3478af5c1a838e16cb, type: 2}
-  goldieTargetAfterSnake: {fileID: 11400000, guid: 1da4ed4978be0c942a3617ad52ded5b7,
+  attackBoringIndustry: {fileID: 11400000, guid: a7b1c2d3b4ce7504dba79648964287a7,
     type: 2}
   parkingSpot: {fileID: 1716742079}
   roadDustParticles: {fileID: 3626832829391354810, guid: de108e2f26cd0d840839a37248625c36,
@@ -3970,7 +3968,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2493533380254222324}
   m_LocalRotation: {x: -0, y: -0.24036475, z: -0, w: 0.9706826}
-  m_LocalPosition: {x: -160.33, y: -0.069000006, z: 6.55}
+  m_LocalPosition: {x: -160.8, y: -0.069000006, z: 6.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

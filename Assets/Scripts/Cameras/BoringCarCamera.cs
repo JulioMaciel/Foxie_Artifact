@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Controller;
 using Managers;
+using StaticData;
 using Tools;
 using UnityEngine;
 
@@ -13,6 +15,8 @@ namespace Cameras
         GameObject boringCar;
         FreeCameraControl freeCamera;
         MoveControl playerMoveControl;
+        
+        public event Action<EventToTrigger> OnEventToTrigger;
 
         void OnEnable()
         {
@@ -21,7 +25,7 @@ namespace Cameras
             boringCar = Entity.Instance.boringCar;
             
             freeCamera.enabled = false;
-            playerMoveControl.Stop(); //playerMoveControl.enabled = false;
+            playerMoveControl.Stop();
 
             StartCoroutine(MoveCameraSmoothly(true));
         }
@@ -37,7 +41,6 @@ namespace Cameras
             var desiredHeight = currentPos.y + height * (goUp ? 1 : -1);
             
             var desiredPosition = new Vector3(currentPos.x, desiredHeight, currentPos.z);
-            Debug.DrawLine(currentPos, desiredPosition, Color.magenta, 99);
             yield return transform.MoveUntilArrive(desiredPosition, 1);
 
             // Move back down after going up 
@@ -50,7 +53,8 @@ namespace Cameras
         void End()
         {
             freeCamera.enabled = true;
-            playerMoveControl.Resume(); //playerMoveControl.enabled = true;
+            playerMoveControl.Resume();
+            OnEventToTrigger?.Invoke(EventToTrigger.ShowAttackBoringDialogue);
             Destroy(this);
         }
     }

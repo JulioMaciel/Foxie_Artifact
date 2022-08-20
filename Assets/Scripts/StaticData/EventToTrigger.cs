@@ -12,6 +12,8 @@
         StartAttackSnakeEvent,
         SetGoldieTargetAfterSnake,
         ShowBoringCar,
-        ShowBiteUI
+        ShowAttackBoringDialogue,
+        ShowBiteUI,
+        SetGoldieAsFirstTarget,
     }
 }

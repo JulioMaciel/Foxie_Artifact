@@ -6,6 +6,7 @@ using Managers;
 using ScriptableObjects;
 using StaticData;
 using Tools;
+using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -25,6 +26,8 @@ namespace GameEvents
         [SerializeField] Transform farmerWorkSpot;
         [SerializeField] Transform goldieSnakePigSpot;
         [SerializeField] Transform cameraWakeUpSpot;
+
+        //[SerializeField] TutorialControls mouseCameraTutorialControl;
 
         Animator goldieAnimator;
         Animator playerAnimator;
@@ -81,6 +84,7 @@ namespace GameEvents
         {
             DialogueManager.Instance.OnEventToTrigger += OnEventToTrigger;
             QuestPointerManager.Instance.OnApproachTarget += OnEventToTrigger;
+            TutorialManager.Instance.OnEventToTrigger += OnEventToTrigger;
         }
 
         void OnEventToTrigger(EventToTrigger eventToTrigger)
@@ -90,6 +94,7 @@ namespace GameEvents
                 case EventToTrigger.CleanSleepingPP: StartCoroutine(CleanPostProcessing()); break;
                 case EventToTrigger.MoveWakingCamera: MoveCameraWhileWakeUp(); break;
                 case EventToTrigger.EnablePlayerControl: StartCoroutine(EnablePlayerControl()); break;
+                case EventToTrigger.SetGoldieAsFirstTarget: SetGoldieAsFirstTarget(); break;
                 case EventToTrigger.StartFarmerAnimation: StartCoroutine(FarmerLeaveHouse()); break;
                 case EventToTrigger.SetSnakeTarget: SetSnakeTarget(); break;
                 case EventToTrigger.ShowSnakeFoundDialogue: DialogueManager.Instance.StartDialogue(snakeFoundDialogue); break;
@@ -190,12 +195,15 @@ namespace GameEvents
 
         IEnumerator MoveGoldieToWelcomeSpot()
         {
+            TutorialManager.Instance.StartTutorial();
             StartCoroutine(goldieNavmesh.MoveAnimating(goldieAnimator, goldieWelcomeFarmerSpot.position));
             yield return goldieNavmesh.WaitToArrive();
-        
             goldie.transform.LookAt(farmer.transform);
+        }
+
+        void SetGoldieAsFirstTarget()
+        {
             GoldieBarks();
-        
             QuestPointerManager.Instance.SetNewTarget(goldie, EventToTrigger.StartFarmerAnimation, "Follow Goldie");
         }
 
@@ -238,6 +246,7 @@ namespace GameEvents
         {
             DialogueManager.Instance.OnEventToTrigger -= OnEventToTrigger;
             QuestPointerManager.Instance.OnApproachTarget -= OnEventToTrigger;
+            TutorialManager.Instance.OnEventToTrigger -= OnEventToTrigger;
         }
     }
 }

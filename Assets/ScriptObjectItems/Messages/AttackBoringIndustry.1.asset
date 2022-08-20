@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   message: Ok Foxie, let's do the same as last time. Bite their legs until they give
     up.
-  sequentialEventToTrigger: 10
+  sequentialEventToTrigger: 11
