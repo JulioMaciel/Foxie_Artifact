@@ -10,20 +10,21 @@ namespace Tools
 {
     public static class Extensions
     {
-        public static IEnumerator MoveAnimating(this NavMeshAgent agent, Animator anim, Vector3 destination)
+        public static IEnumerator MoveAnimating(this NavMeshAgent agent, Animator anim, Vector3 destination, float tolerance = .5f)
         {
             if (anim.parameters.All(p => p.nameHash != AnimParam.MoveSpeed))
                 throw new UnityException("The animator must have a MoveSpeed parameter.");
 
             agent.SetDestination(destination);
         
-            while (!agent.HasPracticallyArrived())
+            while (!agent.HasPracticallyArrived(tolerance))
             {
                 var velocity = agent.velocity.magnitude/agent.speed;
                 anim.SetFloat(AnimParam.MoveSpeed, velocity);
                 yield return null;
             }
             anim.SetFloat(AnimParam.MoveSpeed, 0);
+            agent.ResetPath();
         }
     
         public static bool HasPracticallyArrived(this NavMeshAgent agent, float tolerance = .5f)
@@ -44,11 +45,11 @@ namespace Tools
             agent.ResetPath();
         }
 
-        public static IEnumerator WaitCurrentAnimation(this Animator anim)
+        public static IEnumerator WaitCurrentClipFinish(this Animator anim)
         {
-            var clip = anim.GetCurrentAnimatorStateInfo(0);
-            var fullLength = clip.length / clip.speed;
-            yield return new WaitForSecondsRealtime(fullLength);
+            var initAnim = anim.GetCurrentAnimatorClipInfo(0)[0].clip; 
+            while (anim.GetCurrentAnimatorClipInfo(0)[0].clip == initAnim)
+                yield return null;
         }
 
         public static void TrySetWorldDestination(this NavMeshAgent agent, Vector3 worldDestination)
@@ -74,7 +75,15 @@ namespace Tools
         public static IEnumerator WaitAnimationFinish(this Animator anim, AnimClip clip)
         {
             yield return anim.WaitAnimationStart(clip);
-            yield return anim.WaitCurrentAnimation();
+            yield return anim.WaitCurrentClipFinish();
+        }
+
+        public static IEnumerator WaitNextClipFinish(this Animator anim)
+        {
+            // var currentAnim = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+            // while (anim.GetCurrentAnimatorStateInfo(0).IsName(currentAnim))
+                yield return anim.WaitCurrentClipFinish();
+            yield return anim.WaitCurrentClipFinish();
         }
 
         public static void TurnBackOn(this Transform trans, Transform target)

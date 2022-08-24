@@ -24,6 +24,7 @@ namespace GameEvents
         [SerializeField] AudioClip carIdleClip;
         [SerializeField] AudioClip carDoorOpenClip;
         [SerializeField] AudioClip carDoorCloseClip;
+        [SerializeField] AudioClip painScream;
         [SerializeField] AudioClip[] angryClips;
         [SerializeField] AudioClip[] sadClips;
         [SerializeField] AudioClip[] scaredClips;
@@ -59,6 +60,8 @@ namespace GameEvents
         bool isCarMoving;
         bool hasAttackedDriver;
         bool hasAttackedPassenger;
+        bool hasDriverReturnedToCar;
+        bool hasPassengerReturnedToCar;
 
         void OnEnable()
         {
@@ -67,8 +70,6 @@ namespace GameEvents
             
             QuestPointerManager.Instance.OnApproachTarget += OnEventToTrigger;
             DialogueManager.Instance.OnEventToTrigger += OnEventToTrigger;
-
-            //DebugMode.Instance.EnableDebugCamera(boringCar.transform);
         }
 
         void Update()
@@ -115,7 +116,10 @@ namespace GameEvents
                 case EventToTrigger.ShowBoringCar: ShowBoringCar(); break;
                 case EventToTrigger.ShowAttackBoringDialogue: 
                     DialogueManager.Instance.StartDialogue(attackBoringIndustry); break;
-                case EventToTrigger.ShowBiteUI: ShowBiteUI(); break;
+                case EventToTrigger.SetDriverAsTarget: SetDriverAsTarget(); break;
+                case EventToTrigger.ShowAttackLegsUI: ShowAttackLegsUI(); break;
+                case EventToTrigger.ReactDriverToBite: hasAttackedDriver = true; break;
+                case EventToTrigger.ReactPassengerToBite: hasAttackedPassenger = true; break;
             }
         }
 
@@ -213,7 +217,7 @@ namespace GameEvents
             TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
             driverBalloon.ShowBalloon(balloonBoringReasons, 5);
 
-            yield return driverAnimator.WaitCurrentAnimation();
+            yield return driverAnimator.WaitCurrentClipFinish();
             var farmerPos = farmer.transform.position;
             StartCoroutine(driverNavMesh.MoveAnimating(driverAnimator, farmerPos));
             StartCoroutine(passengerNavMesh.MoveAnimating(passengerAnimator, farmerPos));
@@ -222,40 +226,57 @@ namespace GameEvents
             driverNavMesh.transform.LookAt(farmer.transform);
             passengerNavMesh.transform.LookAt(farmer.transform);
 
-            StartCoroutine(KeepDriverArguing());
-            StartCoroutine(KeepPassengerArguing());
+            StartCoroutine(KeepBoringAgentArguing(true, driverAnimator, driverAudio, driverNavMesh, driverBalloon));
+            StartCoroutine(KeepBoringAgentArguing(false, passengerAnimator, passengerAudio, passengerNavMesh, passengerBalloon));
             StartCoroutine(KeepFarmerArguing());
         }
 
-        IEnumerator KeepDriverArguing()
+        IEnumerator KeepBoringAgentArguing(bool isDriver, Animator anim, AudioSource audio, NavMeshAgent navMesh, SpeechBalloonHandler balloon)
         {
-            while (!hasAttackedDriver)
+            while (isDriver ? !hasAttackedDriver : !hasAttackedPassenger)
             {
-                TalkAnimating(Emotion.Angry, driverAnimator, driverAudio);
-                driverBalloon.ShowBalloon(balloonBoringReasons, 3);
-                yield return driverAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(1f, 3f));
+                TalkAnimating(Emotion.Angry, anim, audio);
+                balloon.ShowBalloon(balloonBoringReasons, 3);
+                
+                var rndWait = Random.Range(2f, 4f);
+                var currentWaiting = 0f;
+                while (currentWaiting < rndWait && (isDriver ? !hasAttackedDriver : !hasAttackedPassenger))
+                {
+                    currentWaiting += Time.deltaTime;
+                    yield return null;
+                }
             }
 
-            // todo: what happens after attacked
+            StartCoroutine(ReactToGetAttacked(isDriver, anim, audio, navMesh));
         }
-        
-        IEnumerator KeepPassengerArguing()
+
+        IEnumerator ReactToGetAttacked(bool isDriver, Animator anim, AudioSource audio, NavMeshAgent navMesh)
         {
-            while (!hasAttackedPassenger)
-            {
-                TalkAnimating(Emotion.Angry, passengerAnimator, passengerAudio);
-                passengerBalloon.ShowBalloon(balloonBoringReasons, 3);
-                yield return passengerAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(1f, 3f));
-            }  
+            yield return new WaitForSeconds(0.1f);
+            audio.PlayClip(painScream);
+            anim.SetTrigger(AnimParam.Human.GetHit);
+            Debug.Log($"SetTrigger GetHit");
+            //yield return anim.WaitNextClipFinish();
+            yield return anim.WaitAnimationFinish(AnimClip.Injured_leg);
+            Debug.Log($"next clip has finished. go navMesh.MoveAnimating");
+            yield return navMesh.MoveAnimating(anim, boringCar.transform.position, 3);
+            //yield return navMesh.WaitToArrive(2);
+            audio.PlayClip(carDoorOpenClip);
+            yield return new WaitForSeconds(0.5f);
+            audio.PlayClip(carDoorCloseClip);
+            yield return new WaitForSeconds(0.5f);
+            Destroy(isDriver ? boringDriver : boringPassenger);
+
+            if (isDriver) hasPassengerReturnedToCar = true;
+            else hasDriverReturnedToCar = true;
             
-            // todo: what happens after attacked
+            if (hasPassengerReturnedToCar && hasDriverReturnedToCar) 
+                DriveBoringCarAway();
         }
         
         IEnumerator KeepFarmerArguing()
         {
-            while (!hasAttackedPassenger && !hasAttackedDriver)
+            while (!hasAttackedPassenger || !hasAttackedDriver)
             {
                 var willReactSad = Random.Range(0, 2) == 0;
 
@@ -269,12 +290,32 @@ namespace GameEvents
                     TalkAnimating(Emotion.Scared, farmerAnimator, farmerAudio);
                 }
                 
-                yield return farmerAnimator.WaitCurrentAnimation();
-                yield return new WaitForSeconds(Random.Range(3f, 6f));
+                //yield return farmerAnimator.WaitCurrentAnimation();
+                //yield return new WaitForSeconds(Random.Range(3f, 6f));
+                
+                //yield return WaitTimeOrTrigger(Random.Range(3f, 6f), wereBothAgentsAttacked);
+                var rndWait = Random.Range(3f, 6f);
+                var currentWaiting = 0f;
+                while (currentWaiting < rndWait && !(hasAttackedPassenger && hasAttackedDriver))
+                {
+                    currentWaiting += Time.deltaTime;
+                    yield return null;
+                }
             }
-            
-            // todo: what happens after attacks
+
+            yield return new WaitForSeconds(2);
+            StartCoroutine(KeepFarmerCheeringAndWaving());
         }
+
+        // IEnumerator WaitTimeOrTrigger(float waitTime, bool breakTrigger) // deveria ser um ref aqui
+        // {
+        //     var currentWaiting = 0f;
+        //     while (currentWaiting < waitTime || breakTrigger)
+        //     {
+        //         currentWaiting += Time.deltaTime;
+        //         yield return null;
+        //     }
+        // }
 
         void TalkAnimating(Emotion emotion, Animator humanAnim, AudioSource audioSource)
         {
@@ -295,10 +336,38 @@ namespace GameEvents
             }
         }
 
-        void ShowBiteUI()
+        void SetDriverAsTarget()
+        {
+            QuestPointerManager.Instance.SetNewTarget(boringDriver, EventToTrigger.ShowAttackLegsUI, 
+                "Approach and attack the boring industry");
+        }
+
+        void ShowAttackLegsUI()
+        {
+            var driverBiteHandler = boringDriver.GetComponentInChildren<BiteHandler>();
+            driverBiteHandler.enabled = true;
+            driverBiteHandler.OnEventToTrigger += OnEventToTrigger;
+            var passengerBiteHandler = boringPassenger.GetComponentInChildren<BiteHandler>();
+            passengerBiteHandler.enabled = true;
+            passengerBiteHandler.OnEventToTrigger += OnEventToTrigger;
+        }
+
+        void DriveBoringCarAway()
         {
             // TODO
-            Debug.Log("wip: showing bite ui...");
+            Debug.Log("A equipe rocket está decolando outra vez!!!");
+        }
+
+        IEnumerator KeepFarmerCheeringAndWaving()
+        {
+            while (true) // repeat until closes game
+            {
+                farmerAnimator.SetTrigger(AnimParam.Human.Cheer);
+                yield return new WaitForSeconds(3);
+                farmer.transform.LookAt(boringCar.transform);
+                farmerAnimator.SetTrigger(AnimParam.Human.Wave);
+                yield return new WaitForSeconds(3);
+            }
         }
 
         void OnDisable()

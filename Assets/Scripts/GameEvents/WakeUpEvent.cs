@@ -217,16 +217,10 @@ namespace GameEvents
             farmerAnimator.SetTrigger(AnimParam.Human.Wave);
             yield return new WaitForSeconds(3);
         
-            StartCoroutine(farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position));
-            yield return new WaitForSeconds(1);
-            StartCoroutine(PlayFarmerAnimationWork());
-
             DialogueManager.Instance.StartDialogue(snakeHuntDialogue);
-        }
-
-        IEnumerator PlayFarmerAnimationWork()
-        {
-            yield return farmerNavMesh.WaitToArrive();
+            
+            yield return farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position, 1f);
+            yield return new WaitForSeconds(.5f);
             farmerAnimator.SetBool(AnimParam.Human.IsWorking, true);
         }
 

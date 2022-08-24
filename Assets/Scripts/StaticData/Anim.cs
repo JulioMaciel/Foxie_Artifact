@@ -30,6 +30,8 @@ namespace StaticData
             public static int Shout = Animator.StringToHash("Shout");
             public static int SayNo = Animator.StringToHash("SayNo");
             public static int Horror = Animator.StringToHash("Horror");
+            public static int GetHit = Animator.StringToHash("GetHit");
+            public static int Cheer = Animator.StringToHash("Cheer");
         }
 
         public struct Snake
@@ -46,6 +48,7 @@ namespace StaticData
     public enum AnimClip
     {
         Idle,
-        Wave
+        Wave,
+        Injured_leg
     }
 }

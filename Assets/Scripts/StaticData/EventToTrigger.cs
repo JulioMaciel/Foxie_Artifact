@@ -13,7 +13,10 @@
         SetGoldieTargetAfterSnake,
         ShowBoringCar,
         ShowAttackBoringDialogue,
-        ShowBiteUI,
+        SetDriverAsTarget,
         SetGoldieAsFirstTarget,
+        ShowAttackLegsUI,
+        ReactDriverToBite,
+        ReactPassengerToBite,
     }
 }
