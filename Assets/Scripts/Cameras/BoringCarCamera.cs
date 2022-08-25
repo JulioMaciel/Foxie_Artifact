@@ -18,6 +18,8 @@ namespace Cameras
         
         public event Action<EventToTrigger> OnEventToTrigger;
 
+        public bool isEndGame;
+
         void OnEnable()
         {
             freeCamera = GetComponent<FreeCameraControl>();
@@ -44,7 +46,7 @@ namespace Cameras
             yield return transform.MoveUntilArrive(desiredPosition, 1);
 
             // Move back down after going up 
-            if (!goUp) yield break;
+            if (!goUp || isEndGame) yield break;
             yield return new WaitForSeconds(1);
             yield return MoveCameraSmoothly(false);
             End();
@@ -55,7 +57,7 @@ namespace Cameras
             freeCamera.enabled = true;
             playerMoveControl.Resume();
             OnEventToTrigger?.Invoke(EventToTrigger.ShowAttackBoringDialogue);
-            Destroy(this);
+            enabled = false;
         }
     }
 }

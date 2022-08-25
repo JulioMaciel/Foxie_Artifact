@@ -10,8 +10,12 @@ namespace Tools
 {
     public static class Extensions
     {
-        public static IEnumerator MoveAnimating(this NavMeshAgent agent, Animator anim, Vector3 destination, float tolerance = .5f)
+        public static IEnumerator MoveAnimating(this NavMeshAgent agent, Vector3 destination, float tolerance = .5f)
         {
+            var anim = agent.gameObject.GetComponent<Animator>();
+            if (anim == null)
+                throw new UnityException("The GameObject owning this navmesh agent must also have a animator attached.");
+            
             if (anim.parameters.All(p => p.nameHash != AnimParam.MoveSpeed))
                 throw new UnityException("The animator must have a MoveSpeed parameter.");
 
@@ -80,9 +84,7 @@ namespace Tools
 
         public static IEnumerator WaitNextClipFinish(this Animator anim)
         {
-            // var currentAnim = anim.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-            // while (anim.GetCurrentAnimatorStateInfo(0).IsName(currentAnim))
-                yield return anim.WaitCurrentClipFinish();
+            yield return anim.WaitCurrentClipFinish();
             yield return anim.WaitCurrentClipFinish();
         }
 

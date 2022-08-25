@@ -6,7 +6,6 @@ using Managers;
 using ScriptableObjects;
 using StaticData;
 using Tools;
-using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -196,7 +195,7 @@ namespace GameEvents
         IEnumerator MoveGoldieToWelcomeSpot()
         {
             TutorialManager.Instance.StartTutorial();
-            StartCoroutine(goldieNavmesh.MoveAnimating(goldieAnimator, goldieWelcomeFarmerSpot.position));
+            StartCoroutine(goldieNavmesh.MoveAnimating(goldieWelcomeFarmerSpot.position));
             yield return goldieNavmesh.WaitToArrive();
             goldie.transform.LookAt(farmer.transform);
         }
@@ -209,7 +208,7 @@ namespace GameEvents
 
         IEnumerator FarmerLeaveHouse()
         {
-            StartCoroutine(farmerNavMesh.MoveAnimating(farmerAnimator, farmerWaveSpot.position));
+            StartCoroutine(farmerNavMesh.MoveAnimating(farmerWaveSpot.position));
         
             yield return farmerNavMesh.WaitToArrive();
         
@@ -219,14 +218,14 @@ namespace GameEvents
         
             DialogueManager.Instance.StartDialogue(snakeHuntDialogue);
             
-            yield return farmerNavMesh.MoveAnimating(farmerAnimator, farmerWorkSpot.position, 1f);
+            yield return farmerNavMesh.MoveAnimating(farmerWorkSpot.position, 1f);
             yield return new WaitForSeconds(.5f);
             farmerAnimator.SetBool(AnimParam.Human.IsWorking, true);
         }
 
         void SetSnakeTarget()
         {
-            StartCoroutine(goldieNavmesh.MoveAnimating(goldieAnimator, goldieSnakePigSpot.position));
+            StartCoroutine(goldieNavmesh.MoveAnimating(goldieSnakePigSpot.position));
             QuestPointerManager.Instance.SetNewTarget(snake, EventToTrigger.ShowSnakeFoundDialogue, "Search for snakes around the chicks");
         }
 

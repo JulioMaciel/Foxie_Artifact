@@ -18,5 +18,6 @@
         ShowAttackLegsUI,
         ReactDriverToBite,
         ReactPassengerToBite,
+        RaiseCameraDriveAway,
     }
 }

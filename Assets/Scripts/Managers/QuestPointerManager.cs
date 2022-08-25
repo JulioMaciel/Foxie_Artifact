@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using ScriptableObjects;
 using StaticData;
 using TMPro;
 using Tools;

@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using Cameras;
-using Controller;
 using Managers;
 using ScriptableObjects;
 using StaticData;
+using TMPro;
 using Tools;
 using UI;
 using UnityEngine;
@@ -18,21 +18,27 @@ namespace GameEvents
         [SerializeField] GameObject roadDustParent;
         [SerializeField] DialogueItem boringCarShowedUp;
         [SerializeField] DialogueItem attackBoringIndustry;
+        [SerializeField] DialogueItem foxieBeatBoringIndustry;
         [SerializeField] Transform parkingSpot;
+        [SerializeField] Transform goldieBarkingSpot;
+        [SerializeField] Transform uTurnSpot;
+        [SerializeField] Transform finalRoadSpot;
         [SerializeField] ParticleSystem roadDustParticles;
         [SerializeField] AudioClip carOnRoadClip;
         [SerializeField] AudioClip carIdleClip;
         [SerializeField] AudioClip carDoorOpenClip;
         [SerializeField] AudioClip carDoorCloseClip;
         [SerializeField] AudioClip painScream;
+        [SerializeField] AudioClip goldieBarkClip;
+        [SerializeField] AudioClip goldieSnarlClip;
         [SerializeField] AudioClip[] angryClips;
         [SerializeField] AudioClip[] sadClips;
         [SerializeField] AudioClip[] scaredClips;
         [SerializeField] BalloonItem balloonBoringReasons;
         [SerializeField] BalloonItem balloonSayingNo;
+        [SerializeField] TextMeshProUGUI endGameUI;
 
         Camera mainCamera;
-        GameObject player;
         GameObject farmer;
         GameObject goldie;
         GameObject boringCar;
@@ -42,14 +48,17 @@ namespace GameEvents
         NavMeshAgent carNavMesh;
         NavMeshAgent driverNavMesh;
         NavMeshAgent passengerNavMesh;
+        NavMeshAgent goldieNavMesh;
         Animator carWheelsAnimator;
         Animator driverAnimator;
         Animator passengerAnimator;
         Animator farmerAnimator;
+        Animator goldieAnimator;
         AudioSource carAudio;
         AudioSource driverAudio;
         AudioSource passengerAudio;
         AudioSource farmerAudio;
+        AudioSource goldieAudio;
         SpeechBalloonHandler farmerBalloon;
         SpeechBalloonHandler driverBalloon;
         SpeechBalloonHandler passengerBalloon;
@@ -60,8 +69,6 @@ namespace GameEvents
         bool isCarMoving;
         bool hasAttackedDriver;
         bool hasAttackedPassenger;
-        bool hasDriverReturnedToCar;
-        bool hasPassengerReturnedToCar;
 
         void OnEnable()
         {
@@ -80,7 +87,6 @@ namespace GameEvents
         void SetObjects()
         {
             mainCamera = Camera.main;
-            player = Entity.Instance.player;
             farmer = Entity.Instance.farmer;
             goldie = Entity.Instance.goldie;
             boringCar = Entity.Instance.boringCar;
@@ -93,14 +99,17 @@ namespace GameEvents
             carNavMesh = boringCar.GetComponent<NavMeshAgent>();
             driverNavMesh = boringDriver.GetComponent<NavMeshAgent>();
             passengerNavMesh = boringPassenger.GetComponent<NavMeshAgent>();
+            goldieNavMesh = goldie.GetComponent<NavMeshAgent>();
             carWheelsAnimator = boringCar.GetComponentInChildren<Animator>();
             driverAnimator = boringDriver.GetComponent<Animator>();
             passengerAnimator = boringPassenger.GetComponent<Animator>();
             farmerAnimator = farmer.GetComponent<Animator>();
+            goldieAnimator = goldie.GetComponent<Animator>();
             carAudio = boringCar.GetComponent<AudioSource>();
             driverAudio = boringDriver.GetComponent<AudioSource>();
             passengerAudio = boringPassenger.GetComponent<AudioSource>();
             farmerAudio = farmer.GetComponent<AudioSource>();
+            goldieAudio = goldie.GetComponent<AudioSource>();
             farmerBalloon = farmer.GetComponent<SpeechBalloonHandler>();
             driverBalloon = boringDriver.GetComponent<SpeechBalloonHandler>();
             passengerBalloon = boringPassenger.GetComponent<SpeechBalloonHandler>();
@@ -120,6 +129,7 @@ namespace GameEvents
                 case EventToTrigger.ShowAttackLegsUI: ShowAttackLegsUI(); break;
                 case EventToTrigger.ReactDriverToBite: hasAttackedDriver = true; break;
                 case EventToTrigger.ReactPassengerToBite: hasAttackedPassenger = true; break;
+                case EventToTrigger.RaiseCameraDriveAway: StartCoroutine(DriveBoringCarAway()); break;
             }
         }
 
@@ -219,8 +229,8 @@ namespace GameEvents
 
             yield return driverAnimator.WaitCurrentClipFinish();
             var farmerPos = farmer.transform.position;
-            StartCoroutine(driverNavMesh.MoveAnimating(driverAnimator, farmerPos));
-            StartCoroutine(passengerNavMesh.MoveAnimating(passengerAnimator, farmerPos));
+            StartCoroutine(driverNavMesh.MoveAnimating(farmerPos));
+            StartCoroutine(passengerNavMesh.MoveAnimating(farmerPos));
             yield return driverNavMesh.WaitToArrive(2);
             
             driverNavMesh.transform.LookAt(farmer.transform);
@@ -255,23 +265,13 @@ namespace GameEvents
             yield return new WaitForSeconds(0.1f);
             audio.PlayClip(painScream);
             anim.SetTrigger(AnimParam.Human.GetHit);
-            Debug.Log($"SetTrigger GetHit");
-            //yield return anim.WaitNextClipFinish();
             yield return anim.WaitAnimationFinish(AnimClip.Injured_leg);
-            Debug.Log($"next clip has finished. go navMesh.MoveAnimating");
-            yield return navMesh.MoveAnimating(anim, boringCar.transform.position, 3);
-            //yield return navMesh.WaitToArrive(2);
+            yield return navMesh.MoveAnimating(boringCar.transform.position, 3);
             audio.PlayClip(carDoorOpenClip);
             yield return new WaitForSeconds(0.5f);
             audio.PlayClip(carDoorCloseClip);
             yield return new WaitForSeconds(0.5f);
             Destroy(isDriver ? boringDriver : boringPassenger);
-
-            if (isDriver) hasPassengerReturnedToCar = true;
-            else hasDriverReturnedToCar = true;
-            
-            if (hasPassengerReturnedToCar && hasDriverReturnedToCar) 
-                DriveBoringCarAway();
         }
         
         IEnumerator KeepFarmerArguing()
@@ -290,10 +290,6 @@ namespace GameEvents
                     TalkAnimating(Emotion.Scared, farmerAnimator, farmerAudio);
                 }
                 
-                //yield return farmerAnimator.WaitCurrentAnimation();
-                //yield return new WaitForSeconds(Random.Range(3f, 6f));
-                
-                //yield return WaitTimeOrTrigger(Random.Range(3f, 6f), wereBothAgentsAttacked);
                 var rndWait = Random.Range(3f, 6f);
                 var currentWaiting = 0f;
                 while (currentWaiting < rndWait && !(hasAttackedPassenger && hasAttackedDriver))
@@ -306,16 +302,6 @@ namespace GameEvents
             yield return new WaitForSeconds(2);
             StartCoroutine(KeepFarmerCheeringAndWaving());
         }
-
-        // IEnumerator WaitTimeOrTrigger(float waitTime, bool breakTrigger) // deveria ser um ref aqui
-        // {
-        //     var currentWaiting = 0f;
-        //     while (currentWaiting < waitTime || breakTrigger)
-        //     {
-        //         currentWaiting += Time.deltaTime;
-        //         yield return null;
-        //     }
-        // }
 
         void TalkAnimating(Emotion emotion, Animator humanAnim, AudioSource audioSource)
         {
@@ -339,7 +325,29 @@ namespace GameEvents
         void SetDriverAsTarget()
         {
             QuestPointerManager.Instance.SetNewTarget(boringDriver, EventToTrigger.ShowAttackLegsUI, 
-                "Approach and attack the boring industry");
+                "Defend the farmer from the boring industry");
+
+            StartCoroutine(MoveGoldieToBarkSpot());
+        }
+
+        IEnumerator MoveGoldieToBarkSpot()
+        {
+            yield return goldieNavMesh.MoveAnimating(goldieBarkingSpot.position);
+            goldie.transform.LookAt(farmer.transform);
+            while (!hasAttackedPassenger || !hasAttackedDriver)
+            {
+                goldieAnimator.SetTrigger(AnimParam.Goldie.Bark);
+                goldieAudio.PlayClip(goldieBarkClip);
+                yield return new WaitForSeconds(2);
+
+                if (Random.Range(0, 2) != 0) continue;
+                goldieAudio.PlayClip(goldieSnarlClip);
+                yield return new WaitForSeconds(1);
+            }
+
+            goldie.transform.LookAt(boringCar.transform);
+            yield return new WaitForSeconds(5);
+            DialogueManager.Instance.StartDialogue(foxieBeatBoringIndustry);
         }
 
         void ShowAttackLegsUI()
@@ -352,10 +360,18 @@ namespace GameEvents
             passengerBiteHandler.OnEventToTrigger += OnEventToTrigger;
         }
 
-        void DriveBoringCarAway()
+        IEnumerator DriveBoringCarAway()
         {
-            // TODO
-            Debug.Log("A equipe rocket está decolando outra vez!!!");
+            yield return new WaitForSeconds(5); // wait both agents enter the vehicle
+            isCarMoving = true;
+            carAudio.PlayClip(carOnRoadClip, true);
+            carWheelsAnimator.SetBool(AnimParam.Car.IsMovingForward, true);
+            carNavMesh.SetDestination(uTurnSpot.position);
+            yield return carNavMesh.WaitToArrive(1f);
+            carNavMesh.SetDestination(finalRoadSpot.position);
+            EnableEndGameCamera();
+            yield return new WaitForSeconds(4);
+            StartCoroutine(EndGameUIFadeIn());
         }
 
         IEnumerator KeepFarmerCheeringAndWaving()
@@ -367,6 +383,24 @@ namespace GameEvents
                 farmer.transform.LookAt(boringCar.transform);
                 farmerAnimator.SetTrigger(AnimParam.Human.Wave);
                 yield return new WaitForSeconds(3);
+            }
+        }
+
+        void EnableEndGameCamera()
+        {
+            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
+            var boringCamera = mainCamera.GetComponent<BoringCarCamera>();
+            boringCamera.enabled = true;
+            boringCamera.isEndGame = true;
+        }
+
+        IEnumerator EndGameUIFadeIn()
+        {
+            endGameUI.gameObject.SetActive(true);
+            while (endGameUI.alpha < 1)
+            {
+                endGameUI.alpha += Time.deltaTime * 0.75f;
+                yield return null;
             }
         }
 
