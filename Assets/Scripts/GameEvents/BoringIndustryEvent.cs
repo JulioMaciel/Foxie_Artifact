@@ -9,6 +9,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace GameEvents
@@ -37,6 +38,7 @@ namespace GameEvents
         [SerializeField] BalloonItem balloonBoringReasons;
         [SerializeField] BalloonItem balloonSayingNo;
         [SerializeField] TextMeshProUGUI endGameUI;
+        [SerializeField] Button mainMenuButton;
 
         Camera mainCamera;
         GameObject farmer;
@@ -397,9 +399,24 @@ namespace GameEvents
         IEnumerator EndGameUIFadeIn()
         {
             endGameUI.gameObject.SetActive(true);
+            endGameUI.alpha = 0;
+            var canvasGroup = mainMenuButton.GetComponent<CanvasGroup>();
+            canvasGroup.alpha = 0;
+            
             while (endGameUI.alpha < 1)
             {
                 endGameUI.alpha += Time.deltaTime * 0.75f;
+                yield return null;
+            }
+            // var mainMenuBtnImg = mainMenuButton.GetComponent<Image>();
+            // var txt = mainMenuButton.GetComponentInChildren<TextMeshProUGUI>();
+            while (canvasGroup.alpha < 1)
+            {
+                // var c = mainMenuBtnImg.color;
+                // mainMenuBtnImg.color = new Color(c.r, c.g, c.b, Time.deltaTime * 0.75f);
+                // txt.alpha += Time.deltaTime * 0.75f;
+                
+                canvasGroup.alpha += Time.deltaTime * 0.75f;
                 yield return null;
             }
         }

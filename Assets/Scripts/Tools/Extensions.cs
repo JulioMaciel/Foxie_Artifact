@@ -132,24 +132,23 @@ namespace Tools
             var rndClip = clips[Random.Range(0, clips.Length)];
             audioSource.PlayClip(rndClip);
         }
-        
-        // public static IEnumerator KeepPlaying(AudioSource audioSource, AudioClip[] clips)
-        // {
-        //     //yield return null;
-        //     audioSource.PlayRandomClip(clips);
-        //     while (audioSource.isPlaying)
-        //         yield return null;
-        //     
-        //     yield return KeepPlaying(audioSource, clips);
-        //
-        //     // foreach (var t in clips)
-        //     // {
-        //     //     audioSource.clip = t;
-        //     //     audioSource.Play();
-        //     //     
-        //     //     while (audioSource.isPlaying)
-        //     //         yield return null;
-        //     // }
-        // }
+
+        public static IEnumerator ChangeClipSmoothly(this AudioSource audioSource, AudioClip clip, float speed)
+        {
+            var initVolume = audioSource.volume; 
+            while (audioSource.volume > 0)
+            {
+                audioSource.volume -= Time.deltaTime * speed;
+                yield return null;
+            }
+            audioSource.Stop();
+            audioSource.PlayClip(clip);
+            while (audioSource.volume < initVolume)
+            {
+                audioSource.volume += Time.deltaTime * speed;
+                yield return null;
+            }
+        }
+
     }
 }
