@@ -403,19 +403,14 @@ namespace GameEvents
             var canvasGroup = mainMenuButton.GetComponent<CanvasGroup>();
             canvasGroup.alpha = 0;
             
+            StartCoroutine(BlackScreenHandler.Instance.Darken(0.1f));
             while (endGameUI.alpha < 1)
             {
                 endGameUI.alpha += Time.deltaTime * 0.75f;
                 yield return null;
             }
-            // var mainMenuBtnImg = mainMenuButton.GetComponent<Image>();
-            // var txt = mainMenuButton.GetComponentInChildren<TextMeshProUGUI>();
             while (canvasGroup.alpha < 1)
             {
-                // var c = mainMenuBtnImg.color;
-                // mainMenuBtnImg.color = new Color(c.r, c.g, c.b, Time.deltaTime * 0.75f);
-                // txt.alpha += Time.deltaTime * 0.75f;
-                
                 canvasGroup.alpha += Time.deltaTime * 0.75f;
                 yield return null;
             }

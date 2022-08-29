@@ -15,6 +15,7 @@ namespace GameEvents
 {
     public class WakeUpEvent : MonoBehaviour
     {
+        [SerializeField] Camera mainCamera;
         [SerializeField] Volume postProcessingVolume;
         [SerializeField] DialogueItem welcomeFarmerDialogue;
         [SerializeField] DialogueItem snakeHuntDialogue;
@@ -26,8 +27,6 @@ namespace GameEvents
         [SerializeField] Transform goldieSnakePigSpot;
         [SerializeField] Transform cameraWakeUpSpot;
 
-        //[SerializeField] TutorialControls mouseCameraTutorialControl;
-
         Animator goldieAnimator;
         Animator playerAnimator;
         Animator farmerAnimator;
@@ -36,7 +35,6 @@ namespace GameEvents
         NavMeshAgent farmerNavMesh;
         AudioSource goldieAudio;
         
-        Camera mainCamera;
         GameObject player;
         GameObject goldie;
         GameObject snake;
@@ -53,7 +51,6 @@ namespace GameEvents
 
         void SetObjects()
         {
-            mainCamera = Camera.main;
             player = Entity.Instance.player;
             goldie = Entity.Instance.goldie;
             farmer = Entity.Instance.farmer;
@@ -73,6 +70,7 @@ namespace GameEvents
 
         void Start()
         {
+            mainCamera.gameObject.SetActive(true);
             playerAnimator.SetTrigger(AnimParam.Fox.Sleep);
             DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);
             playerMoveControl.enabled = false;

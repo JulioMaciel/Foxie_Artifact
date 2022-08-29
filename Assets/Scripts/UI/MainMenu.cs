@@ -16,7 +16,6 @@ namespace UI
         [SerializeField] WakeUpEvent startGameEvent;
         [SerializeField] Camera menuCamera;
         [SerializeField] GameObject targetCameraFocus;
-        [SerializeField] Image blackScreen;
         [SerializeField] IntroHandler intro;
         [SerializeField] Button startGameBtn;
         [SerializeField] Toggle skipIntroCheckBox;
@@ -27,7 +26,6 @@ namespace UI
         [SerializeField] RectTransform gameTitleRect;
         [SerializeField] RectTransform[] titleStars;
         [SerializeField] TextMeshProUGUI titleText;
-        [SerializeField] GameObject menuPanel;
         
         AudioClip natureEffects;
         AudioSource audioSource;
@@ -139,8 +137,10 @@ namespace UI
             yield return BlackScreenHandler.Instance.Darken();
             yield return new WaitForSeconds(1);
             StartCoroutine(environmentalAudio.ChangeClipSmoothly(natureEffects, 1));
+            
+            StartCoroutine(BlackScreenHandler.Instance.Lighten(1f));
             startGameEvent.enabled = true;
-            yield return BlackScreenHandler.Instance.Lighten(1f);
+            menuCamera.gameObject.SetActive(false);
             enabled = false;
         }
 
@@ -153,8 +153,6 @@ namespace UI
                 yield return null;
             }
         }
-
-
 
         IEnumerator MoveCameraTowardsPlayer()
         {

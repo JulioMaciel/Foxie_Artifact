@@ -28,10 +28,10 @@ namespace UI
         
         public IEnumerator Lighten(float speed = .2f)
         {
-            while (img.color.a < 1)
+            while (img.color.a > 0)
             {
                 var c = img.color;
-                img.color = new Color(c.r, c.g, c.b, c.a + Time.deltaTime * speed);
+                img.color = new Color(c.r, c.g, c.b, c.a - Time.deltaTime * speed);
                 yield return null;
             }
         }
