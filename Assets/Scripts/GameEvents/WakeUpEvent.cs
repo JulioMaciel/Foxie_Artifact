@@ -6,6 +6,7 @@ using Managers;
 using ScriptableObjects;
 using StaticData;
 using Tools;
+using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -70,6 +71,8 @@ namespace GameEvents
 
         void Start()
         {
+            StartCoroutine(BlackScreenHandler.Instance.Lighten());
+            StartCoroutine(AudioManager.Instance.PlayGameClip());
             mainCamera.gameObject.SetActive(true);
             playerAnimator.SetTrigger(AnimParam.Fox.Sleep);
             DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);

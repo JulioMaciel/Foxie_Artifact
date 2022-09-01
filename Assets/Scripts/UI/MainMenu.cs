@@ -10,13 +10,9 @@ namespace UI
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] AudioSource environmentalAudio;
-        [SerializeField] AudioClip menuMusic;
-        [SerializeField] AudioClip sadMusic;
         [SerializeField] WakeUpEvent startGameEvent;
         [SerializeField] Camera menuCamera;
         [SerializeField] GameObject targetCameraFocus;
-        [SerializeField] IntroHandler intro;
         [SerializeField] Button startGameBtn;
         [SerializeField] Toggle skipIntroCheckBox;
         [SerializeField] Button gitBtn;
@@ -26,6 +22,7 @@ namespace UI
         [SerializeField] RectTransform gameTitleRect;
         [SerializeField] RectTransform[] titleStars;
         [SerializeField] TextMeshProUGUI titleText;
+        [SerializeField] IntroHandler introHandler;
         
         AudioClip natureEffects;
         AudioSource audioSource;
@@ -37,10 +34,7 @@ namespace UI
 
         void Start()
         {
-            natureEffects = environmentalAudio.clip;
-            environmentalAudio.PlayClip(menuMusic);
-            environmentalAudio.time = 5;
-
+            AudioManager.Instance.PlayMenuClip();
             StartCoroutine(AnimateTitle());
             StartCoroutine(MoveCamera());
             SetUpButtons();
@@ -120,25 +114,20 @@ namespace UI
 
         IEnumerator StartIntro()
         {
+            StartCoroutine(AudioManager.Instance.StopSmoothly());
             StartCoroutine(FadeOutMainMenu());
-            yield return new WaitForSeconds(1);
-            yield return BlackScreenHandler.Instance.Darken();
-            StartCoroutine(environmentalAudio.ChangeClipSmoothly(sadMusic, 1));
-            yield return new WaitForSeconds(3);
-            intro.gameObject.SetActive(true);
-            yield return BlackScreenHandler.Instance.Lighten(.4f);
+            yield return BlackScreenHandler.Instance.Darken(.6f);
+            introHandler.gameObject.SetActive(true);
             enabled = false;
         }
 
         IEnumerator StartGame()
         {
+            StartCoroutine(AudioManager.Instance.StopSmoothly());
             StartCoroutine(MoveCameraTowardsPlayer());
             StartCoroutine(FadeOutMainMenu());
             yield return BlackScreenHandler.Instance.Darken();
             yield return new WaitForSeconds(1);
-            StartCoroutine(environmentalAudio.ChangeClipSmoothly(natureEffects, 1));
-            
-            StartCoroutine(BlackScreenHandler.Instance.Lighten(1f));
             startGameEvent.enabled = true;
             menuCamera.gameObject.SetActive(false);
             enabled = false;
