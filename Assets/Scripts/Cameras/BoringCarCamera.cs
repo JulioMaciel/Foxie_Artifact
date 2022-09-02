@@ -13,7 +13,7 @@ namespace Cameras
         [SerializeField] float height = 10;
         
         GameObject boringCar;
-        FreeCameraControl freeCamera;
+        GameplayCamera gameplayCamera;
         MoveControl playerMoveControl;
         
         public event Action<EventToTrigger> OnEventToTrigger;
@@ -22,11 +22,11 @@ namespace Cameras
 
         void OnEnable()
         {
-            freeCamera = GetComponent<FreeCameraControl>();
+            gameplayCamera = Entity.Instance.gamePlayCamera.GetComponent<GameplayCamera>();
             playerMoveControl = Entity.Instance.player.GetComponent<MoveControl>();
             boringCar = Entity.Instance.boringCar;
             
-            freeCamera.enabled = false;
+            gameplayCamera.enabled = false;
             playerMoveControl.Stop();
 
             StartCoroutine(MoveCameraSmoothly(true));
@@ -54,7 +54,7 @@ namespace Cameras
 
         void End()
         {
-            freeCamera.enabled = true;
+            gameplayCamera.enabled = true;
             playerMoveControl.Resume();
             OnEventToTrigger?.Invoke(EventToTrigger.ShowAttackBoringDialogue);
             enabled = false;

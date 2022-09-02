@@ -39,7 +39,7 @@ namespace GameEvents
         NavMeshAgent snakeNavMesh;
         NavMeshAgent goldieNavMesh;
         CharacterController playerControl;
-        FreeCameraControl freeFreeCameraControl;
+        GameplayCamera gameplayGameplayCamera;
         AttackSnakeCamera snakeAttackCameraControl;
         AudioSource playerAudio;
         AudioSource snakeAudio;
@@ -49,7 +49,7 @@ namespace GameEvents
         GameObject player;
         GameObject snake;
         GameObject goldie;
-        Camera mainCamera;
+        Camera gameplayCamera;
 
         Vector3 direction;
 
@@ -73,7 +73,7 @@ namespace GameEvents
             hasEventStarted = true;
             attackSnakeCanvas.gameObject.SetActive(true);
             playerMoveControl.enabled = false;
-            freeFreeCameraControl.enabled = false;
+            gameplayGameplayCamera.enabled = false;
             snakeAttackCameraControl.enabled = true;
             snakeAnimalWanderer.enabled = false;
             snakeIdleEvent.enabled = false;
@@ -92,7 +92,7 @@ namespace GameEvents
 
         void SetObjects()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             player = Entity.Instance.player;
             snake = Entity.Instance.snake;
             goldie = Entity.Instance.goldie; 
@@ -107,8 +107,8 @@ namespace GameEvents
             snakeNavMesh = snake.GetComponent<NavMeshAgent>();
             goldieNavMesh = goldie.GetComponent<NavMeshAgent>();
             playerControl = player.GetComponent<CharacterController>();
-            freeFreeCameraControl = mainCamera.GetComponent<FreeCameraControl>();
-            snakeAttackCameraControl = mainCamera.GetComponent<AttackSnakeCamera>();
+            gameplayGameplayCamera = gameplayCamera.GetComponent<GameplayCamera>();
+            snakeAttackCameraControl = gameplayCamera.GetComponent<AttackSnakeCamera>();
             playerAudio = player.GetComponent<AudioSource>();
             snakeAudio = snake.GetComponent<AudioSource>();
             snakeAnimalWanderer = snake.GetComponent<AnimalWanderer>();
@@ -218,7 +218,7 @@ namespace GameEvents
             hasEventStarted = false;
             attackSnakeCanvas.gameObject.SetActive(false);
             playerMoveControl.enabled = true;
-            freeFreeCameraControl.enabled = true;
+            gameplayGameplayCamera.enabled = true;
             snakeAttackCameraControl.enabled = false;
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, 1f);
             goldieAnimator.SetFloat(AnimParam.MoveSpeed, 0);

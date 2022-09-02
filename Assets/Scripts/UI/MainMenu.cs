@@ -4,6 +4,7 @@ using Managers;
 using TMPro;
 using Tools;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
@@ -30,6 +31,9 @@ namespace UI
         void Awake()
         {
             audioSource = GetComponent<AudioSource>();
+
+            if (SceneParameters.StarGameSkippingMainMenu)
+                StartGameAfterIntro();
         }
 
         void Start()
@@ -117,8 +121,9 @@ namespace UI
             StartCoroutine(AudioManager.Instance.StopSmoothly());
             StartCoroutine(FadeOutMainMenu());
             yield return BlackScreenHandler.Instance.Darken(.6f);
-            introHandler.gameObject.SetActive(true);
-            enabled = false;
+            //introHandler.gameObject.SetActive(true);
+            //enabled = false;
+            SceneManager.LoadScene(1);
         }
 
         IEnumerator StartGame()
@@ -130,7 +135,8 @@ namespace UI
             yield return new WaitForSeconds(1);
             startGameEvent.enabled = true;
             menuCamera.gameObject.SetActive(false);
-            enabled = false;
+            //enabled = false;
+            gameObject.SetActive(false);
         }
 
         IEnumerator FadeOutMainMenu()
@@ -152,6 +158,14 @@ namespace UI
                     player.transform.position, .1f);
                 yield return null;
             }
+        }
+
+        void StartGameAfterIntro()
+        {
+            startGameEvent.enabled = true;
+            menuCamera.gameObject.SetActive(false);
+            gameObject.SetActive(false);
+            SceneParameters.StarGameSkippingMainMenu = false;
         }
 
         void OnDisable()

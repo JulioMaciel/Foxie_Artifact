@@ -2219,6 +2219,37 @@ Transform:
   m_Father: {fileID: 8812652607777787868}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1556273708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1556273709}
+  m_Layer: 0
+  m_Name: GoldieBarkingBoringSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1556273709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556273708}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -160.13, y: 0.18, z: 12.93}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2493533378727476359}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1559051504
 GameObject:
   m_ObjectHideFlags: 0
@@ -3679,6 +3710,7 @@ Transform:
   - {fileID: 2493533380265610645}
   - {fileID: 2493533379808659271}
   - {fileID: 1926475350}
+  - {fileID: 1556273709}
   m_Father: {fileID: 2493533379622542869}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3756,11 +3788,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2493533379435969107}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec837619c6a51bc46a91df29c430f1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
   postProcessingVolume: {fileID: 0}
   welcomeFarmerDialogue: {fileID: 11400000, guid: cd157a343799ce54cada8d9cc7509ace,
     type: 2}
@@ -3821,13 +3854,21 @@ MonoBehaviour:
   boringCarShowedUp: {fileID: 11400000, guid: 66a836c776f6aa3478af5c1a838e16cb, type: 2}
   attackBoringIndustry: {fileID: 11400000, guid: a7b1c2d3b4ce7504dba79648964287a7,
     type: 2}
+  foxieBeatBoringIndustry: {fileID: 11400000, guid: 2cfda8dcad330134a8c86efd7db05aa3,
+    type: 2}
   parkingSpot: {fileID: 1716742079}
+  goldieBarkingSpot: {fileID: 1556273709}
+  uTurnSpot: {fileID: 658585687}
+  finalRoadSpot: {fileID: 2055447245}
   roadDustParticles: {fileID: 3626832829391354810, guid: de108e2f26cd0d840839a37248625c36,
     type: 3}
   carOnRoadClip: {fileID: 8300000, guid: 1ddeb136f38d782489bcb55fa62d2ffd, type: 3}
   carIdleClip: {fileID: 8300000, guid: ca5fc1b9fbaf8ce459d9de4d32e6ce17, type: 3}
   carDoorOpenClip: {fileID: 8300000, guid: 3765464157babe842887c358a5f21531, type: 3}
   carDoorCloseClip: {fileID: 8300000, guid: 3a96c3ca4622ecc43a2794e2c9b9a250, type: 3}
+  painScream: {fileID: 8300000, guid: d1e708bcaeca7434d96f5ffb8d1da6ce, type: 3}
+  goldieBarkClip: {fileID: 8300000, guid: e224d0bca5c330547a6a40f6956d7bf6, type: 3}
+  goldieSnarlClip: {fileID: 8300000, guid: 312c68f2e2c24da49ba9fb10e92215f6, type: 3}
   angryClips:
   - {fileID: 8300000, guid: 4d88e6262a1ea194784abbd4c6b9aef8, type: 3}
   - {fileID: 8300000, guid: 315bd56c01461884a8b4a56e8d337a52, type: 3}
@@ -3845,6 +3886,8 @@ MonoBehaviour:
   balloonBoringReasons: {fileID: 11400000, guid: 30abbc769edc04f45a602422a6fadbda,
     type: 2}
   balloonSayingNo: {fileID: 11400000, guid: 781531683a24c3847a10ac9bfa9c3484, type: 2}
+  endGameUI: {fileID: 0}
+  mainMenuButton: {fileID: 0}
 --- !u!1 &2493533379484841961
 GameObject:
   m_ObjectHideFlags: 0

@@ -184,13 +184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac03b1fd7d9df4469c56a00ec828438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentalAudio: {fileID: 0}
-  menuMusic: {fileID: 8300000, guid: 81ab27ef175e00e438c6d712b243943e, type: 3}
-  sadMusic: {fileID: 8300000, guid: 97395aeeb06edb0469e5cc8bffdbb1b2, type: 3}
   startGameEvent: {fileID: 0}
   menuCamera: {fileID: 0}
   targetCameraFocus: {fileID: 0}
-  intro: {fileID: 0}
   startGameBtn: {fileID: 2235502940703452149}
   skipIntroCheckBox: {fileID: 4353287384956395940}
   gitBtn: {fileID: 7345665663156229847}
@@ -204,6 +200,7 @@ MonoBehaviour:
   - {fileID: 2051356948658570514}
   - {fileID: 2051356947861048995}
   titleText: {fileID: 2051356949188738348}
+  introHandler: {fileID: 0}
 --- !u!225 &858862221
 CanvasGroup:
   m_ObjectHideFlags: 0

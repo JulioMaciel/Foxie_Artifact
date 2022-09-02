@@ -4,6 +4,7 @@ namespace Managers
 {
     public class Entity : MonoBehaviour
     {
+        public Camera gamePlayCamera;
         public GameObject player;
         public GameObject goldie;
         public GameObject farmer;

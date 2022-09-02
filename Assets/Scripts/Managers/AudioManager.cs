@@ -56,7 +56,7 @@ namespace Managers
         {
             while (backgroundAudio.volume < initVolume)
             {
-                backgroundAudio.volume += Time.deltaTime;
+                backgroundAudio.volume += Time.deltaTime * 0.25f;
                 yield return null;
             }
         }
@@ -65,7 +65,7 @@ namespace Managers
         {
             while (backgroundAudio.volume > 0)
             {
-                backgroundAudio.volume -= Time.deltaTime * 0.75f;
+                backgroundAudio.volume -= Time.deltaTime * 0.1f;
                 yield return null;
             }
             backgroundAudio.Stop();

@@ -1,20 +1,21 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 
 namespace UI
 {
     public class QuestPointerHandler : MonoBehaviour
     {
-        Camera mainCamera;
+        Camera gameplayCamera;
         Transform target;
 
         void Awake()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
         }
 
         void Update()
         {
-            var direction = (mainCamera.transform.position - target.transform.position).normalized;
+            var direction = (gameplayCamera.transform.position - target.transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(-direction);
         }
 

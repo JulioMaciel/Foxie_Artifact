@@ -16,7 +16,6 @@ namespace GameEvents
 {
     public class WakeUpEvent : MonoBehaviour
     {
-        [SerializeField] Camera mainCamera;
         [SerializeField] Volume postProcessingVolume;
         [SerializeField] DialogueItem welcomeFarmerDialogue;
         [SerializeField] DialogueItem snakeHuntDialogue;
@@ -35,7 +34,8 @@ namespace GameEvents
         NavMeshAgent goldieNavmesh;
         NavMeshAgent farmerNavMesh;
         AudioSource goldieAudio;
-        
+
+        Camera gameplayCamera;
         GameObject player;
         GameObject goldie;
         GameObject snake;
@@ -52,6 +52,7 @@ namespace GameEvents
 
         void SetObjects()
         {
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             player = Entity.Instance.player;
             goldie = Entity.Instance.goldie;
             farmer = Entity.Instance.farmer;
@@ -73,7 +74,7 @@ namespace GameEvents
         {
             StartCoroutine(BlackScreenHandler.Instance.Lighten());
             StartCoroutine(AudioManager.Instance.PlayGameClip());
-            mainCamera.gameObject.SetActive(true);
+            gameplayCamera.gameObject.SetActive(true);
             playerAnimator.SetTrigger(AnimParam.Fox.Sleep);
             DialogueManager.Instance.StartDialogue(welcomeFarmerDialogue);
             playerMoveControl.enabled = false;
@@ -164,27 +165,27 @@ namespace GameEvents
 
         IEnumerator MoveCameraToWakeUpSpot()
         {
-            while (!mainCamera.transform.position.IsCloseEnough(cameraWakeUpSpot.transform.position))
+            while (!gameplayCamera.transform.position.IsCloseEnough(cameraWakeUpSpot.transform.position))
             {
                 var speed = Time.deltaTime;
-                mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, cameraWakeUpSpot.transform.position, speed);
+                gameplayCamera.transform.position = Vector3.Lerp(gameplayCamera.transform.position, cameraWakeUpSpot.transform.position, speed);
                 yield return null;
             }
         }
 
         IEnumerator RotateCameraToWakeUpSpot()
         {
-            while (mainCamera.transform.rotation.normalized != cameraWakeUpSpot.transform.rotation.normalized)
+            while (gameplayCamera.transform.rotation.normalized != cameraWakeUpSpot.transform.rotation.normalized)
             {
                 var speed = Time.deltaTime;
-                mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, cameraWakeUpSpot.transform.rotation, speed);
+                gameplayCamera.transform.rotation = Quaternion.Lerp(gameplayCamera.transform.rotation, cameraWakeUpSpot.transform.rotation, speed);
                 yield return null;
             }
         }
 
         IEnumerator EnablePlayerControl()
         {
-            mainCamera.GetComponent<FreeCameraControl>().enabled = true;
+            gameplayCamera.GetComponent<GameplayCamera>().enabled = true;
             playerAnimator.SetTrigger(AnimParam.Fox.StandUp);
             yield return playerAnimator.WaitAnimationStart(AnimClip.Idle);
 

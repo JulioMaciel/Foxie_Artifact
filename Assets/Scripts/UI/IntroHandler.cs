@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Linq;
-using GameEvents;
 using Managers;
 using ScriptableObjects;
 using TMPro;
 using Tools;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
@@ -16,8 +16,6 @@ namespace UI
         [SerializeField] Image skipBar;
         [SerializeField] Image bg;
         [SerializeField] IntroTextItem[] introTextItems;
-        [SerializeField] WakeUpEvent startGameEvent;
-        [SerializeField] Camera menuCamera;
         [SerializeField] AudioClip letterTypedClip;
 
         IntroTextItem last;
@@ -99,8 +97,8 @@ namespace UI
             foreach (var c in current.text)
             {
                 textUI.text += c;
-                introSource.PlayClip(letterTypedClip);
-                yield return new WaitForSeconds(0.05f);
+                introSource.PlayOneShot(letterTypedClip);
+                yield return new WaitForSeconds(0.075f);
             }
         }
 
@@ -128,12 +126,8 @@ namespace UI
         {
             skipBar.fillAmount += Time.deltaTime;
 
-            if (skipBar.fillAmount >= 1)
-            {
-                // skipBar.fillAmount = 0;
-                // JumpToNextItem();
+            if (skipBar.fillAmount >= 1) 
                 StartCoroutine(StartGame());
-            }
         }
 
         void ReduceSkipBar()
@@ -145,9 +139,9 @@ namespace UI
         {
             StartCoroutine(AudioManager.Instance.StopSmoothly());
             yield return BlackScreenHandler.Instance.Darken();
-            startGameEvent.enabled = true;
-            menuCamera.gameObject.SetActive(false);
-            gameObject.SetActive(false);
+            
+            SceneParameters.StarGameSkippingMainMenu = true;
+            SceneManager.LoadScene(0);
         }
     }
 }

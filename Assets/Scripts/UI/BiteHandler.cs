@@ -15,7 +15,7 @@ namespace UI
         
         const float Speed = 1.5f;
 
-        Camera mainCamera;
+        Camera gameplayCamera;
         GameObject player;
         Image img;
 
@@ -25,7 +25,7 @@ namespace UI
 
         void OnEnable()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             player = Entity.Instance.player;
             targetInside.SetActive(true);
             img = targetInside.GetComponentInChildren<Image>();
@@ -33,16 +33,15 @@ namespace UI
 
         void Update()
         {
-            targetInside.transform.LookAt(mainCamera.transform);
+            targetInside.transform.LookAt(gameplayCamera.transform);
 
             if (Input.GetMouseButton(0))
             {
-                var rayToClick = mainCamera.ScreenPointToRay(Input.mousePosition);
+                var rayToClick = gameplayCamera.ScreenPointToRay(Input.mousePosition);
                 if (!Physics.Raycast(rayToClick, out var hit, Layers.Interactable)) return;
 
                 if (hit.transform.gameObject == img.gameObject)
                 {
-                    //img.gameObject.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
                     img.fillAmount -= Time.deltaTime * Speed;
                     
                     if (!hasPlayerAttacked)
@@ -54,8 +53,6 @@ namespace UI
                     }
                 }
             }
-            // else if (Input.GetMouseButtonUp(0)) 
-            //     img.gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
             if (img.fillAmount <= 0)
             {

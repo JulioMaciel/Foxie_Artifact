@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 
 namespace UI
@@ -6,7 +7,7 @@ namespace UI
     {
         public float distance = .4f;
         
-        Camera mainCamera;
+        Camera gameplayCamera;
         Transform thisHuman;
         float yPos;
         
@@ -17,14 +18,14 @@ namespace UI
     
         void Start()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             thisHuman = transform.parent;
             yPos = transform.localPosition.y;
         }
 
         void LateUpdate()
         {
-            transform.LookAt(mainCamera.transform);
+            transform.LookAt(gameplayCamera.transform);
             SetPosition();
         }
 
@@ -41,7 +42,7 @@ namespace UI
             var humanTrans = thisHuman.transform;
             var humanPos = humanTrans.position;
             humanPos.y = 0;
-            var camPos = mainCamera.transform.position;
+            var camPos = gameplayCamera.transform.position;
             camPos.y = 0;
             var humanForward = humanTrans.forward;
             humanForward.y = 0;
@@ -83,7 +84,7 @@ namespace UI
 
         float Get180Angle()
         {
-            var direction = thisHuman.position - mainCamera.transform.position;
+            var direction = thisHuman.position - gameplayCamera.transform.position;
             direction.y = 0;
             return Vector3.Angle(thisHuman.forward, direction);
         }

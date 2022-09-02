@@ -40,7 +40,7 @@ namespace GameEvents
         [SerializeField] TextMeshProUGUI endGameUI;
         [SerializeField] Button mainMenuButton;
 
-        Camera mainCamera;
+        Camera gameplayCamera;
         GameObject farmer;
         GameObject goldie;
         GameObject boringCar;
@@ -88,7 +88,7 @@ namespace GameEvents
 
         void SetObjects()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             farmer = Entity.Instance.farmer;
             goldie = Entity.Instance.goldie;
             boringCar = Entity.Instance.boringCar;
@@ -137,8 +137,8 @@ namespace GameEvents
 
         void ShowBoringCar()
         {
-            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
-            var boringCamera = mainCamera.GetComponent<BoringCarCamera>();
+            gameplayCamera.GetComponent<GameplayCamera>().enabled = false;
+            var boringCamera = gameplayCamera.GetComponent<BoringCarCamera>();
             boringCamera.enabled = true;
             boringCamera.OnEventToTrigger += OnEventToTrigger;
 
@@ -373,7 +373,7 @@ namespace GameEvents
             carNavMesh.SetDestination(finalRoadSpot.position);
             EnableEndGameCamera();
             yield return new WaitForSeconds(4);
-            StartCoroutine(EndGameUIFadeIn());
+            endGameUI.gameObject.SetActive(true);
         }
 
         IEnumerator KeepFarmerCheeringAndWaving()
@@ -390,30 +390,10 @@ namespace GameEvents
 
         void EnableEndGameCamera()
         {
-            mainCamera.GetComponent<FreeCameraControl>().enabled = false;
-            var boringCamera = mainCamera.GetComponent<BoringCarCamera>();
+            gameplayCamera.GetComponent<GameplayCamera>().enabled = false;
+            var boringCamera = gameplayCamera.GetComponent<BoringCarCamera>();
             boringCamera.enabled = true;
             boringCamera.isEndGame = true;
-        }
-
-        IEnumerator EndGameUIFadeIn()
-        {
-            endGameUI.gameObject.SetActive(true);
-            endGameUI.alpha = 0;
-            var canvasGroup = mainMenuButton.GetComponent<CanvasGroup>();
-            canvasGroup.alpha = 0;
-            
-            StartCoroutine(BlackScreenHandler.Instance.Darken(0.1f));
-            while (endGameUI.alpha < 1)
-            {
-                endGameUI.alpha += Time.deltaTime * 0.75f;
-                yield return null;
-            }
-            while (canvasGroup.alpha < 1)
-            {
-                canvasGroup.alpha += Time.deltaTime * 0.75f;
-                yield return null;
-            }
         }
 
         void OnDisable()

@@ -1,4 +1,5 @@
 ﻿using System;
+using Managers;
 using StaticData;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Controller
     
         const float Gravity = -10f;
 
-        Camera mainCamera;
+        Camera gameplayCamera;
         CharacterController controller;
         Animator animator;
         Vector3 direction;
@@ -25,7 +26,7 @@ namespace Controller
 
         void Awake()
         {
-            mainCamera = Camera.main;
+            gameplayCamera = Entity.Instance.gamePlayCamera;
             controller = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
         }
@@ -78,7 +79,7 @@ namespace Controller
 
         void Move()
         {
-            var camDir = mainCamera.transform.TransformDirection(direction);
+            var camDir = gameplayCamera.transform.TransformDirection(direction);
             var flatMovement = playerSpeed * Time.deltaTime * camDir;
             moveDirection = new Vector3(flatMovement.x, moveDirection.y, flatMovement.z);
             controller.Move(moveDirection);
