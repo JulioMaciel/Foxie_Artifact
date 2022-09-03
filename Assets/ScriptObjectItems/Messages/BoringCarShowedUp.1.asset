@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef43a6cb87e4d38af668fc1cabd92b0, type: 3}
   m_Name: BoringCarShowedUp.1
   m_EditorClassIdentifier: 
-  message: OH MY DOGNESS, look that car, it's the boring industry again!!!
+  message: OH MY DOGNESS, look at that car, it's the boring industry again!!!
   sequentialEventToTrigger: 0

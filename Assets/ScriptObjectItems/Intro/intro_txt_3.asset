@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b04be0853094072865b26223dba7bb5, type: 3}
+  m_Name: intro_txt_3
+  m_EditorClassIdentifier: 
+  text: However, as time passes, it was clear that this environment was not for him.
+  next: {fileID: 11400000, guid: ccca352e4664a2d499ddc24ab9518178, type: 2}
+  backgroundItem: {fileID: 11400000, guid: 09d0982376bfee544a5a32b2fb338e2f, type: 2}

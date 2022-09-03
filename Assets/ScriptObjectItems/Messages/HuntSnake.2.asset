@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ef43a6cb87e4d38af668fc1cabd92b0, type: 3}
   m_Name: HuntSnake.2
   m_EditorClassIdentifier: 
-  message: 'As we did yesteday, let''s see if there is any snake around the animals.
+  message: 'As we did yesterday, let''s see if there is any snake around the animals.
     If you find any, attack it. '
-  sequentialEvent: 0
+  sequentialEventToTrigger: 0

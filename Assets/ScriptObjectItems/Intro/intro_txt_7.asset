@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b04be0853094072865b26223dba7bb5, type: 3}
+  m_Name: intro_txt_7
+  m_EditorClassIdentifier: 
+  text: In the midst of this troubled scenario, you showed up. You are Foxie the
+    fox, one of the many wild animals Jay sheltered on his farm.
+  next: {fileID: 11400000, guid: a19ef1fc7928aae4a8c479ba6dfd89d3, type: 2}
+  backgroundItem: {fileID: 11400000, guid: 28ee948e58f5a784aa909c19fdc29174, type: 2}

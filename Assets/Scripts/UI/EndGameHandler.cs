@@ -17,7 +17,7 @@ namespace UI
         {
             mainMenuBtn = GetComponentInChildren<Button>();
             textMesh = GetComponent<TextMeshProUGUI>();
-            canvasGroup = GetComponent<CanvasGroup>();
+            canvasGroup = mainMenuBtn.GetComponent<CanvasGroup>();
         }
 
         void OnEnable()

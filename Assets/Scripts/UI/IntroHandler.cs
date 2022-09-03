@@ -15,13 +15,16 @@ namespace UI
         [SerializeField] TextMeshProUGUI textUI;
         [SerializeField] Image skipBar;
         [SerializeField] Image bg;
-        [SerializeField] IntroTextItem[] introTextItems;
+        [SerializeField] IntroTextItem initialIntroText;
         [SerializeField] AudioClip letterTypedClip;
 
         IntroTextItem last;
         IntroTextItem current;
-        Vector2 initBgPosition;
+        Vector2 initOffsetMax;
+        Vector2 initOffsetMin;
         AudioSource introSource;
+
+        bool skipIntro;
 
         void Awake()
         {
@@ -32,8 +35,9 @@ namespace UI
         {
             StartCoroutine(AudioManager.Instance.PlayIntroClip());
             StartCoroutine(BlackScreenHandler.Instance.Lighten(1f));
-            initBgPosition = bg.rectTransform.offsetMax;
-            current = introTextItems.First();
+            initOffsetMax = bg.rectTransform.offsetMax;
+            initOffsetMin = bg.rectTransform.offsetMin;
+            current = initialIntroText;
             ShowItem();
         }
 
@@ -73,7 +77,8 @@ namespace UI
         IEnumerator ChangeBg()
         {
             yield return DarkenBg();
-            bg.rectTransform.offsetMax = initBgPosition;
+            bg.rectTransform.offsetMax = initOffsetMax;
+            bg.rectTransform.offsetMin = initOffsetMin;
             bg.sprite = current.backgroundItem.image;
             StartCoroutine(LightenBg());
             StartCoroutine(MoveBg());
@@ -94,11 +99,15 @@ namespace UI
         IEnumerator ShowTextLetterByLetter()
         {
             textUI.text = string.Empty;
+            var currentWhenStarted = current;
             foreach (var c in current.text)
             {
+                if (currentWhenStarted != current)
+                    yield break;
+                
                 textUI.text += c;
                 introSource.PlayOneShot(letterTypedClip);
-                yield return new WaitForSeconds(0.075f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
@@ -124,10 +133,12 @@ namespace UI
         
         void IncreaseSkipBar()
         {
-            skipBar.fillAmount += Time.deltaTime;
-
-            if (skipBar.fillAmount >= 1) 
+            if (skipBar.fillAmount >= 1 && !skipIntro)
+            {
+                skipIntro = true;
                 StartCoroutine(StartGame());
+            }
+            else skipBar.fillAmount += Time.deltaTime;
         }
 
         void ReduceSkipBar()

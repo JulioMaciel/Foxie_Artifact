@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FoxieBeatBoringIndustry.2
   m_EditorClassIdentifier: 
   message: I am quite sure the boring industry will remember you are working with
-    the farmer now, before they try to retake him again.
+    the farmer now before they try to retake him again.
   sequentialEventToTrigger: 16
