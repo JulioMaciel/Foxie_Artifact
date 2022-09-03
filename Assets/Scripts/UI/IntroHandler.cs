@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using Managers;
 using ScriptableObjects;
 using TMPro;
@@ -24,7 +23,7 @@ namespace UI
         Vector2 initOffsetMin;
         AudioSource introSource;
 
-        bool skipIntro;
+        bool hasPlayerSkipped;
 
         void Awake()
         {
@@ -133,9 +132,9 @@ namespace UI
         
         void IncreaseSkipBar()
         {
-            if (skipBar.fillAmount >= 1 && !skipIntro)
+            if (skipBar.fillAmount >= 1 && !hasPlayerSkipped)
             {
-                skipIntro = true;
+                hasPlayerSkipped = true;
                 StartCoroutine(StartGame());
             }
             else skipBar.fillAmount += Time.deltaTime;
@@ -143,7 +142,7 @@ namespace UI
 
         void ReduceSkipBar()
         {
-            skipBar.fillAmount -= Time.deltaTime * 0.5f;
+            if (!hasPlayerSkipped) skipBar.fillAmount -= Time.deltaTime * 0.5f;
         }
 
         IEnumerator StartGame()

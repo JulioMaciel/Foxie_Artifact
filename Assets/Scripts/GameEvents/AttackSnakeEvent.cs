@@ -58,6 +58,9 @@ namespace GameEvents
         float suspicionLevel;
         float awarenessLevel;
         float approachSliderValue;
+        
+        bool hasAwarenessReachedMaxLevel;
+        bool hasPlayerApproachEnoughToAttack;
 
         PointerEventData onApproachInputPressed;
     
@@ -87,7 +90,7 @@ namespace GameEvents
             if (!hasEventStarted || !canPlayerApproach) return;
 
             ReactToApproachSlider();
-            StartCoroutine(HandleSuspicion());
+            HandleSuspicion();
         }
 
         void SetObjects()
@@ -127,6 +130,7 @@ namespace GameEvents
             suspicionLevel = 0;
             awarenessLevel = 0;
             approachSlider.value = 0;
+            hasAwarenessReachedMaxLevel = false;
             canPlayerApproach = true;
             approachSlider.interactable = true;
             UpdateSuspicionUI();
@@ -143,8 +147,11 @@ namespace GameEvents
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, walkMultiplier);
         }
 
-        IEnumerator HandleSuspicion()
+        void HandleSuspicion()
         {
+            if (hasAwarenessReachedMaxLevel || hasPlayerApproachEnoughToAttack)
+                return;
+            
             if (approachSlider.value == 0 && suspicionLevel > 0) 
                 suspicionLevel -= Time.deltaTime * 6;
             else
@@ -161,9 +168,15 @@ namespace GameEvents
             UpdateSuspicionUI();
 
             if (awarenessLevel >= 100)
-                yield return SnakeAttack();
+            {
+                hasAwarenessReachedMaxLevel = true;
+                StartCoroutine(SnakeAttack());
+            }
             else if (player.transform.position.IsCloseEnough(snake.transform.position, 1))
-                yield return PlayerAttack();
+            {
+                hasPlayerApproachEnoughToAttack = true;
+                StartCoroutine(PlayerAttack());
+            }
         }
 
         IEnumerator SnakeAttack()
