@@ -6,20 +6,17 @@ using Managers;
 using ScriptableObjects;
 using StaticData;
 using Tools;
-using UI;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
 namespace GameEvents
 {
     public class AttackSnakeEvent : MonoBehaviour
     {
+        [SerializeField] AttackSnakeControl attackSnakeControl;
         [SerializeField] Transform playerSpot;
         [SerializeField] Transform snakeSpot;
         [SerializeField] Transform goldieCongratsPlayer;
-        [SerializeField] AttackSnakeHandler attackSnakeHandler;
-        [SerializeField] Slider approachSlider;
         [SerializeField] DialogueItem snakeAttackedDialogue;
         [SerializeField] DialogueItem snakedSuccessfullyAttacked;
         [SerializeField] AudioClip foxAttackClip;
@@ -46,43 +43,29 @@ namespace GameEvents
         Camera gameplayCamera;
 
         Vector3 direction;
-
-        bool hasEventStarted;
-        bool canPlayerApproach;
-        float suspicionLevel;
-        float awarenessLevel;
-        float approachSliderValue;
-        
-        bool hasAwarenessReachedMaxLevel;
-        bool hasPlayerApproachEnoughToAttack;
     
         public static AttackSnakeEvent Instance;
         void Awake() => Instance = this;
 
         void OnEnable()
         {
-            approachSlider.onValueChanged.AddListener(value => approachSliderValue = value);
-        
             SetObjects();
             GetComponents();
-            hasEventStarted = true;
-            attackSnakeHandler.ShowCanvas();
             playerMoveControl.enabled = false;
             gameplayGameplayCamera.enabled = false;
             snakeAttackCameraControl.enabled = true;
             snakeAnimalWanderer.enabled = false;
             snakeIdleEvent.enabled = false;
             goldieNavMesh.SetDestination(goldieCongratsPlayer.position);
-            ResetControls();
             direction = (snakeSpot.transform.position - playerSpot.transform.position).normalized;
+            attackSnakeControl.enabled = true;
+            SetInitialPositions();
+            attackSnakeControl.OnEventToTrigger += OnEventToTrigger;
         }
 
-        void Update()
+        void LateUpdate()
         {
-            if (!hasEventStarted || !canPlayerApproach) return;
-
-            ReactToApproachSlider();
-            HandleSuspicion();
+            MovePlayerBySlider(attackSnakeControl.GetApproachSliderValue());
         }
 
         void SetObjects()
@@ -108,10 +91,9 @@ namespace GameEvents
             snakeAudio = snake.GetComponent<AudioSource>();
             snakeAnimalWanderer = snake.GetComponent<AnimalWanderer>();
             snakeIdleEvent = snake.GetComponent<IdleEvent>();
-            
         }
 
-        void ResetControls()
+        void SetInitialPositions()
         {
             snakeNavMesh.ResetPath();
             snake.transform.position = snakeSpot.position;
@@ -119,62 +101,32 @@ namespace GameEvents
             snakeAnim.SetFloat(AnimParam.MoveSpeed, 0f);
             player.transform.position = playerSpot.position;
             player.transform.LookAt(snake.transform);
-            suspicionLevel = 0;
-            awarenessLevel = 0;
-            approachSlider.value = 0;
-            hasAwarenessReachedMaxLevel = false;
-            canPlayerApproach = true;
-            approachSlider.interactable = true;
-            attackSnakeHandler.UpdateSuspicionUI(suspicionLevel);
-            attackSnakeHandler.UpdateAwarenessUI(awarenessLevel);        
+            attackSnakeControl.Reset();
         }
 
-        void ReactToApproachSlider()
+        void OnEventToTrigger(EventToTrigger eventToTrigger)
         {
-            if (approachSliderValue > 0) 
-                playerControl.Move(direction * approachSlider.value / 10);
+            switch (eventToTrigger)
+            {
+                case EventToTrigger.HandleSnakeAttackFoxie: 
+                    StartCoroutine(SnakeAttack()); break;
+                case EventToTrigger.HandleFoxieAttackSnake: 
+                    StartCoroutine(FoxieAttack()); break;
+            }
+        }
 
-            playerAnim.SetFloat(AnimParam.MoveSpeed, approachSlider.value);
-            var walkMultiplier = Mathf.Clamp01(approachSlider.value * 3);
+        void MovePlayerBySlider(float approachSliderValue)
+        {
+            if (approachSliderValue > 0)
+                playerControl.Move(direction * approachSliderValue / 10);
+
+            playerAnim.SetFloat(AnimParam.MoveSpeed, approachSliderValue);
+            var walkMultiplier = Mathf.Clamp01(approachSliderValue * 3);
             playerAnim.SetFloat(AnimParam.Fox.WalkMultiplier, walkMultiplier);
-        }
-
-        void HandleSuspicion()
-        {
-            if (hasAwarenessReachedMaxLevel || hasPlayerApproachEnoughToAttack)
-                return;
-            
-            if (approachSlider.value == 0 && suspicionLevel > 0) 
-                suspicionLevel -= Time.deltaTime * 6;
-            else
-            {
-                if (suspicionLevel <= 100) 
-                    suspicionLevel += Time.deltaTime * approachSlider.value * 75;
-
-                if (suspicionLevel >= 25)
-                {
-                    awarenessLevel += suspicionLevel / 150;
-                    attackSnakeHandler.UpdateAwarenessUI(awarenessLevel);
-                }
-            }
-            attackSnakeHandler.UpdateSuspicionUI(suspicionLevel);
-
-            if (awarenessLevel >= 100)
-            {
-                hasAwarenessReachedMaxLevel = true;
-                StartCoroutine(SnakeAttack());
-            }
-            else if (player.transform.position.IsCloseEnough(snake.transform.position, 1))
-            {
-                hasPlayerApproachEnoughToAttack = true;
-                StartCoroutine(PlayerAttack());
-            }
         }
 
         IEnumerator SnakeAttack()
         {
-            canPlayerApproach = false;
-            approachSlider.interactable = false;
             playerAnim.SetFloat(AnimParam.MoveSpeed, 0);
             snakeNavMesh.TrySetWorldDestination(player.transform.position);
             yield return snakeNavMesh.WaitToArrive(1.5f);
@@ -183,13 +135,11 @@ namespace GameEvents
             yield return new WaitForSeconds(2);
             DialogueManager.Instance.StartDialogue(snakeAttackedDialogue);
             yield return new WaitForSeconds(3);
-            ResetControls();
+            SetInitialPositions();
         }
 
-        IEnumerator PlayerAttack()
+        IEnumerator FoxieAttack()
         {
-            canPlayerApproach = false;
-            approachSlider.interactable = false;
             playerAnim.SetTrigger(AnimParam.Attack);
             playerAudio.PlayClip(foxAttackClip);
             yield return new WaitForSeconds(1);
@@ -200,8 +150,6 @@ namespace GameEvents
 
         void EndEvent()
         {
-            hasEventStarted = false;
-            attackSnakeHandler.HideCanvas();
             playerMoveControl.enabled = true;
             gameplayGameplayCamera.enabled = true;
             snakeAttackCameraControl.enabled = false;
@@ -215,7 +163,7 @@ namespace GameEvents
 
         void OnDisable()
         {
-            approachSlider.onValueChanged.RemoveAllListeners();
+            attackSnakeControl.OnEventToTrigger -= OnEventToTrigger;
         }
     }
 }

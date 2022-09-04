@@ -19,5 +19,7 @@
         ReactDriverToBite,
         ReactPassengerToBite,
         RaiseCameraDriveAway,
+        HandleFoxieAttackSnake,
+        HandleSnakeAttackFoxie,
     }
 }
