@@ -6,9 +6,9 @@ using Managers;
 using ScriptableObjects;
 using StaticData;
 using Tools;
+using UI;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace GameEvents
@@ -18,19 +18,13 @@ namespace GameEvents
         [SerializeField] Transform playerSpot;
         [SerializeField] Transform snakeSpot;
         [SerializeField] Transform goldieCongratsPlayer;
-        [SerializeField] RectTransform attackSnakeCanvas;
-        [SerializeField] RectTransform suspicionBar;
-        [SerializeField] Slider awarenessSlider;
+        [SerializeField] AttackSnakeHandler attackSnakeHandler;
         [SerializeField] Slider approachSlider;
-        [SerializeField] Image fillAreaAwarenessSlider;
         [SerializeField] DialogueItem snakeAttackedDialogue;
         [SerializeField] DialogueItem snakedSuccessfullyAttacked;
         [SerializeField] AudioClip foxAttackClip;
         [SerializeField] AudioClip snakeAttackClip;
         [SerializeField] AudioClip snakeDieClip;
-    
-        [SerializeField] Color32 awarenessInitialColor = new(255, 238, 196, 255);
-        [SerializeField] Color32 awarenessFinalColor = new(246, 74, 57, 255);
 
         MoveControl playerMoveControl;
         Animator playerAnim;
@@ -45,7 +39,7 @@ namespace GameEvents
         AudioSource snakeAudio;
         AnimalWanderer snakeAnimalWanderer;
         IdleEvent snakeIdleEvent;
-        Image suspiciousImage;
+        
         GameObject player;
         GameObject snake;
         GameObject goldie;
@@ -61,8 +55,6 @@ namespace GameEvents
         
         bool hasAwarenessReachedMaxLevel;
         bool hasPlayerApproachEnoughToAttack;
-
-        PointerEventData onApproachInputPressed;
     
         public static AttackSnakeEvent Instance;
         void Awake() => Instance = this;
@@ -74,7 +66,7 @@ namespace GameEvents
             SetObjects();
             GetComponents();
             hasEventStarted = true;
-            attackSnakeCanvas.gameObject.SetActive(true);
+            attackSnakeHandler.ShowCanvas();
             playerMoveControl.enabled = false;
             gameplayGameplayCamera.enabled = false;
             snakeAttackCameraControl.enabled = true;
@@ -116,7 +108,7 @@ namespace GameEvents
             snakeAudio = snake.GetComponent<AudioSource>();
             snakeAnimalWanderer = snake.GetComponent<AnimalWanderer>();
             snakeIdleEvent = snake.GetComponent<IdleEvent>();
-            suspiciousImage = suspicionBar.GetComponent<Image>();
+            
         }
 
         void ResetControls()
@@ -133,8 +125,8 @@ namespace GameEvents
             hasAwarenessReachedMaxLevel = false;
             canPlayerApproach = true;
             approachSlider.interactable = true;
-            UpdateSuspicionUI();
-            UpdateAwarenessUI();        
+            attackSnakeHandler.UpdateSuspicionUI(suspicionLevel);
+            attackSnakeHandler.UpdateAwarenessUI(awarenessLevel);        
         }
 
         void ReactToApproachSlider()
@@ -162,10 +154,10 @@ namespace GameEvents
                 if (suspicionLevel >= 25)
                 {
                     awarenessLevel += suspicionLevel / 150;
-                    UpdateAwarenessUI();
+                    attackSnakeHandler.UpdateAwarenessUI(awarenessLevel);
                 }
             }
-            UpdateSuspicionUI();
+            attackSnakeHandler.UpdateSuspicionUI(suspicionLevel);
 
             if (awarenessLevel >= 100)
             {
@@ -205,31 +197,11 @@ namespace GameEvents
             snakeAudio.PlayClip(snakeDieClip);
             EndEvent();
         }
-    
-        void UpdateAwarenessUI()
-        {
-            var scaledAwareness = awarenessLevel / 100;
-            awarenessSlider.value = scaledAwareness;
-        
-            var nextColor = Color32.Lerp(awarenessInitialColor,awarenessFinalColor, scaledAwareness);
-            fillAreaAwarenessSlider.color = nextColor;
-        }
-
-        void UpdateSuspicionUI()
-        {
-            var scaledSuspicion = suspicionLevel / 100;
-            suspicionBar.localScale = new Vector3(1f, scaledSuspicion, 1f);
-        
-            var currentAlpha = Mathf.Lerp(115, 215, scaledSuspicion);
-            var tempColor = (Color32)suspiciousImage.color;
-            tempColor.a = (byte)currentAlpha;
-            suspiciousImage.color = tempColor;
-        }
 
         void EndEvent()
         {
             hasEventStarted = false;
-            attackSnakeCanvas.gameObject.SetActive(false);
+            attackSnakeHandler.HideCanvas();
             playerMoveControl.enabled = true;
             gameplayGameplayCamera.enabled = true;
             snakeAttackCameraControl.enabled = false;

@@ -38,7 +38,6 @@ namespace GameEvents
         [SerializeField] BalloonItem balloonBoringReasons;
         [SerializeField] BalloonItem balloonSayingNo;
         [SerializeField] TextMeshProUGUI endGameUI;
-        [SerializeField] Button mainMenuButton;
 
         Camera gameplayCamera;
         GameObject farmer;

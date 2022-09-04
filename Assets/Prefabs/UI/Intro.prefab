@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textUI: {fileID: 5995635634938141145}
   skipBar: {fileID: 3685901852552653906}
-  bg: {fileID: 5995635634630342625}
+  bg: {fileID: 938862722}
   initialIntroText: {fileID: 11400000, guid: 29033d9fe09cee748b7d5e36e65da2e9, type: 2}
   letterTypedClip: {fileID: 8300000, guid: 51bd47a27019cd5488cdbed7bdab0e8f, type: 3}
 --- !u!1 &5995635633173198015
@@ -598,9 +598,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5995635634630342626}
   - component: {fileID: 5995635634630342624}
-  - component: {fileID: 5995635634630342625}
+  - component: {fileID: 938862722}
   m_Layer: 5
-  m_Name: Image
+  m_Name: bg_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -634,7 +634,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5995635634630342627}
   m_CullTransparentMesh: 1
---- !u!114 &5995635634630342625
+--- !u!114 &938862722
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -648,7 +648,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

@@ -19,8 +19,8 @@ namespace UI
 
         IntroTextItem last;
         IntroTextItem current;
-        Vector2 initOffsetMax;
-        Vector2 initOffsetMin;
+        Vector2 initialBgAnchorPos;
+        Vector2 targetBgAnchorPos;
         AudioSource introSource;
 
         bool hasPlayerSkipped;
@@ -34,8 +34,9 @@ namespace UI
         {
             StartCoroutine(AudioManager.Instance.PlayIntroClip());
             StartCoroutine(BlackScreenHandler.Instance.Lighten(1f));
-            initOffsetMax = bg.rectTransform.offsetMax;
-            initOffsetMin = bg.rectTransform.offsetMin;
+            FixBgImageFrameIfWebGL();
+            initialBgAnchorPos = bg.rectTransform.anchoredPosition;
+            targetBgAnchorPos = new Vector2(initialBgAnchorPos.x - 300, initialBgAnchorPos.y);
             current = initialIntroText;
             ShowItem();
         }
@@ -46,6 +47,14 @@ namespace UI
             else if (skipBar.fillAmount > 0) ReduceSkipBar();
 
             if (Input.GetMouseButtonDown(0)) JumpToNextItem();
+        }
+
+        void FixBgImageFrameIfWebGL()
+        {
+            #if UNITY_WEBGL
+                var s = bg.rectTransform.localScale;
+                bg.rectTransform.localScale = new Vector3(s.x * 1.33f, s.y, s.z);
+            #endif
         }
 
         void JumpToNextItem()
@@ -76,8 +85,7 @@ namespace UI
         IEnumerator ChangeBg()
         {
             yield return DarkenBg();
-            bg.rectTransform.offsetMax = initOffsetMax;
-            bg.rectTransform.offsetMin = initOffsetMin;
+            bg.rectTransform.anchoredPosition = initialBgAnchorPos;
             bg.sprite = current.backgroundItem.image;
             StartCoroutine(LightenBg());
             StartCoroutine(MoveBg());
@@ -85,12 +93,11 @@ namespace UI
         
         IEnumerator MoveBg()
         {
-            while (bg.rectTransform.offsetMax.x > 0)
+            while (Vector2.Distance(bg.rectTransform.anchoredPosition, targetBgAnchorPos) > 1)
             {
-                var max = bg.rectTransform.offsetMax;
-                var min = bg.rectTransform.offsetMin;
-                bg.rectTransform.offsetMax = new Vector2(max.x - Time.deltaTime * 10, max.y);
-                bg.rectTransform.offsetMin = new Vector2(min.x - Time.deltaTime * 10, min.y);
+                var frameDistance = Time.deltaTime * 10;
+                var nextPos = new Vector2(bg.rectTransform.anchoredPosition.x - frameDistance, initialBgAnchorPos.y);
+                bg.rectTransform.anchoredPosition = nextPos;
                 yield return null;
             }
         }

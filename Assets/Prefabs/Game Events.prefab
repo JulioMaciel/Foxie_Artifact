@@ -3793,8 +3793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec837619c6a51bc46a91df29c430f1ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  postProcessingVolume: {fileID: 0}
+  wakeUpVolumeHandler: {fileID: 0}
   welcomeFarmerDialogue: {fileID: 11400000, guid: cd157a343799ce54cada8d9cc7509ace,
     type: 2}
   snakeHuntDialogue: {fileID: 11400000, guid: f9724280ca3c03c4ab15968a0bac2434, type: 2}
@@ -3804,7 +3803,6 @@ MonoBehaviour:
   farmerWaveSpot: {fileID: 2493533379140514099}
   farmerWorkSpot: {fileID: 2493533380254222325}
   goldieSnakePigSpot: {fileID: 2493533379808659271}
-  cameraWakeUpSpot: {fileID: 1506608188}
 --- !u!114 &2493533379435969110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3820,11 +3818,8 @@ MonoBehaviour:
   playerSpot: {fileID: 2493533378657049224}
   snakeSpot: {fileID: 2493533379484841962}
   goldieCongratsPlayer: {fileID: 1926475350}
-  attackSnakeCanvas: {fileID: 0}
-  suspicionBar: {fileID: 0}
-  awarenessSlider: {fileID: 0}
+  attackSnakeHandler: {fileID: 0}
   approachSlider: {fileID: 0}
-  fillAreaAwarenessSlider: {fileID: 0}
   snakeAttackedDialogue: {fileID: 11400000, guid: 02acf1e7e2fa4074882c8712cde10e02,
     type: 2}
   snakedSuccessfullyAttacked: {fileID: 11400000, guid: ab7dbabceb16a514e8fc911606d9c361,
@@ -3832,12 +3827,6 @@ MonoBehaviour:
   foxAttackClip: {fileID: 8300000, guid: 72f0840406326d141aef30dddc289179, type: 3}
   snakeAttackClip: {fileID: 8300000, guid: 97395aeeb06edb0469e5cc8bffdbb1b2, type: 3}
   snakeDieClip: {fileID: 8300000, guid: 46195311a4949744c93a8c689e4b51be, type: 3}
-  awarenessInitialColor:
-    serializedVersion: 2
-    rgba: 4291096319
-  awarenessFinalColor:
-    serializedVersion: 2
-    rgba: 4281944822
 --- !u!114 &1576432372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3887,7 +3876,6 @@ MonoBehaviour:
     type: 2}
   balloonSayingNo: {fileID: 11400000, guid: 781531683a24c3847a10ac9bfa9c3484, type: 2}
   endGameUI: {fileID: 0}
-  mainMenuButton: {fileID: 0}
 --- !u!1 &2493533379484841961
 GameObject:
   m_ObjectHideFlags: 0
