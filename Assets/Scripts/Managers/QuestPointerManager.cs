@@ -17,6 +17,8 @@ namespace Managers
         QuestPointerHandler questPointerHandler;
         TextMeshProUGUI questPointerText;
         Transform targetTransform;
+        CanvasGroup textCanvasGroup;
+        RectTransform textRectFrame;
         EventToTrigger eventToTrigger;
     
         public static QuestPointerManager Instance;
@@ -29,6 +31,8 @@ namespace Managers
             player = Entity.Instance.player;
             questPointerHandler = questPointer3D.GetComponentInChildren<QuestPointerHandler>();
             questPointerText = questPointer2D.GetComponentInChildren<TextMeshProUGUI>();
+            textCanvasGroup = questPointer2D.GetComponentInChildren<CanvasGroup>();
+            textRectFrame = textCanvasGroup.GetComponent<RectTransform>();
         }
 
         public void SetNewTarget(GameObject target, EventToTrigger eventToTriggerWhenApproach, string underPointerInstruction)
@@ -36,20 +40,34 @@ namespace Managers
             questPointer3D.gameObject.SetActive(true);
             questPointer2D.gameObject.SetActive(true);
         
-            //currentTarget = item;
             targetTransform = target.transform;
             eventToTrigger = eventToTriggerWhenApproach;
             questPointerHandler.SetTarget(targetTransform);
             questPointerText.text = underPointerInstruction;
-
-            StartCoroutine(EraseMessageLater());
+            textRectFrame.sizeDelta = new Vector2(underPointerInstruction.Length * 11f, textRectFrame.sizeDelta.y);
+            
+            StartCoroutine(ShowInstruction());
+            StartCoroutine(HideInstruction());
             StartCoroutine(CheckIfApproachedTarget());
         }
+        
+        IEnumerator ShowInstruction()
+        {
+            while (textCanvasGroup.alpha < 1)
+            {
+                textCanvasGroup.alpha += Time.deltaTime * 5;
+                yield return null;
+            }
+        }
 
-        IEnumerator EraseMessageLater()
+        IEnumerator HideInstruction()
         {
             yield return new WaitForSeconds(5);
-            questPointerText.text = string.Empty;
+            while (textCanvasGroup.alpha > 0)
+            {
+                textCanvasGroup.alpha -= Time.deltaTime * 5;
+                yield return null;
+            }
         }
 
         IEnumerator CheckIfApproachedTarget()

@@ -9,7 +9,6 @@ using UI;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Pool;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace GameEvents

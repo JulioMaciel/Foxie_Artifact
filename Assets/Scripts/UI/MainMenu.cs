@@ -23,7 +23,7 @@ namespace UI
         [SerializeField] RectTransform gameTitleRect;
         [SerializeField] RectTransform[] titleStars;
         [SerializeField] TextMeshProUGUI titleText;
-        [SerializeField] IntroHandler introHandler;
+        [SerializeField] Button exitGameBtn;
         
         AudioClip natureEffects;
         AudioSource audioSource;
@@ -113,7 +113,15 @@ namespace UI
                 audioSource.PlayClip(startBtnClickedSound);
                 Application.OpenURL("https://www.linkedin.com/in/julio-maciel-1a0971105/");
             });
-
+            
+            #if !UNITY_WEBGL
+                exitGameBtn.gameObject.SetActive(true);
+                exitGameBtn.onClick.AddListener(() =>
+                {
+                    audioSource.PlayClip(startBtnClickedSound);
+                    Application.Quit();
+                });
+            #endif
         }
 
         IEnumerator StartIntro()
@@ -121,8 +129,6 @@ namespace UI
             StartCoroutine(AudioManager.Instance.StopSmoothly());
             StartCoroutine(FadeOutMainMenu());
             yield return BlackScreenHandler.Instance.Darken(.6f);
-            //introHandler.gameObject.SetActive(true);
-            //enabled = false;
             SceneManager.LoadScene(1);
         }
 
@@ -135,7 +141,6 @@ namespace UI
             yield return new WaitForSeconds(1);
             startGameEvent.enabled = true;
             menuCamera.gameObject.SetActive(false);
-            //enabled = false;
             gameObject.SetActive(false);
         }
 

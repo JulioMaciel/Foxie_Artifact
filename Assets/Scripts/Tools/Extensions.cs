@@ -133,22 +133,5 @@ namespace Tools
             audioSource.PlayClip(rndClip);
         }
 
-        // public static IEnumerator ChangeClipSmoothly(this AudioSource audioSource, AudioClip clip, float speed)
-        // {
-        //     var initVolume = audioSource.volume; 
-        //     while (audioSource.volume > 0)
-        //     {
-        //         audioSource.volume -= Time.deltaTime * speed;
-        //         yield return null;
-        //     }
-        //     audioSource.Stop();
-        //     audioSource.PlayClip(clip);
-        //     while (audioSource.volume < initVolume)
-        //     {
-        //         audioSource.volume += Time.deltaTime * speed;
-        //         yield return null;
-        //     }
-        // }
-
     }
 }
