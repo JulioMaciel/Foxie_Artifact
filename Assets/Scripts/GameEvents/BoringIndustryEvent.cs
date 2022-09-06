@@ -358,6 +358,7 @@ namespace GameEvents
             var passengerBiteHandler = boringPassenger.GetComponentInChildren<BiteHandler>();
             passengerBiteHandler.enabled = true;
             passengerBiteHandler.OnEventToTrigger += OnEventToTrigger;
+            StartCoroutine(TutorialManager.Instance.StartAttackBoringTutorial());
         }
 
         IEnumerator DriveBoringCarAway()

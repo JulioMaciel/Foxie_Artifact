@@ -122,7 +122,7 @@ namespace GameEvents
 
         IEnumerator MoveGoldieToWelcomeSpot()
         {
-            TutorialManager.Instance.StartTutorial();
+            TutorialManager.Instance.StartWakeUpTutorial();
             StartCoroutine(goldieNavmesh.MoveAnimating(goldieWelcomeFarmerSpot.position));
             yield return goldieNavmesh.WaitToArrive();
             goldie.transform.LookAt(farmer.transform);

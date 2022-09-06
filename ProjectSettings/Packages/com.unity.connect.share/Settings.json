@@ -6,7 +6,7 @@
             {
                 "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "buildOutputDirList",
-                "value": "{\"m_Value\":\"C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v11;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v10;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v9;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v8;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v7;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v6 NoCompress;;;;\"}"
+                "value": "{\"m_Value\":\"C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v12;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v11;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v10;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v9;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v8;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v7;C:/Users/Juketo/Documents/Unity/Builds/Foxie adVentures WebGL v6 NoCompress;;;\"}"
             }
         ]
     }

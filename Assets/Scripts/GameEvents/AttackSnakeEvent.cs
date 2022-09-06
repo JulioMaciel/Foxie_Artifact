@@ -61,6 +61,7 @@ namespace GameEvents
             attackSnakeControl.enabled = true;
             SetInitialPositions();
             attackSnakeControl.OnEventToTrigger += OnEventToTrigger;
+            StartCoroutine(TutorialManager.Instance.StartAttackSnakeTutorial());
         }
 
         void LateUpdate()

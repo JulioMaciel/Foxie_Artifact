@@ -3,6 +3,7 @@ using System.Collections;
 using StaticData;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Managers
 {
@@ -11,9 +12,14 @@ namespace Managers
         [SerializeField] GameObject tutorialUI;
         [SerializeField] string wasdText;
         [SerializeField] string jumpText;
+        [SerializeField] string attackSnakeText;
+        [SerializeField] string attackBoringText;
         [SerializeField] Color controlPressedTextColor;
         [SerializeField] float minTimeControlPressed = 2;
         [SerializeField] float initialUIMovementSpeed = 1.1f;
+        [SerializeField] Slider snakeApproachSlider;
+        [SerializeField] Image driverTargetImg;
+        [SerializeField] Image passengerTargetImg;
 
         RectTransform tutorialUIRect;
         TextMeshProUGUI textMeshPro;
@@ -26,7 +32,7 @@ namespace Managers
         public static TutorialManager Instance;
         void Awake() => Instance = this;
 
-        public void StartTutorial()
+        public void StartWakeUpTutorial()
         {
             tutorialUI.SetActive(true);
             textMeshPro = tutorialUI.GetComponentInChildren<TextMeshProUGUI>();
@@ -34,6 +40,29 @@ namespace Managers
             controlStartingTextColor = textMeshPro.color;
             currentControl = TutorialControl.MouseCamera;
             StartCoroutine(MoveWaitAndChange());
+        }
+
+        public IEnumerator StartAttackSnakeTutorial()
+        {
+            textMeshPro.color = controlStartingTextColor;
+            textMeshPro.text = attackSnakeText;
+            const float distance = 160f;
+            yield return MoveUI(true, distance);
+            while (snakeApproachSlider.value == 0) yield return null;
+            textMeshPro.color = controlPressedTextColor;
+            yield return new WaitForSeconds(1);
+            yield return MoveUI(false, distance);
+        }
+        
+        public IEnumerator StartAttackBoringTutorial()
+        {
+            textMeshPro.color = controlStartingTextColor;
+            textMeshPro.text = attackBoringText;
+            yield return MoveUI(true);
+            while (driverTargetImg.fillAmount >= 1 && passengerTargetImg.fillAmount >= 1) yield return null;
+            textMeshPro.color = controlPressedTextColor;
+            yield return new WaitForSeconds(1);
+            yield return MoveUI(false);
         }
 
         IEnumerator MoveWaitAndChange()
@@ -55,11 +84,11 @@ namespace Managers
             yield return MoveUI(false);
         }
 
-        IEnumerator MoveUI(bool goDown)
+        IEnumerator MoveUI(bool goDown, float distance = 100)
         {
             if(goDown) textMeshPro.color = controlStartingTextColor;
             
-            var targetY = tutorialUIRect.anchoredPosition.y + 100 * (goDown? -1 : 1);
+            var targetY = tutorialUIRect.anchoredPosition.y + distance * (goDown? -1 : 1);
             var timePast = 0f;
             while(Math.Abs(tutorialUIRect.anchoredPosition.y - targetY) > 0.1)
             {
